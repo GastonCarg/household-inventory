@@ -14,7 +14,6 @@ const Header = () => {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      console.log({ inputValue });
       handleSetSearchValue(inputValue);
     }, 1000);
 
