@@ -1,14 +1,18 @@
-'use client';
+"use client";
 
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState } from "react";
 
 const SearchContext = createContext({
-  searchValue: '',
+  searchValue: "",
   handleSetSearchValue: (value: string) => {},
 });
 
-export const SearchContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [searchValue, setSearchValue] = useState<string>('');
+export const SearchContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [searchValue, setSearchValue] = useState<string>("");
 
   const handleSetSearchValue = (value: string) => {
     setSearchValue(value);
@@ -18,7 +22,9 @@ export const SearchContextProvider = ({ children }: { children: React.ReactNode 
     searchValue,
     handleSetSearchValue,
   };
-  return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;
+  return (
+    <SearchContext.Provider value={value}>{children}</SearchContext.Provider>
+  );
 };
 
 export default SearchContext;
