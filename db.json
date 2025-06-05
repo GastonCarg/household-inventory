@@ -1,0 +1,92 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "title": "Pollo",
+      "count": "10",
+      "expireDate": "2024-12-31T23:59:59Z",
+      "color": "green",
+      "location": "Refrigerator"
+    },
+    {
+      "id": 2,
+      "title": "Costeletas",
+      "count": "10",
+      "expireDate": "2024-12-31T23:59:59Z",
+      "color": "orange",
+      "location": "Refrigerator"
+    },
+    {
+      "id": 3,
+      "title": "Yogurt",
+      "count": "10",
+      "expireDate": "2024-12-31T23:59:59Z",
+      "color": "red",
+      "location": "Freezer"
+    },
+    {
+      "id": 4,
+      "title": "Dulce de durazno",
+      "count": "10",
+      "expireDate": "2024-12-31T23:59:59Z",
+      "color": "black",
+      "location": "Refrigerator"
+    },
+    {
+      "id": 5,
+      "title": "Lechuga",
+      "count": "10",
+      "expireDate": "2024-12-31T23:59:59Z",
+      "color": "blue",
+      "location": "Freezer"
+    },
+    {
+      "id": 6,
+      "title": "Zanahoria",
+      "count": "10",
+      "expireDate": "2024-12-31T23:59:59Z",
+      "color": "yellow",
+      "location": "Pantry"
+    },
+    {
+      "id": 7,
+      "title": "Cebolla",
+      "count": "10",
+      "expireDate": "2024-12-31T23:59:59Z",
+      "color": "purple",
+      "location": "Refrigerator"
+    },
+    {
+      "id": 8,
+      "title": "Salsa de tomate",
+      "count": "10",
+      "expireDate": "2024-12-31T23:59:59Z",
+      "color": "pink",
+      "location": "Freezer"
+    },
+    {
+      "id": 9,
+      "title": "Leche",
+      "count": "10",
+      "expireDate": "2024-12-31T23:59:59Z",
+      "color": "brown",
+      "location": "Pantry"
+    },
+    {
+      "id": 10,
+      "title": "Salame",
+      "count": "10",
+      "expireDate": "2024-12-31T23:59:59Z",
+      "color": "gray",
+      "location": ""
+    },
+    {
+      "id": 11,
+      "title": "Ñoquis",
+      "count": "10",
+      "expireDate": "2024-12-31T23:59:59Z",
+      "color": "cyan",
+      "location": "Refrigerator"
+    }
+  ]
+}

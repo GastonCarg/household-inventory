@@ -16,7 +16,7 @@ const SearchComponent: React.FC = () => {
 
   const handleClickSearch = () => {
     setIsInputVisible(true);
-    setTimeout(() => searchInputRef.current?.focus(), 0);
+    setTimeout(() => searchInputRef.current?.focus(), 500);
   };
 
   const getResults = (event: React.KeyboardEvent<HTMLInputElement>) => {

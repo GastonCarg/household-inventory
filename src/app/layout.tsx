@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
 import { SearchContextProvider } from "../(contexts)/searchContext/page";
 import Header from "./(header)/header";
 import "./globals.css";

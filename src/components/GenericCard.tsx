@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/helpers";
 import React from "react";
 
 interface GenericCardProps {
@@ -6,6 +7,7 @@ interface GenericCardProps {
   expireDate?: string;
   newProduct?: boolean;
   color?: string;
+  location?: string;
 }
 
 const GenericCard: React.FC<GenericCardProps> = ({
@@ -14,12 +16,14 @@ const GenericCard: React.FC<GenericCardProps> = ({
   expireDate,
   newProduct,
   color,
+  location,
 }) => {
   const colorTextMap: Record<string, string> = {
-    black: "text-red-500",
+    black: "text-black-500",
     orange: "text-orange-500",
     yellow: "text-yellow-500",
     red: "text-red-500",
+    green: "text-green-600",
   };
 
   const colorBackgroundMap: Record<string, string> = {
@@ -27,6 +31,7 @@ const GenericCard: React.FC<GenericCardProps> = ({
     orange: "bg-orange-100",
     yellow: "bg-yellow-100",
     red: "bg-red-100",
+    green: "bg-green-100",
     transparent: "bg-transparent",
   };
 
@@ -35,6 +40,7 @@ const GenericCard: React.FC<GenericCardProps> = ({
     orange: "border-orange-200",
     yellow: "border-yellow-200",
     red: "border-red-200",
+    green: "border-green-300",
   };
 
   const colorClass = color ? colorTextMap[color] || "text-black" : "text-black";
@@ -62,7 +68,10 @@ const GenericCard: React.FC<GenericCardProps> = ({
         )}
       </section>
       {count && <p className={`font-bold text-3xl ${colorClass}`}>{count}</p>}
-      {expireDate && <p className="font-bold text-sm">Expires: {expireDate}</p>}
+      {expireDate && <p className="font-bold text-sm">Expires: {formatDate(expireDate)}</p>}
+      {location && (
+        <p className="text-xs text-gray-500">Location: {location}</p>
+      )}
     </div>
   );
 };
