@@ -6,3 +6,10 @@ export const formatDate = (date: string | Date): string => {
   };
   return new Date(date).toLocaleDateString('es-AR', options);
 }
+
+export const getExpirationDaysLeft = (expireDate: string | Date): number => {
+  const today = new Date();
+  const expirationDate = new Date(expireDate);
+  const timeDiff = expirationDate.getTime() - today.getTime();
+  return Math.ceil(timeDiff / (1000 * 3600 * 24));
+}

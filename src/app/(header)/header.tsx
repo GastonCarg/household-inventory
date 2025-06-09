@@ -6,7 +6,6 @@ import { useState } from "react";
 import SearchComponent from "../(search)/searchComponent";
 import AddItemModal from "../items/(addItem)/addItem";
 
-// const queryClient = useQueryClient();
 const Header = () => {
   const [addItemModal, setAddItemModal] = useState(false);
 
@@ -20,7 +19,7 @@ const Header = () => {
 
   return (
     <header className="flex h-16 items-center justify-between border-b border-gray-300 bg-white">
-      <label className="p-4 text-2xl font-bold">Food Inventory</label>
+      <label className="p-4 text-2xl font-bold">Household Inventory</label>
       <section className="grid grid-flow-col gap-4 p-4">
         <SearchComponent />
         <button

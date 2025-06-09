@@ -1,13 +1,13 @@
+import { Item } from "@/app/items/type";
 import { ITEMS_URL } from "../../(constants)";
 
-// TODO: add typing
 export const getAllItems = async ({
   page,
   searchValue,
 }: {
   page?: number | undefined;
   searchValue?: string | undefined;
-}): Promise<any> => {
+}): Promise<Item[]> => {
   try {
     // delay to simulate network latency
     await delay();
@@ -31,8 +31,7 @@ export const getAllItems = async ({
     const data = await response.json();
 
     if (searchValue) {
-      // TODO: add typing
-      const filtered = data.filter((item: any) =>
+      const filtered = data.filter((item: Item) =>
         item.title.toLowerCase().includes(searchValue.toLowerCase())
       );
 
@@ -40,9 +39,32 @@ export const getAllItems = async ({
     }
     return data;
   } catch (error) {
-    console.error("Error fetching items:", error);
     throw error;
   }
 };
+
+export const addItem = async (item: Item): Promise<Item> => {
+  try {
+    // delay to simulate network latency
+    await delay();
+
+    const response = await fetch(ITEMS_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(item),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to add item");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
 
 const delay = (ms = 3000) => new Promise((res) => setTimeout(res, ms));

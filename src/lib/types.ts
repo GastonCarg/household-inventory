@@ -7,6 +7,14 @@ export interface IGenericTabs extends Props {
   isFilter?: boolean;
 }
 
+export interface IGenericCardProps {
+  title: string;
+  count?: string;
+  expireDate?: string;
+  newProduct?: boolean;
+  location?: string;
+}
+
 type Props = {
   children?: ReactNode;
 };

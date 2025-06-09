@@ -3,6 +3,7 @@
 import ItemsList from "./items/page";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ToastContainer } from "react-toastify";
 
 const queryClient = new QueryClient();
 const Home = () => {
@@ -12,6 +13,7 @@ const Home = () => {
       <div className="grid gap-4 p-4">
         <ItemsList />
       </div>
+      <ToastContainer />
     </QueryClientProvider>
   );
 };

@@ -3,11 +3,13 @@
 import SearchContext from "@/(contexts)/searchContext/page";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Filter, ListFilter, Refrigerator, Snowflake } from "lucide-react";
-import React, { useContext, useState } from "react";
+import React, { Suspense, useContext, useState } from "react";
 
 import { getAllItems } from "@/api/items";
 import { GenericCard, GenericTabs } from "@/components";
+import { getExpirationDaysLeft } from "@/lib/helpers";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { toast } from "react-toastify";
 
 const ItemsList: React.FC = () => {
   const [buttonPressed, setButtonPressed] = useState("All Items");
@@ -46,6 +48,20 @@ const ItemsList: React.FC = () => {
   let items = data?.pages.flatMap(({ data }) => data) || [];
   const total = data?.pages.flatMap(({ items }) => items)[0] || 0;
 
+  const totalExpired = items
+    .filter((item: any) => {
+      const daysLeft = getExpirationDaysLeft(item.expireDate);
+      return daysLeft <= 0;
+    })
+    .length.toString();
+
+  const totalExpiringSoon = items
+    .filter((item: any) => {
+      const daysLeft = getExpirationDaysLeft(item.expireDate);
+      return daysLeft > 0 && daysLeft <= 3;
+    })
+    .length.toString();
+
   if (searchValue) {
     items = items.filter((item: any) =>
       item.title.toLowerCase().includes(searchValue.toLowerCase())
@@ -62,16 +78,17 @@ const ItemsList: React.FC = () => {
 
   // TODO: implement error component
   if (error) {
-    console.error("Error fetching items:", error);
-    return <div>Error</div>;
+    toast.error("Error fetching items:" + error.message);
   }
 
   return (
     <>
       <div className="grid grid-cols-3 gap-4 p-4">
-        <GenericCard title="Total items" count="20" color="black" />
-        <GenericCard title="Expiring soon" count="6" color="orange" />
-        <GenericCard title="Expired" count="3" color="red" />
+        <Suspense fallback={<div>Loading...</div>}>
+          <GenericCard title="Total items" count={total} />
+          <GenericCard title="Expiring soon" count={totalExpiringSoon} />
+          <GenericCard title="Expired" count={totalExpired} />
+        </Suspense>
       </div>
       <section className="flex column gap-4 w-full border-b border-gray-300 pt-8">
         {buttonList.map((button, idx) => {
@@ -108,12 +125,7 @@ const ItemsList: React.FC = () => {
           {items.map((item, index) => {
             const { title, color, expireDate } = item;
             return (
-              <GenericCard
-                key={index}
-                title={title}
-                color={color}
-                expireDate={expireDate}
-              />
+              <GenericCard key={index} title={title} expireDate={expireDate} />
             );
           })}
         </div>
