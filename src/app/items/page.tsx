@@ -7,14 +7,18 @@ import React, { Suspense, useContext, useState } from "react";
 
 import { getAllItems } from "@/api/items";
 import { GenericCard, GenericTabs } from "@/components";
-import { getExpirationDaysLeft } from "@/lib/helpers";
+import { useItems } from "@/hooks/useItems";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
+import { Item } from "./type";
 
 const ItemsList: React.FC = () => {
   const [buttonPressed, setButtonPressed] = useState("All Items");
   const { searchValue } = useContext(SearchContext);
+  const { totalItems, isLoadingTotalItems, errorTotalItems } = useItems();
+  const { total, expired, expiringSoon } = totalItems;
 
+  // TODO: implement horizontal scroll
   const buttonList = [
     {
       title: "All Items",
@@ -46,48 +50,37 @@ const ItemsList: React.FC = () => {
     });
 
   let items = data?.pages.flatMap(({ data }) => data) || [];
-  const total = data?.pages.flatMap(({ items }) => items)[0] || 0;
-
-  const totalExpired = items
-    .filter((item: any) => {
-      const daysLeft = getExpirationDaysLeft(item.expireDate);
-      return daysLeft <= 0;
-    })
-    .length.toString();
-
-  const totalExpiringSoon = items
-    .filter((item: any) => {
-      const daysLeft = getExpirationDaysLeft(item.expireDate);
-      return daysLeft > 0 && daysLeft <= 3;
-    })
-    .length.toString();
 
   if (searchValue) {
-    items = items.filter((item: any) =>
+    items = items.filter((item: Item) =>
       item.title.toLowerCase().includes(searchValue.toLowerCase())
     );
   }
+
   if (buttonPressed !== "All Items") {
-    items = items.filter((item: any) => item.category === buttonPressed);
+    items = items.filter((item: Item) => item.location === buttonPressed);
   }
 
   // TODO: implement loading component
-  if (status === "pending") {
+  if (status === "pending" || isLoadingTotalItems) {
     return <div>Loading...</div>;
   }
 
   // TODO: implement error component
-  if (error) {
-    toast.error("Error fetching items:" + error.message);
+  if (error || errorTotalItems) {
+    const errorMessage = error
+      ? error.message
+      : errorTotalItems || "Unknown error";
+    toast.error("Error fetching items: " + errorMessage);
   }
 
   return (
     <>
       <div className="grid grid-cols-3 gap-4 p-4">
         <Suspense fallback={<div>Loading...</div>}>
-          <GenericCard title="Total items" count={total} />
-          <GenericCard title="Expiring soon" count={totalExpiringSoon} />
-          <GenericCard title="Expired" count={totalExpired} />
+          <GenericCard title="Total items" count={total.toString()} />
+          <GenericCard title="Expiring soon" count={expiringSoon.toString()} />
+          <GenericCard title="Expired" count={expired.toString()} />
         </Suspense>
       </div>
       <section className="flex column gap-4 w-full border-b border-gray-300 pt-8">

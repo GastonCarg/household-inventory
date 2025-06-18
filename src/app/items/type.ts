@@ -7,3 +7,9 @@ export interface Item {
 }
 
 export interface ItemFormValues extends Item { }
+
+export interface ItemSummaryResponse {
+  total: number;
+  expired: number;
+  expiringSoon: number;
+}

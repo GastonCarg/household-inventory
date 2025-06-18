@@ -1,15 +1,20 @@
 "use client";
 
+import Header from "./(header)/header";
 import ItemsList from "./items/page";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
 import { ToastContainer } from "react-toastify";
 
-const queryClient = new QueryClient();
 const Home = () => {
+  const [queryClient] = useState(() => {
+    return new QueryClient();
+  });
+
   return (
-    // TODO: Add i18n to translation
     <QueryClientProvider client={queryClient}>
+      <Header />
       <div className="grid gap-4 p-4">
         <ItemsList />
       </div>

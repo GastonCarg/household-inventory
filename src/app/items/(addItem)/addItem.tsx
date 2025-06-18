@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Form from "next/form";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -8,8 +9,27 @@ import { IAddItemModal } from "./type";
 
 const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
   const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
 
-  const locations = ["Refrigerator", "Fridge"];
+  const locations = ["Refrigerator", "Freezer"];
+
+  const mutation = useMutation({
+    mutationFn: addItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items", "infinite"] });
+      toast.success("Item added successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    },
+    onError: (error) => {
+      toast.error("An error occurred while adding the item. Please try again.");
+      console.error("Error adding item:", error);
+    },
+  });
 
   const handleSubmit = async (formData: FormData) => {
     setLoading(true);
@@ -34,21 +54,13 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
         expireDate: date.toISOString(),
         location: location,
       };
-
-      addItem(item);
       closeModal();
-
-      toast.success("Item added successfully!", {
-        position: "top-right",
-        autoClose: 5000,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
 
       formData.set("name", "");
       formData.set("expiration", "");
       formData.set("location", locations[0]);
+
+      mutation.mutate(item);
     } catch (error) {
       toast.error("An error occurred while adding the item. Please try again.");
       console.error("Error adding item:", error);
@@ -78,7 +90,6 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
           name="name"
           placeholder="Product name"
           className="border p-2 rounded"
-          required
           autoComplete="on"
         />
         <label id="expiration" className="text-lg font-semibold">
@@ -89,13 +100,12 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
           type="number"
           placeholder="30"
           className="border p-2 rounded border-gray-300"
-          required
           min="1"
         />
         <label id="location" className="text-lg font-semibold">
           Location:
         </label>
-        <select name="location" className="border p-2 rounded" required>
+        <select name="location" className="border p-2 rounded">
           {locations.map((location, idx) => (
             <option key={idx} value={location}>
               {location}

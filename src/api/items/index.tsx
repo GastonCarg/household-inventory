@@ -1,4 +1,4 @@
-import { Item } from "@/app/items/type";
+import { Item, ItemSummaryResponse } from "@/app/items/type";
 import { ITEMS_URL } from "../../(constants)";
 
 export const getAllItems = async ({
@@ -18,7 +18,7 @@ export const getAllItems = async ({
 
     let url = "";
     if (process.env.NODE_ENV === "development") {
-      url = `${ITEMS_URL}?${queryParams.toString()}`;
+      url = `${ITEMS_URL}/items?${queryParams.toString()}`;
     } else {
       url = ITEMS_URL;
     }
@@ -48,7 +48,7 @@ export const addItem = async (item: Item): Promise<Item> => {
     // delay to simulate network latency
     await delay();
 
-    const response = await fetch(ITEMS_URL, {
+    const response = await fetch(`${ITEMS_URL}/items`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,6 +65,23 @@ export const addItem = async (item: Item): Promise<Item> => {
   } catch (error) {
     throw error;
   }
-}
+};
 
-const delay = (ms = 3000) => new Promise((res) => setTimeout(res, ms));
+export const getItemsSummary = async (): Promise<ItemSummaryResponse> => {
+  try {
+    // delay to simulate network latency
+    await delay();
+
+    const response = await fetch(`${ITEMS_URL}/summary`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch item summary");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const delay = (ms = 1000) => new Promise((res) => setTimeout(res, ms));
