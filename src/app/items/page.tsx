@@ -3,6 +3,7 @@
 import SearchContext from "@/(contexts)/searchContext/page";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Filter, ListFilter, Refrigerator, Snowflake } from "lucide-react";
+import { useTranslations } from "next-intl";
 import React, { Suspense, useContext, useState } from "react";
 
 import { getAllItems } from "@/api/items";
@@ -18,20 +19,22 @@ const ItemsList: React.FC = () => {
   const { totalItems, isLoadingTotalItems, errorTotalItems } = useItems();
   const { total, expired, expiringSoon } = totalItems;
 
+  const t = useTranslations("ItemsList");
+
   // TODO: implement horizontal scroll
   const buttonList = [
     {
-      title: "All Items",
+      title: t("All Items"),
       action: (value: string) => setButtonPressed(value),
       icon: <ListFilter className="mr-2" />,
     },
     {
-      title: "Refrigerator",
+      title: t("Refrigerator"),
       action: (value: string) => setButtonPressed(value),
       icon: <Refrigerator className="mr-2" />,
     },
     {
-      title: "Freezer",
+      title: t("Freezer"),
       action: (value: string) => setButtonPressed(value),
       icon: <Snowflake className="mr-2" />,
     },

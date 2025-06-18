@@ -1,7 +1,7 @@
 "use client";
 
-import Header from "./(header)/header";
-import ItemsList from "./items/page";
+import Header from "../(header)/header";
+import ItemsList from "../items/page";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";

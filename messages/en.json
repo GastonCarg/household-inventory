@@ -1,0 +1,11 @@
+{
+  "ItemsList": {
+    "All Items": "All Items",
+    "Refrigerator": "Refrigerator",
+    "Freezer": "Freezer"
+  },
+  "Header": {
+    "AddItems": "Add Items",
+    "HouseholdInventory": "Household Inventory"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "ItemsList": {
+    "All Items": "Todos los artículos",
+    "Refrigerator": "Heladera",
+    "Freezer": "Congelador"
+  },
+  "Header": {
+    "AddItem": "Agregar artículos",
+    "HouseholdInventory": "Inventario del hogar"
+  }
+}
