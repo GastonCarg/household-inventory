@@ -7,6 +7,7 @@ import {
 } from "@/(constants)";
 import { formatDate, getExpirationDaysLeft } from "@/lib/helpers";
 import { IGenericCardProps } from "@/lib/types";
+import { useTranslations } from "next-intl";
 
 const GenericCard: React.FC<IGenericCardProps> = ({
   title,
@@ -17,13 +18,15 @@ const GenericCard: React.FC<IGenericCardProps> = ({
 }) => {
   let color = "black";
   let textDaysLeft = "";
+  const t = useTranslations("GenericCard");
+
   if (expireDate) {
     const daysLeft = getExpirationDaysLeft(expireDate);
 
-    textDaysLeft = `${daysLeft} days left`;
+    textDaysLeft = `${daysLeft} ${t("DaysLeft")}`;
     if (daysLeft <= 0) {
       color = "red";
-      textDaysLeft = "Expired";
+      textDaysLeft = t("Expired");
     } else if (daysLeft <= 3) {
       color = "orange";
     } else {

@@ -1,11 +1,32 @@
 {
   "ItemsList": {
-    "All Items": "All Items",
+    "All Items": "All items",
+    "Refrigerator": "Refrigerator",
+    "Freezer": "Freezer",
+    "TotalItems": "Total items",
+    "Expired": "Expired",
+    "ExpiringSoon": "Expiring soon",
+    "Filter": "Filter"
+  },
+  "Header": {
+    "AddItem": "Add item",
+    "HouseholdInventory": "Household Inventory"
+  },
+  "Search": {
+    "Search": "Search"
+  },
+  "AddItemModal": {
+    "ProductName": "Product name",
+    "Expiration": "Expiration date (in days)",
+    "Location": "Location",
+    "AddItem": "Add item",
+    "Cancel": "Cancel",
+    "Submit": "Submit",
     "Refrigerator": "Refrigerator",
     "Freezer": "Freezer"
   },
-  "Header": {
-    "AddItems": "Add Items",
-    "HouseholdInventory": "Household Inventory"
+  "GenericCard": {
+    "DaysLeft": "days left",
+    "Expired": "Expired"
   }
 }

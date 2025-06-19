@@ -81,9 +81,12 @@ const ItemsList: React.FC = () => {
     <>
       <div className="grid grid-cols-3 gap-4 p-4">
         <Suspense fallback={<div>Loading...</div>}>
-          <GenericCard title="Total items" count={total.toString()} />
-          <GenericCard title="Expiring soon" count={expiringSoon.toString()} />
-          <GenericCard title="Expired" count={expired.toString()} />
+          <GenericCard title={t("TotalItems")} count={total.toString()} />
+          <GenericCard
+            title={t("ExpiringSoon")}
+            count={expiringSoon.toString()}
+          />
+          <GenericCard title={t("Expired")} count={expired.toString()} />
         </Suspense>
       </div>
       <section className="flex column gap-4 w-full border-b border-gray-300 pt-8">
@@ -106,7 +109,7 @@ const ItemsList: React.FC = () => {
           onClick={() => alert("Filter clicked")}
         >
           <Filter className="mr-2" />
-          <span>Filter</span>
+          <span>{t("Filter")}</span>
         </button>
       </section>
       <InfiniteScroll
@@ -119,7 +122,7 @@ const ItemsList: React.FC = () => {
       >
         <div className="grid grid-cols-3 gap-4 p-4">
           {items.map((item, index) => {
-            const { title, color, expireDate } = item;
+            const { title, expireDate } = item;
             return (
               <GenericCard key={index} title={title} expireDate={expireDate} />
             );

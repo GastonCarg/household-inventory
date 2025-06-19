@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import Form from "next/form";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -10,8 +11,10 @@ import { IAddItemModal } from "./type";
 const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
+  const t = useTranslations("AddItemModal");
 
-  const locations = ["Refrigerator", "Freezer"];
+  // TODO: get locations from backend
+  const locations = [t("Refrigerator"), t("Freezer")];
 
   const mutation = useMutation({
     mutationFn: addItem,
@@ -81,19 +84,19 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
     <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-md">
       <Form action={handleSubmit} className="flex flex-col gap-4">
         <section className="flex items-center justify-center">
-          <h2 className="text-2xl font-bold">Add Item</h2>
+          <h2 className="text-2xl font-bold">{t("AddItem")}</h2>
         </section>
         <label id="name" className="text-lg font-semibold">
-          Product name:
+          {t("ProductName")}:
         </label>
         <input
           name="name"
-          placeholder="Product name"
+          placeholder={t("ProductName")}
           className="border p-2 rounded"
           autoComplete="on"
         />
         <label id="expiration" className="text-lg font-semibold">
-          Expiration date (in days):
+          {t("Expiration")}:
         </label>
         <input
           name="expiration"
@@ -103,7 +106,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
           min="1"
         />
         <label id="location" className="text-lg font-semibold">
-          Location:
+          {t("Location")}:
         </label>
         <select name="location" className="border p-2 rounded">
           {locations.map((location, idx) => (
@@ -118,13 +121,13 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
             onClick={closeModal}
             className="px-4 py-2 bg-gray-200 border border-gray-300 rounded"
           >
-            Cancel
+            {t("Cancel")}
           </button>
           <button
             type="submit"
             className="px-4 py-2 bg-green-700 text-white rounded"
           >
-            Submit
+            {t("Submit")}
           </button>
         </div>
       </Form>
