@@ -20,7 +20,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
     mutationFn: addItem,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items", "infinite"] });
-      toast.success("Item added successfully!", {
+      toast.success(t("ItemAddedSuccessfully"), {
         position: "top-right",
         autoClose: 5000,
         closeOnClick: true,
@@ -29,7 +29,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
       });
     },
     onError: (error) => {
-      toast.error("An error occurred while adding the item. Please try again.");
+      toast.error(t("ErrorAddingItem"));
       console.error("Error adding item:", error);
     },
   });

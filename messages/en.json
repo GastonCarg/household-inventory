@@ -6,7 +6,10 @@
     "TotalItems": "Total items",
     "Expired": "Expired",
     "ExpiringSoon": "Expiring soon",
-    "Filter": "Filter"
+    "Filter": "Filter",
+    "NoItemsFound": "No items found",
+    "ErrorFetchingItems": "Error fetching items: ",
+    "ErrorFetchingItemsDetails": "An error occurred while fetching the items. Please try again later."
   },
   "Header": {
     "AddItem": "Add item",
@@ -23,7 +26,9 @@
     "Cancel": "Cancel",
     "Submit": "Submit",
     "Refrigerator": "Refrigerator",
-    "Freezer": "Freezer"
+    "Freezer": "Freezer",
+    "ItemAddedSuccessfully": "Item added successfully!",
+    "ErrorAddingItem": "An error occurred while adding the item. Please try again."
   },
   "GenericCard": {
     "DaysLeft": "days left",

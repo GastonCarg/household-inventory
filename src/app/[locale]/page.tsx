@@ -1,11 +1,12 @@
 "use client";
 
-import Header from "../(header)/header";
-import ItemsList from "../items/page";
-
+import Loader from "@/components/Loader";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { ToastContainer } from "react-toastify";
+import Header from "../(header)/header";
+
+const ItemsList = lazy(() => import("../items/page"));
 
 const Home = () => {
   const [queryClient] = useState(() => {
@@ -16,7 +17,9 @@ const Home = () => {
     <QueryClientProvider client={queryClient}>
       <Header />
       <div className="grid gap-4 p-4">
-        <ItemsList />
+        <Suspense fallback={<Loader />}>
+          <ItemsList />
+        </Suspense>
       </div>
       <ToastContainer />
     </QueryClientProvider>

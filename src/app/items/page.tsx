@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import React, { Suspense, useContext, useState } from "react";
 
 import { getAllItems } from "@/api/items";
-import { GenericCard, GenericTabs } from "@/components";
+import { GenericCard, GenericTabs, Loader } from "@/components";
 import { useItems } from "@/hooks/useItems";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
@@ -64,17 +64,23 @@ const ItemsList: React.FC = () => {
     items = items.filter((item: Item) => item.location === buttonPressed);
   }
 
-  // TODO: implement loading component
   if (status === "pending" || isLoadingTotalItems) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
-  // TODO: implement error component
   if (error || errorTotalItems) {
-    const errorMessage = error
-      ? error.message
-      : errorTotalItems || "Unknown error";
-    toast.error("Error fetching items: " + errorMessage);
+    toast.error(t("ErrorFetchingItemsDetails"));
+  }
+
+  if (!items.length) {
+    return (
+      <div
+        className="flex items-center justify-center text-2xl font-bold"
+        style={{ height: "calc(100vh - 64px)" }}
+      >
+        {t("NoItemsFound")}
+      </div>
+    );
   }
 
   return (
@@ -118,7 +124,7 @@ const ItemsList: React.FC = () => {
         next={fetchNextPage}
         hasMore={hasNextPage || false}
         scrollThreshold={0.9}
-        loader={<h4>Loading more items...</h4>}
+        loader={<Loader hasMoreItems />}
       >
         <div className="grid grid-cols-3 gap-4 p-4">
           {items.map((item, index) => {

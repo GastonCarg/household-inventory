@@ -5,8 +5,11 @@
     "Freezer": "Congelador",
     "TotalItems": "Total de artículos",
     "Expired": "Vencido",
-    "ExpiringSoon": "Próximo vencimiento",
-    "Filter": "Filtrar"
+    "ExpiringSoon": "Próximo a vencer",
+    "Filter": "Filtrar",
+    "NoItemsFound": "No se encontraron artículos",
+    "ErrorFetchingItems": "Error al obtener los artículos: ",
+    "ErrorFetchingItemsDetails": "Ocurrió un error al obtener los artículos. Por favor, inténtalo de nuevo más tarde."
   },
   "Header": {
     "AddItem": "Agregar artículo",
