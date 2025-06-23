@@ -1,0 +1,37 @@
+{
+  "ItemsList": {
+    "All Items": "All items",
+    "Refrigerator": "Refrigerator",
+    "Freezer": "Freezer",
+    "TotalItems": "Total items",
+    "Expired": "Expired",
+    "ExpiringSoon": "Expiring soon",
+    "Filter": "Filter",
+    "NoItemsFound": "No items found",
+    "ErrorFetchingItems": "Error fetching items: ",
+    "ErrorFetchingItemsDetails": "An error occurred while fetching the items. Please try again later."
+  },
+  "Header": {
+    "AddItem": "Add item",
+    "HouseholdInventory": "Household Inventory"
+  },
+  "Search": {
+    "Search": "Search"
+  },
+  "AddItemModal": {
+    "ProductName": "Product name",
+    "Expiration": "Expiration date (in days)",
+    "Location": "Location",
+    "AddItem": "Add item",
+    "Cancel": "Cancel",
+    "Submit": "Submit",
+    "Refrigerator": "Refrigerator",
+    "Freezer": "Freezer",
+    "ItemAddedSuccessfully": "Item added successfully!",
+    "ErrorAddingItem": "An error occurred while adding the item. Please try again."
+  },
+  "GenericCard": {
+    "DaysLeft": "days left",
+    "Expired": "Expired"
+  }
+}

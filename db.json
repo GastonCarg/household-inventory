@@ -1,0 +1,12 @@
+{
+  "items": [],
+  "summary": {
+    "total": 13,
+    "expired": 11,
+    "expiringSoon": 1,
+    "locations": {
+      "Refrigerator": 6,
+      "Freezer": 3
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "ItemsList": {
+    "All Items": "Todos los artículos",
+    "Refrigerator": "Heladera",
+    "Freezer": "Congelador",
+    "TotalItems": "Total de artículos",
+    "Expired": "Vencido",
+    "ExpiringSoon": "Próximo a vencer",
+    "Filter": "Filtrar",
+    "NoItemsFound": "No se encontraron artículos",
+    "ErrorFetchingItems": "Error al obtener los artículos: ",
+    "ErrorFetchingItemsDetails": "Ocurrió un error al obtener los artículos. Por favor, inténtalo de nuevo más tarde."
+  },
+  "Header": {
+    "AddItem": "Agregar artículo",
+    "HouseholdInventory": "Inventario del hogar"
+  },
+  "Search": {
+    "Search": "Buscar"
+  },
+  "AddItemModal": {
+    "ProductName": "Nombre del artículo",
+    "Expiration": "Fecha de vencimiento (en días)",
+    "Location": "Ubicación",
+    "AddItem": "Agregar artículo",
+    "Cancel": "Cancelar",
+    "Submit": "Enviar",
+    "Refrigerator": "Heladera",
+    "Freezer": "Congelador"
+  },
+  "GenericCard": {
+    "DaysLeft": "días restantes",
+    "Expired": "Vencido"
+  }
+}
