@@ -26,7 +26,9 @@
     "Cancel": "Cancelar",
     "Submit": "Enviar",
     "Refrigerator": "Heladera",
-    "Freezer": "Congelador"
+    "Freezer": "Congelador",
+    "ItemAddedSuccessfully": "¡Artículo agregado exitosamente!",
+    "ErrorAddingItem": "Ocurrió un error al agregar el artículo. Por favor, inténtalo de nuevo."
   },
   "GenericCard": {
     "DaysLeft": "días restantes",
