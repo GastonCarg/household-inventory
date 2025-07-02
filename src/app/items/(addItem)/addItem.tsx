@@ -30,7 +30,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
     },
     onError: (error) => {
       toast.error(t("ErrorAddingItem"));
-      console.error("Error adding item:", error);
+      console.error(t("ErrorAddingItemLog"), error);
     },
   });
 
@@ -42,7 +42,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
       const location = formData.get("location")?.toString() || "";
 
       if (!name || !expiration || !location) {
-        toast.warning("Please fill in all fields.");
+        toast.warning(t("PleaseFillAllFields"));
         return;
       }
 
@@ -65,8 +65,8 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
 
       mutation.mutate(item);
     } catch (error) {
-      toast.error("An error occurred while adding the item. Please try again.");
-      console.error("Error adding item:", error);
+      toast.error(t("ErrorAddingItem"));
+      console.error(t("ErrorAddingItemLog"), error);
     } finally {
       setLoading(false);
     }
@@ -82,7 +82,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
 
   return (
     <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-md">
-      <Form action={handleSubmit} className="flex flex-col gap-4">
+      <Form data-testid="addItemForm" action={handleSubmit} className="flex flex-col gap-4">
         <section className="flex items-center justify-center">
           <h2 className="text-2xl font-bold">{t("AddItem")}</h2>
         </section>

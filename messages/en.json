@@ -28,7 +28,9 @@
     "Refrigerator": "Refrigerator",
     "Freezer": "Freezer",
     "ItemAddedSuccessfully": "Item added successfully!",
-    "ErrorAddingItem": "An error occurred while adding the item. Please try again."
+    "ErrorAddingItem": "An error occurred while adding the item. Please try again.",
+    "ErrorAddingItemLog": "Error adding item: ",
+    "PleaseFillAllFields": "Please fill in all fields."
   },
   "GenericCard": {
     "DaysLeft": "days left",

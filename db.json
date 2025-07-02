@@ -1,5 +1,12 @@
 {
-  "items": [],
+  "items": [
+    {
+      "id": "1564",
+      "title": "Manzana",
+      "expireDate": "2025-07-03T12:32:31.117Z",
+      "location": "Heladera"
+    }
+  ],
   "summary": {
     "total": 13,
     "expired": 11,

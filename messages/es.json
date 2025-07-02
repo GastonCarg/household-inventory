@@ -24,11 +24,13 @@
     "Location": "Ubicación",
     "AddItem": "Agregar artículo",
     "Cancel": "Cancelar",
-    "Submit": "Enviar",
+    "Submit": "Confirmar",
     "Refrigerator": "Heladera",
     "Freezer": "Congelador",
     "ItemAddedSuccessfully": "¡Artículo agregado exitosamente!",
-    "ErrorAddingItem": "Ocurrió un error al agregar el artículo. Por favor, inténtalo de nuevo."
+    "ErrorAddingItem": "Ocurrió un error al agregar el artículo. Por favor, inténtalo de nuevo.",
+    "ErrorAddingItemLog": "Error al agregar el artículo: ",
+    "PleaseFillAllFields": "Por favor, complete todos los campos."
   },
   "GenericCard": {
     "DaysLeft": "días restantes",
