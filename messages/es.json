@@ -1,6 +1,6 @@
 {
   "ItemsList": {
-    "All Items": "Todos los artículos",
+    "AllItems": "Todos los artículos",
     "Refrigerator": "Heladera",
     "Freezer": "Congelador",
     "TotalItems": "Total de artículos",
@@ -9,7 +9,12 @@
     "Filter": "Filtrar",
     "NoItemsFound": "No se encontraron artículos",
     "ErrorFetchingItems": "Error al obtener los artículos: ",
-    "ErrorFetchingItemsDetails": "Ocurrió un error al obtener los artículos. Por favor, inténtalo de nuevo más tarde."
+    "ErrorFetchingItemsDetails": "Ocurrió un error al obtener los artículos. Por favor, inténtalo de nuevo más tarde.",
+    "ErrorLoadingData": "Tenemos un error al cargar los datos, inténtelo nuevamente más tarde",
+    "ItemDeletedSuccessfully": "¡Artículo borrado exitosamente!",
+    "ErrorDeletingItemLog": "Error al borrar el artículo: ",
+    "ErrorDeletingItem": "Ocurrió un error al borrar el artículo. Por favor, inténtalo de nuevo.",
+    "DeletingItem": "Deleting Item..."
   },
   "Header": {
     "AddItem": "Agregar artículo",
@@ -20,13 +25,20 @@
   },
   "AddItemModal": {
     "ProductName": "Nombre del artículo",
+    "Quantity": "Cantidad",
     "Expiration": "Fecha de vencimiento (en días)",
     "Location": "Ubicación",
     "AddItem": "Agregar artículo",
     "Cancel": "Cancelar",
-    "Submit": "Enviar",
+    "Submit": "Confirmar",
     "Refrigerator": "Heladera",
-    "Freezer": "Congelador"
+    "Freezer": "Congelador",
+    "ItemAddedSuccessfully": "¡Artículo agregado exitosamente!",
+    "ErrorAddingItem": "Ocurrió un error al agregar el artículo. Por favor, inténtalo de nuevo.",
+    "ErrorAddingItemLog": "Error al agregar el artículo: ",
+    "PleaseFillAllFields": "Por favor, complete todos los campos.",
+    "Close": "Cerrar",
+    "Error": "Error"
   },
   "GenericCard": {
     "DaysLeft": "días restantes",

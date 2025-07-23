@@ -84,4 +84,27 @@ export const getItemsSummary = async (): Promise<ItemSummaryResponse> => {
   }
 };
 
+export const deleteItem = async (id: string): Promise<void> => {
+  try {
+    await delay();
+
+    // TODO: May be just must change a flag
+    const response = await fetch(`${ITEMS_URL}/items/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch item summary");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const delay = (ms = 1000) => new Promise((res) => setTimeout(res, ms));
