@@ -8,11 +8,15 @@ export interface IGenericTabs extends Props {
 }
 
 export interface IGenericCardProps {
+  id?: string;
   title: string;
   count?: string;
   expireDate?: string;
   newProduct?: boolean;
   location?: string;
+  quantity?: number;
+  isDeletable?: boolean;
+  onDelete?: (id: string) => void;
 }
 
 type Props = {

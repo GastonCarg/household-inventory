@@ -24,7 +24,6 @@ const SearchComponent: React.FC = () => {
 
   const getResults = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      // TODO: apply search
       setIsInputVisible(false);
     }
   };

@@ -1,3 +1,4 @@
+import { Calendar, Clock, MapPin, Package, Trash2 } from "lucide-react";
 import React from "react";
 
 import {
@@ -10,11 +11,15 @@ import { IGenericCardProps } from "@/lib/types";
 import { useTranslations } from "next-intl";
 
 const GenericCard: React.FC<IGenericCardProps> = ({
+  id,
   title,
   count,
   expireDate,
   newProduct,
   location,
+  quantity,
+  isDeletable = false,
+  onDelete,
 }) => {
   let color = "black";
   let textDaysLeft = "";
@@ -49,10 +54,15 @@ const GenericCard: React.FC<IGenericCardProps> = ({
     ? COLOR_TEXT_MAP[color] || "text-black"
     : "text-black";
 
+  const handleDelete = (id: string) => {
+    if (onDelete) onDelete(id);
+  };
+
   if (newProduct) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-gray-500 bg-gray-300 p-4 shadow-md">
-        <label id="title" className="text-gray-500">
+      <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-400 bg-gray-50 p-6 shadow-sm hover:border-gray-500 transition-colors">
+        <Package size={32} className="text-gray-400 mb-2" />
+        <label id="title" className="text-gray-500 font-medium text-center">
           {title}
         </label>
       </div>
@@ -61,24 +71,63 @@ const GenericCard: React.FC<IGenericCardProps> = ({
 
   return (
     <div
-      className={`flex min-h-24 flex-col justify-between rounded-md border border-gray-300 bg-white p-4 shadow-md ${expireDate && COLOR_BORDER_MAP[color || "black"]}`}
+      className={`flex min-h-28 flex-col justify-between rounded-lg border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-all duration-200 ${expireDate && COLOR_BORDER_MAP[color || "black"]}`}
     >
-      <section className="flex column w-full items-center">
-        <h2 className="text-md">{title}</h2>
+      <div className="flex items-start justify-between mb-3">
+        <h2 className="text-lg font-semibold text-gray-800 flex-1 pr-2">
+          {title}
+        </h2>
         {textDaysLeft && (
           <span
-            className={`flex items-center justify-center text-xs px-2 py-1 rounded-3xl ml-auto ${COLOR_BACKGROUND_MAP[color || "transparent"]} ${COLOR_TEXT_MAP[color || "black"]}`}
+            className={`flex items-center gap-1 text-xs px-3 py-1.5 rounded-full font-medium ${COLOR_BACKGROUND_MAP[color || "transparent"]} ${COLOR_TEXT_MAP[color || "black"]}`}
           >
+            <Clock size={12} />
             {textDaysLeft}
           </span>
         )}
-      </section>
-      {count && <p className={`font-bold text-3xl ${colorClass}`}>{count}</p>}
-      {expireDate && (
-        <p className="font-bold text-sm">Expires: {formatDate(expireDate)}</p>
-      )}
-      {location && (
-        <p className="text-xs text-gray-500">Location: {location}</p>
+      </div>
+
+      <div className="flex-1">
+        {count && (
+          <p className={`font-bold text-3xl mb-2 ${colorClass}`}>{count}</p>
+        )}
+
+        <div className="space-y-2">
+          {expireDate && (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Calendar size={14} className="text-gray-500" />
+              <span>Expires: {formatDate(expireDate)}</span>
+            </div>
+          )}
+
+          {quantity && (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Package size={14} className="text-gray-500" />
+              <span>Quantity: {quantity}</span>
+            </div>
+          )}
+
+          {location && (
+            <div className="flex justify-between">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <MapPin size={14} className="text-gray-500" />
+                <span>{location}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      {isDeletable && (
+        <div className="flex justify-end">
+          <button
+            onClick={() => handleDelete(id!)}
+            className="p-1 text-gray-400 hover:text-red-500 transition-colors duration-200"
+            aria-label="Delete item"
+            title="Delete item"
+          >
+            <Trash2 size={20} />
+          </button>
+        </div>
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 {
   "ItemsList": {
-    "All Items": "All items",
+    "AllItems": "All Items",
     "Refrigerator": "Refrigerator",
     "Freezer": "Freezer",
     "TotalItems": "Total items",
@@ -9,7 +9,12 @@
     "Filter": "Filter",
     "NoItemsFound": "No items found",
     "ErrorFetchingItems": "Error fetching items: ",
-    "ErrorFetchingItemsDetails": "An error occurred while fetching the items. Please try again later."
+    "ErrorFetchingItemsDetails": "An error occurred while fetching the items. Please try again later.",
+    "ErrorLoadingData": "We have an error loading the data, please try again later",
+    "ItemDeletedSuccessfully": "Item deleted successfully!",
+    "ErrorDeletingItem": "An error occurred while deleting the item. Please try again.",
+    "ErrorDeletingItemLog": "Error deleting item: ",
+    "DeletingItem": "Borrando Item..."
   },
   "Header": {
     "AddItem": "Add item",
@@ -20,6 +25,7 @@
   },
   "AddItemModal": {
     "ProductName": "Product name",
+    "Quantity": "Quantity",
     "Expiration": "Expiration date (in days)",
     "Location": "Location",
     "AddItem": "Add item",
@@ -30,7 +36,9 @@
     "ItemAddedSuccessfully": "Item added successfully!",
     "ErrorAddingItem": "An error occurred while adding the item. Please try again.",
     "ErrorAddingItemLog": "Error adding item: ",
-    "PleaseFillAllFields": "Please fill in all fields."
+    "PleaseFillAllFields": "Please fill in all fields.",
+    "Close": "Close",
+    "Error": "Error"
   },
   "GenericCard": {
     "DaysLeft": "days left",
