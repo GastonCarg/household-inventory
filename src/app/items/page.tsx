@@ -1,87 +1,48 @@
 "use client";
 
 import SearchContext from "@/(contexts)/searchContext/page";
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import {
-  AlertCircle,
-  ListFilter,
-  Loader2,
-  Refrigerator,
-  Snowflake,
-} from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React, { useContext, useState } from "react";
 
-import { deleteItem, getAllItems } from "@/api/items";
 import { GenericCard, GenericTabs, Loader } from "@/components";
-import { useItems } from "@/hooks/useItems";
+import { useDeleteItem, useGetItems, useItemsSummary } from "@/hooks/useItems";
+import { useGetLocations } from "@/hooks/useLocations";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
+import { ILocations } from "./(addItem)/type";
 import { Item } from "./type";
 
 const ItemsList: React.FC = () => {
   const t = useTranslations("ItemsList");
   const [buttonPressed, setButtonPressed] = useState(t("AllItems"));
   const { searchValue } = useContext(SearchContext);
-  const { totalItems, isLoadingTotalItems, errorTotalItems } = useItems();
-  const { total, expired, expiringSoon } = totalItems;
-
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: deleteItem,
-    onSuccess: (_data, id) => {
-      queryClient.setQueryData(["items", "infinite"], (old: any) => ({
-        ...old,
-        pages: old.pages.map((page: any) => ({
-          ...page,
-          data: page.data.filter((item: Item) => item.id !== id),
-        })),
-      }));
-
-      queryClient.invalidateQueries({ queryKey: ["items", "infinite"] });
-
-      toast.success(t("ItemDeletedSuccessfully"));
-    },
-    onError: (error) => {
-      toast.error(t("ErrorDeletingItem"));
-      console.error(t("ErrorDeletingItemLog"), error);
-    },
-  });
-
-  const buttonList = [
-    {
-      title: t("AllItems"),
-      action: (value: string) => setButtonPressed(value),
-      icon: <ListFilter className="mr-2" />,
-    },
-    {
-      title: t("Refrigerator"),
-      action: (value: string) => setButtonPressed(value),
-      icon: <Refrigerator className="mr-2" />,
-    },
-    {
-      title: t("Freezer"),
-      action: (value: string) => setButtonPressed(value),
-      icon: <Snowflake className="mr-2" />,
-    },
-  ];
 
   const { data, error, fetchNextPage, status, hasNextPage } =
-    useInfiniteQuery<any>({
-      queryKey: ["items", "infinite"],
-      queryFn: ({ pageParam = 1 }) =>
-        getAllItems({
-          page: Number(pageParam),
-          searchValue: searchValue || "",
-        }),
-      initialPageParam: 1,
-      getNextPageParam: (nextPage) => nextPage.next ?? undefined,
-    });
+    useGetItems(searchValue);
+  const { data: dataSummary, status: statusSummary } = useItemsSummary();
+  const total = dataSummary?.total ?? 0;
+  const expired = dataSummary?.expired ?? 0;
+  const expiringSoon = dataSummary?.expiringSoon ?? 0;
+
+  const {
+    data: locations,
+    error: errorLocations,
+    status: statusLocations,
+  } = useGetLocations();
+  const mutation = useDeleteItem();
+
+  const removeItem = (id: string) => {
+    mutation.mutate(id);
+  };
+
+  let buttonList = [
+    {
+      id: 0,
+      title: t("AllItems"),
+      action: (value: string) => setButtonPressed(value),
+    },
+  ];
 
   let items = data?.pages.flatMap(({ data }) => data) || [];
 
@@ -95,17 +56,28 @@ const ItemsList: React.FC = () => {
     items = items.filter((item: Item) => item.location === buttonPressed);
   }
 
-  if (status === "pending" || isLoadingTotalItems) {
+  if (
+    status === "pending" ||
+    statusSummary === "pending" ||
+    statusLocations === "pending"
+  ) {
     return <Loader />;
   }
 
-  if (error || errorTotalItems) {
+  if (error || errorLocations) {
     toast.error(t("ErrorFetchingItemsDetails"));
   }
 
-  const removeItem = (id: string) => {
-    mutation.mutate(id);
-  };
+  if (locations) {
+    buttonList = [
+      ...buttonList,
+      ...locations.map((location: ILocations) => ({
+        id: location.id,
+        title: location.name,
+        action: (value: string) => setButtonPressed(value),
+      })),
+    ];
+  }
 
   return (
     <>
@@ -128,16 +100,14 @@ const ItemsList: React.FC = () => {
       )}
       <section className="flex column gap-4 w-full border-b border-gray-300 pt-8">
         {buttonList.map((button, idx) => {
-          const { title, action, icon } = button;
+          const { title, action } = button;
           return (
             <GenericTabs
               key={idx}
               title={title}
-              action={() => action(title)}
+              action={(id) => action(id)}
               buttonPressed={buttonPressed}
-            >
-              {icon}
-            </GenericTabs>
+            ></GenericTabs>
           );
         })}
         {/* <button
