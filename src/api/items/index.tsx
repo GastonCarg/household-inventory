@@ -1,5 +1,4 @@
 import { Item, ItemSummaryResponse } from "@/app/items/type";
-import { ITEMS_URL } from "../../(constants)";
 
 export const getAllItems = async ({
   page,
@@ -9,23 +8,15 @@ export const getAllItems = async ({
   searchValue?: string | undefined;
 }): Promise<Item[]> => {
   try {
-    // delay to simulate network latency
-    await delay();
-
     const queryParams = new URLSearchParams();
-    if (page) queryParams.append("_page", page.toString());
+    if (page) queryParams.append("page", page.toString());
     if (searchValue) queryParams.append("q", searchValue);
 
-    let url = "";
-    if (process.env.NODE_ENV === "development") {
-      url = `${ITEMS_URL}/items?${queryParams.toString()}`;
-    } else {
-      url = ITEMS_URL;
-    }
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/products?${queryParams.toString()}`;
 
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error("Failed to fetch items");
+      throw new Error("Failed to fetch products");
     }
 
     const data = await response.json();
@@ -45,10 +36,8 @@ export const getAllItems = async ({
 
 export const addItem = async (item: Item): Promise<Item> => {
   try {
-    // delay to simulate network latency
-    await delay();
 
-    const response = await fetch(`${ITEMS_URL}/items`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -69,10 +58,8 @@ export const addItem = async (item: Item): Promise<Item> => {
 
 export const getItemsSummary = async (): Promise<ItemSummaryResponse> => {
   try {
-    // delay to simulate network latency
-    await delay();
 
-    const response = await fetch(`${ITEMS_URL}/summary`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/summary`);
     if (!response.ok) {
       throw new Error("Failed to fetch item summary");
     }
@@ -86,15 +73,15 @@ export const getItemsSummary = async (): Promise<ItemSummaryResponse> => {
 
 export const deleteItem = async (id: string): Promise<void> => {
   try {
-    await delay();
-
-    // TODO: May be just must change a flag
-    const response = await fetch(`${ITEMS_URL}/items/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch item summary");
@@ -106,5 +93,3 @@ export const deleteItem = async (id: string): Promise<void> => {
     throw error;
   }
 };
-
-const delay = (ms = 1000) => new Promise((res) => setTimeout(res, ms));

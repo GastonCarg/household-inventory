@@ -41,9 +41,9 @@ const GenericCard: React.FC<IGenericCardProps> = ({
 
   if (count) {
     const lowerTitle = title.toLowerCase();
-    if (lowerTitle.includes("expired")) {
+    if (lowerTitle.includes("expired") || lowerTitle.includes("vencido")) {
       color = "red";
-    } else if (lowerTitle.includes("soon")) {
+    } else if (lowerTitle.includes("soon") || lowerTitle.includes("vencer")) {
       color = "orange";
     } else {
       color = "black";
@@ -111,7 +111,7 @@ const GenericCard: React.FC<IGenericCardProps> = ({
             <div className="flex justify-between">
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <MapPin size={14} className="text-gray-500" />
-                <span>{location}</span>
+                <span>{location.name}</span>
               </div>
             </div>
           )}

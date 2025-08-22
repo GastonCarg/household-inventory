@@ -1,37 +1,19 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAddItem } from "@/hooks/useItems";
+
 import { Check, Loader2, Plus, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Form from "next/form";
 import { toast } from "react-toastify";
 
-import { addItem } from "@/api/items";
+import { useGetLocations } from "@/hooks/useLocations";
 import { Item } from "../type";
-import { IAddItemModal } from "./type";
+import { IAddItemModal, ILocations } from "./type";
 
 const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
-  const queryClient = useQueryClient();
   const t = useTranslations("AddItemModal");
 
-  const locations = [t("Refrigerator"), t("Freezer")];
-
-  const mutation = useMutation({
-    mutationFn: addItem,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["items", "infinite"] });
-      toast.success(t("ItemAddedSuccessfully"), {
-        position: "top-right",
-        autoClose: 5000,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-      closeModal();
-    },
-    onError: (error) => {
-      toast.error(t("ErrorAddingItem"));
-      console.error(t("ErrorAddingItemLog"), error);
-    },
-  });
+  const { data: locations, status, error } = useGetLocations();
+  const mutation = useAddItem(closeModal);
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -78,6 +60,14 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
         <Loader2 size={48} className="animate-spin text-green-700" />
       </div>
     );
+  }
+
+  if (status === "pending") {
+    return <div>Cargando locations</div>;
+  }
+
+  if (error || !locations.length) {
+    return <div>Error al cargar locations</div>;
   }
 
   return (
@@ -170,9 +160,9 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
               className="border border-gray-300 p-3 rounded-lg text-lg focus:ring-2 focus:ring-green-500 outline-none transition-all"
               disabled={mutation.isPending}
             >
-              {locations.map((location, idx) => (
-                <option key={idx} value={location}>
-                  {location}
+              {locations.map((location: ILocations) => (
+                <option key={location.id} value={location.id}>
+                  {location.name}
                 </option>
               ))}
             </select>

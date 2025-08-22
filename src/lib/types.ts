@@ -13,10 +13,16 @@ export interface IGenericCardProps {
   count?: string;
   expireDate?: string;
   newProduct?: boolean;
-  location?: string;
+  location?: Location;
   quantity?: number;
   isDeletable?: boolean;
   onDelete?: (id: string) => void;
+}
+
+export interface Location {
+  id: string;
+  name: string;
+  deletedAt?: string | null;
 }
 
 type Props = {
