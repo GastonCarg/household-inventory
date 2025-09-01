@@ -1,4 +1,4 @@
-import { Item, ItemSummaryResponse } from "@/app/items/type";
+import { Item, ItemSummaryResponse } from "@/app/[locale]/items/type";
 
 export const getAllItems = async ({
   page,

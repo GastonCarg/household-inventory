@@ -3,7 +3,7 @@
 import SearchContext from "@/(contexts)/searchContext/page";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { GenericCard, GenericTabs, Loader } from "@/components";
 import { useDeleteItem, useGetItems, useItemsSummary } from "@/hooks/useItems";
@@ -31,6 +31,13 @@ const ItemsList: React.FC = () => {
     status: statusLocations,
   } = useGetLocations();
   const mutation = useDeleteItem();
+
+  useEffect(() => {
+    if (error || errorLocations) {
+      toast.error(t("ErrorFetchingItemsDetails"));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, errorLocations]);
 
   const removeItem = (id: string) => {
     mutation.mutate(id);
@@ -62,10 +69,6 @@ const ItemsList: React.FC = () => {
     statusLocations === "pending"
   ) {
     return <Loader />;
-  }
-
-  if (error || errorLocations) {
-    toast.error(t("ErrorFetchingItemsDetails"));
   }
 
   if (locations) {

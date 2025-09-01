@@ -7,7 +7,7 @@ import { lazy, useState } from "react";
 // TODO: add import alias
 import SearchComponent from "../(search)/searchComponent";
 
-const ItemModal = lazy(() => import("../items/(addItem)/addItem"));
+const ItemModal = lazy(() => import("../[locale]/items/(addItem)/addItem"));
 
 const Header = () => {
   const [addItemModal, setAddItemModal] = useState(false);

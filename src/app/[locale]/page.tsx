@@ -6,7 +6,7 @@ import { lazy, Suspense, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import Header from "../(header)/header";
 
-const ItemsList = lazy(() => import("../items/page"));
+const ItemsList = lazy(() => import("./items/page"));
 
 const Home = () => {
   const [queryClient] = useState(() => {

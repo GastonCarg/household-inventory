@@ -1,5 +1,5 @@
 import { addItem, deleteItem, getAllItems, getItemsSummary } from "@/api/items";
-import { Item } from "@/app/items/type";
+import { Item } from "@/app/[locale]/items/type";
 import {
   useInfiniteQuery,
   useMutation,
