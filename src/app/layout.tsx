@@ -3,7 +3,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 
 import { SearchContextProvider } from "@/(contexts)/searchContext/page";
-import "../globals.css";
+import "@/app/globals.css";
 
 export default async function LocaleLayout({
   children,

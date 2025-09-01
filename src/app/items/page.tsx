@@ -48,7 +48,7 @@ const ItemsList: React.FC = () => {
 
   if (searchValue) {
     items = items.filter((item: Item) =>
-      item.title.toLowerCase().includes(searchValue.toLowerCase())
+      item.title.toLowerCase().includes(searchValue.toLowerCase()),
     );
   }
 

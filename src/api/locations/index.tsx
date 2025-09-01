@@ -1,8 +1,8 @@
-
-
 export const getLocations = async () => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/locations`)
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/locations`,
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch locations");
     }
@@ -11,4 +11,4 @@ export const getLocations = async () => {
   } catch (error) {
     throw error;
   }
-}
+};

@@ -1,4 +1,4 @@
-export const ITEMS_URL = 'http://localhost:3001';
+export const ITEMS_URL = "http://localhost:3001";
 
 export const COLOR_TEXT_MAP: Record<string, string> = {
   black: "text-black-500",

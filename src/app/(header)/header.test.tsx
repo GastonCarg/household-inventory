@@ -35,7 +35,7 @@ const renderWithQueryClient = (component: React.ReactElement) => {
   });
 
   return render(
-    <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>,
   );
 };
 

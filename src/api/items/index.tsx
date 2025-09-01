@@ -23,7 +23,7 @@ export const getAllItems = async ({
 
     if (searchValue) {
       const filtered = data.filter((item: Item) =>
-        item.title.toLowerCase().includes(searchValue.toLowerCase())
+        item.title.toLowerCase().includes(searchValue.toLowerCase()),
       );
 
       return filtered;
@@ -36,14 +36,16 @@ export const getAllItems = async ({
 
 export const addItem = async (item: Item): Promise<Item> => {
   try {
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/products`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(item),
       },
-      body: JSON.stringify(item),
-    });
+    );
 
     if (!response.ok) {
       throw new Error("Failed to add item");
@@ -58,8 +60,9 @@ export const addItem = async (item: Item): Promise<Item> => {
 
 export const getItemsSummary = async (): Promise<ItemSummaryResponse> => {
   try {
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/summary`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/products/summary`,
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch item summary");
     }
@@ -80,7 +83,7 @@ export const deleteItem = async (id: string): Promise<void> => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (!response.ok) {

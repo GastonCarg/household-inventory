@@ -18,7 +18,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
   const handleSubmit = async (formData: FormData) => {
     try {
       const name = formData.get("name")?.toString() || "";
-      let expiration = formData.get("expiration")?.toString() || "";
+      const expiration = formData.get("expiration")?.toString() || "";
       const location = formData.get("location")?.toString() || "";
       const quantityStr = formData.get("quantity")?.toString() || "";
       const quantity = parseInt(quantityStr, 10);

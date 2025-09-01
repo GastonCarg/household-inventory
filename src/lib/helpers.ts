@@ -1,10 +1,10 @@
 export const formatDate = (date: string | Date, lang?: string): string => {
   const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
   };
-  return new Date(date).toLocaleDateString(lang || 'es-AR', options);
+  return new Date(date).toLocaleDateString(lang || "es-AR", options);
 };
 
 export const getExpirationDaysLeft = (expireDate: string | Date): number => {

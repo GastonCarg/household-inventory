@@ -2,9 +2,12 @@
 
 import React, { createContext, useState } from "react";
 
-const SearchContext = createContext({
+const SearchContext = createContext<{
+  searchValue: string;
+  handleSetSearchValue: (value: string) => void;
+}>({
   searchValue: "",
-  handleSetSearchValue: (value: string) => {},
+  handleSetSearchValue: () => {},
 });
 
 export const SearchContextProvider = ({

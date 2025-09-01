@@ -8,10 +8,16 @@ export interface Item {
   quantity: number;
 }
 
-export interface ItemFormValues extends Item { }
+export type ItemFormValues = Item;
 
 export interface ItemSummaryResponse {
   total: number;
   expired: number;
   expiringSoon: number;
+}
+
+export interface ItemsResponse {
+  data: Item[];
+  page: number;
+  lastPage: number;
 }
