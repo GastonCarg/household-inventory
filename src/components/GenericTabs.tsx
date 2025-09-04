@@ -11,11 +11,11 @@ const GenericTabs: React.FC<IGenericTabs> = ({
   return (
     <button
       id={title}
-      className={`flex items-center justify-center min-w-30 p-4 border-b-2 ${buttonPressed === title ? "border-green-500 text-green-600" : "border-transparent text-gray-500"} ${isFilter && "ml-auto"}`}
+      className={`flex items-center justify-center min-w-fit px-4 py-3 sm:py-4 border-b-2 whitespace-nowrap ${buttonPressed === title ? "border-green-500 text-green-600" : "border-transparent text-gray-500"} ${isFilter && "ml-auto"} transition-colors hover:bg-gray-50 active:bg-gray-100`}
       onClick={() => action(title)}
     >
       {children}
-      <span>{title}</span>
+      <span className="text-sm sm:text-base">{title}</span>
     </button>
   );
 };

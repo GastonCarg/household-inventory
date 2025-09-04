@@ -85,7 +85,7 @@ const ItemsList: React.FC = () => {
   return (
     <>
       {total > 0 ? (
-        <div className="grid grid-cols-3 gap-4 p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
           <GenericCard title={t("TotalItems")} count={total.toString()} />
           <GenericCard
             title={t("ExpiringSoon")}
@@ -101,18 +101,20 @@ const ItemsList: React.FC = () => {
           </div>
         </div>
       )}
-      <section className="flex column gap-4 w-full border-b border-gray-300 pt-8">
-        {buttonList.map((button, idx) => {
-          const { title, action } = button;
-          return (
-            <GenericTabs
-              key={idx}
-              title={title}
-              action={(id) => action(id)}
-              buttonPressed={buttonPressed}
-            ></GenericTabs>
-          );
-        })}
+      <section className="flex flex-col gap-4 w-full border-b border-gray-300 pt-8">
+        <div className="flex overflow-x-auto scrollbar-hide pb-2 gap-1">
+          {buttonList.map((button, idx) => {
+            const { title, action } = button;
+            return (
+              <GenericTabs
+                key={idx}
+                title={title}
+                action={(id) => action(id)}
+                buttonPressed={buttonPressed}
+              ></GenericTabs>
+            );
+          })}
+        </div>
         {/* <button
           id="Filter"
           className="flex items-center justify-center min-w-30 p-4 ml-auto text-gray-500 active:bg-gray-300"
@@ -136,7 +138,7 @@ const ItemsList: React.FC = () => {
           scrollThreshold={0.9}
           loader={<Loader hasMoreItems />}
         >
-          <div className="grid grid-cols-3 gap-4 p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
             {items.map((item, index) => {
               const { title, expireDate, quantity, location, id } = item;
               return (

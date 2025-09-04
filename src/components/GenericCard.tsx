@@ -23,10 +23,11 @@ const GenericCard: React.FC<IGenericCardProps> = ({
 }) => {
   let color = "black";
   let textDaysLeft = "";
+  let daysLeft = 0;
   const t = useTranslations("GenericCard");
 
   if (expireDate) {
-    const daysLeft = getExpirationDaysLeft(expireDate);
+    daysLeft = getExpirationDaysLeft(expireDate);
 
     textDaysLeft = `${daysLeft} ${t("DaysLeft")}`;
     if (daysLeft <= 0) {
@@ -71,57 +72,64 @@ const GenericCard: React.FC<IGenericCardProps> = ({
 
   return (
     <div
-      className={`flex min-h-28 flex-col justify-between rounded-lg border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-all duration-200 ${expireDate && COLOR_BORDER_MAP[color || "black"]}`}
+      className={`flex min-h-28 flex-col justify-between rounded-lg border border-gray-200 bg-white p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 ${expireDate && COLOR_BORDER_MAP[color || "black"]}`}
     >
       <div className="flex items-start justify-between mb-3">
-        <h2 className="text-lg font-semibold text-gray-800 flex-1 pr-2">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-800 flex-1 pr-2">
           {title}
         </h2>
         {textDaysLeft && (
           <span
-            className={`flex items-center gap-1 text-xs px-3 py-1.5 rounded-full font-medium ${COLOR_BACKGROUND_MAP[color || "transparent"]} ${COLOR_TEXT_MAP[color || "black"]}`}
+            className={`flex items-center gap-1 text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-full font-medium ${COLOR_BACKGROUND_MAP[color || "transparent"]} ${COLOR_TEXT_MAP[color || "black"]}`}
           >
             <Clock size={12} />
-            {textDaysLeft}
+            <span className="hidden sm:inline">{textDaysLeft}</span>
+            <span className="sm:hidden">
+              {daysLeft <= 0 ? t("Expired") : `${daysLeft}d`}
+            </span>
           </span>
         )}
       </div>
 
       <div className="flex-1">
         {count && (
-          <p className={`font-bold text-3xl mb-2 ${colorClass}`}>{count}</p>
+          <p className={`font-bold text-2xl sm:text-3xl mb-2 ${colorClass}`}>
+            {count}
+          </p>
         )}
 
         <div className="space-y-2">
           {expireDate && (
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Calendar size={14} className="text-gray-500" />
-              <span>Expires: {formatDate(expireDate)}</span>
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+              <Calendar size={14} className="text-gray-500 shrink-0" />
+              <span className="truncate">
+                Expires: {formatDate(expireDate)}
+              </span>
             </div>
           )}
 
           {quantity && (
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Package size={14} className="text-gray-500" />
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+              <Package size={14} className="text-gray-500 shrink-0" />
               <span>Quantity: {quantity}</span>
             </div>
           )}
 
           {location && (
             <div className="flex justify-between">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <MapPin size={14} className="text-gray-500" />
-                <span>{location.name}</span>
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                <MapPin size={14} className="text-gray-500 shrink-0" />
+                <span className="truncate">{location.name}</span>
               </div>
             </div>
           )}
         </div>
       </div>
       {isDeletable && (
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-2">
           <button
             onClick={() => handleDelete(id!)}
-            className="p-1 text-gray-400 hover:text-red-500 transition-colors duration-200"
+            className="p-2 text-gray-400 hover:text-red-500 transition-colors duration-200 min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label="Delete item"
             title="Delete item"
           >
