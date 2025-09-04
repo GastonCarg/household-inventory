@@ -8,7 +8,18 @@ const Loader: React.FC<{ hasMoreItems?: boolean }> = ({ hasMoreItems }) => {
         !hasMoreItems ? { height: "calc(100vh - 64px)" } : { height: "48px" }
       }
     >
-      <Loader2 className="animate-spin" size={!hasMoreItems ? 70 : 30} />
+      <Loader2
+        className="animate-spin text-green-700"
+        size={!hasMoreItems ? 48 : 24}
+        style={{
+          width: !hasMoreItems
+            ? "clamp(32px, 8vw, 70px)"
+            : "clamp(20px, 6vw, 30px)",
+          height: !hasMoreItems
+            ? "clamp(32px, 8vw, 70px)"
+            : "clamp(20px, 6vw, 30px)",
+        }}
+      />
     </div>
   );
 };

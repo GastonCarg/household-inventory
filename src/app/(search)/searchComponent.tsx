@@ -19,7 +19,7 @@ const SearchComponent: React.FC = () => {
 
   const handleClickSearch = () => {
     setIsInputVisible(true);
-    setTimeout(() => searchInputRef.current?.focus(), 500);
+    setTimeout(() => searchInputRef.current?.focus(), 300);
   };
 
   const getResults = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -38,14 +38,14 @@ const SearchComponent: React.FC = () => {
   }, [inputValue]);
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 w-full sm:w-auto">
       {!isInputVisible && (
         <button
           onClick={handleClickSearch}
-          className="rounded-md bg-gray-400 border-none p-2 text-white flex items-center hover:bg-gray-600 max-h-10"
+          className="rounded-md bg-gray-400 border-none p-3 text-white flex items-center justify-center gap-2 hover:bg-gray-600 max-h-10 w-full sm:w-auto sm:min-w-0 transition-colors"
         >
-          <Search />
-          <span className="text-white p-2">{t("Search")}</span>
+          <Search className="h-5 w-5" />
+          <span className="text-white text-sm sm:text-base">{t("Search")}</span>
         </button>
       )}
 
@@ -54,7 +54,7 @@ const SearchComponent: React.FC = () => {
           type="search"
           ref={searchInputRef}
           placeholder={`${t("Search")}...`}
-          className="rounded-md bg-gray-200 p-2 focus:ring-2 focus:ring-gray-500 focus:outline-none transition-all"
+          className="rounded-md bg-gray-200 p-3 focus:ring-2 focus:ring-gray-500 focus:outline-none transition-all w-full max-h-10 text-base"
           value={inputValue}
           onChange={handleInputValue}
           onKeyUp={getResults}
