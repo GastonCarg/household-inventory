@@ -6,12 +6,14 @@ import { useTranslations } from "next-intl";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
 
+import { STATUS_COLOR_MAP } from "@/(constants)";
 import SearchContext from "@/(contexts)/searchContext/page";
-import { GenericCard, GenericTabs, Loader } from "@/components";
+import { Card, GenericTabs, Loader } from "@/components";
 import { useDeleteItem, useGetItems, useItemsSummary } from "@/hooks/useItems";
 import { useGetLocations } from "@/hooks/useLocations";
 import { ILocations } from "./(addItem)/type";
-import { Item } from "./type";
+import { ItemsListComponent } from "./(ItemList)/page";
+import { IDefaultCards, Item } from "./type";
 
 const ItemsList: React.FC = () => {
   const t = useTranslations("ItemsList");
@@ -24,6 +26,22 @@ const ItemsList: React.FC = () => {
   const total = dataSummary?.total ?? 0;
   const expired = dataSummary?.expired ?? 0;
   const expiringSoon = dataSummary?.expiringSoon ?? 0;
+
+  const SUMMARY_CARDS: IDefaultCards[] = [
+    { id: 1, title: "TotalItems", status: "default", value: total },
+    {
+      id: 2,
+      title: "ExpiringSoon",
+      status: "warning",
+      value: expiringSoon,
+    },
+    {
+      id: 3,
+      title: "Expired",
+      status: "error",
+      value: expired,
+    },
+  ];
 
   const {
     data: locations,
@@ -60,7 +78,7 @@ const ItemsList: React.FC = () => {
   }
 
   if (buttonPressed !== t("AllItems")) {
-    items = items.filter((item: Item) => item.location === buttonPressed);
+    items = items.filter((item: Item) => item.location?.name === buttonPressed);
   }
 
   if (
@@ -84,41 +102,46 @@ const ItemsList: React.FC = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-        <GenericCard title={t("TotalItems")} count={total.toString()} />
-        <GenericCard
-          title={t("ExpiringSoon")}
-          count={expiringSoon.toString()}
-        />
-        <GenericCard title={t("Expired")} count={expired.toString()} />
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4 p-4">
+        {SUMMARY_CARDS.map((card) => {
+          const { id, title, status, value } = card;
+          return (
+            <Card key={id}>
+              <Card.Header>
+                <h2 className="text-base sm:text-lg font-semibold text-gray-800 flex-1 pr-2">
+                  {t(title)}
+                </h2>
+              </Card.Header>
+              <Card.Content>
+                <p
+                  className={`font-bold text-2xl sm:text-3xl mb-2 ${STATUS_COLOR_MAP[status].text}`}
+                >
+                  {value}
+                </p>
+              </Card.Content>
+            </Card>
+          );
+        })}
       </div>
       <section className="flex flex-col gap-4 w-full border-b border-gray-300 pt-8">
         <div className="flex overflow-x-auto scrollbar-hide pb-2 gap-1">
-          {buttonList.map((button, idx) => {
-            const { title, action } = button;
+          {buttonList.map((button) => {
+            const { id, title, action } = button;
             return (
               <GenericTabs
-                key={idx}
+                key={id}
                 title={title}
-                action={(id) => action(id)}
+                action={(title) => action(title)}
                 buttonPressed={buttonPressed}
               ></GenericTabs>
             );
           })}
         </div>
-        {/* <button
-          id="Filter"
-          className="flex items-center justify-center min-w-30 p-4 ml-auto text-gray-500 active:bg-gray-300"
-          onClick={() => alert("Filter clicked")}
-        >
-          <Filter className="mr-2" />
-          <span>{t("Filter")}</span>
-        </button> */}
       </section>
       {mutation.isPending ? (
         <div className="flex flex-col items-center justify-center text-lg font-medium p-8 gap-2">
           <Loader2 className="animate-spin text-green-700" size={32} />
-          {t("DeletingItem")}
+          <p>{t("DeletingItem")}</p>
         </div>
       ) : items.length > 0 ? (
         <InfiniteScroll
@@ -130,21 +153,11 @@ const ItemsList: React.FC = () => {
           loader={<Loader hasMoreItems />}
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-            {items.map((item, index) => {
-              const { title, expireDate, quantity, location, id } = item;
-              return (
-                <GenericCard
-                  key={index}
-                  title={title}
-                  expireDate={expireDate}
-                  quantity={quantity}
-                  location={location}
-                  isDeletable={true}
-                  id={id}
-                  onDelete={() => removeItem(id)}
-                />
-              );
-            })}
+            {items.map((item) => (
+              <React.Fragment key={item.id}>
+                <ItemsListComponent item={item} removeItem={removeItem} />
+              </React.Fragment>
+            ))}
           </div>
         </InfiniteScroll>
       ) : (

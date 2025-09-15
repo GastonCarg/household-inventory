@@ -6,6 +6,7 @@
     "TotalItems": "Total items",
     "Expired": "Expired",
     "ExpiringSoon": "Expiring soon",
+    "DaysLeft": "days left",
     "Filter": "Filter",
     "NoItemsFound": "No items found",
     "ErrorFetchingItems": "Error fetching items: ",

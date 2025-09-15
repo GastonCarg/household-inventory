@@ -3,7 +3,7 @@ export interface Item {
   title: string;
   count?: number;
   expireDate?: string;
-  location?: string;
+  location?: ILocations;
   color?: string;
   quantity: number;
 }
@@ -20,4 +20,22 @@ export interface ItemsResponse {
   data: Item[];
   page: number;
   lastPage: number;
+}
+
+export interface IDefaultCards {
+  id: number;
+  title: string;
+  status: string;
+  icon?: string;
+  value: number;
+}
+
+export interface ILocations {
+  id: number;
+  name: string;
+}
+
+export interface ItemsListComponentProps {
+  item: Item;
+  removeItem: (id: string) => void;
 }
