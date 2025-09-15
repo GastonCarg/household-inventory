@@ -18,7 +18,8 @@
   },
   "Header": {
     "AddItem": "Add item",
-    "HouseholdInventory": "Household Inventory"
+    "HouseholdInventory": "Household Inventory",
+    "ManageHomeEssentials": "Manage your home essentials"
   },
   "Search": {
     "Search": "Search"

@@ -1,5 +1,5 @@
 {
-  "items": [
+  "products": [
     {
       "id": "cc4d",
       "title": "Manzana",
@@ -29,7 +29,7 @@
       "quantity": 3
     }
   ],
-  "summary": {
+  "products/summary": {
     "total": 13,
     "expired": 11,
     "expiringSoon": 1,
@@ -37,5 +37,13 @@
       "Refrigerator": 6,
       "Freezer": 3
     }
-  }
+  },
+  "locations": [{
+    "id": "1",
+    "name": "Refrigerator"
+  },
+  {
+    "id": "2",
+    "name": "Freezer"
+  }]
 }

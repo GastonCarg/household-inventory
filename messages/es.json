@@ -18,7 +18,8 @@
   },
   "Header": {
     "AddItem": "Agregar artículo",
-    "HouseholdInventory": "Inventario del hogar"
+    "HouseholdInventory": "Inventario del hogar",
+    "ManageHomeEssentials": "Gestiona los elementos esenciales de tu hogar"
   },
   "Search": {
     "Search": "Buscar"
