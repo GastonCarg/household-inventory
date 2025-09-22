@@ -154,7 +154,7 @@ const ItemsList: React.FC = () => {
                 title={title}
                 action={(title) => action(title)}
                 buttonPressed={buttonPressed}
-              ></GenericTabs>
+              />
             );
           })}
         </div>
