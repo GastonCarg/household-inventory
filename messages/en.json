@@ -6,6 +6,7 @@
     "TotalItems": "Total items",
     "Expired": "Expired",
     "ExpiringSoon": "Expiring soon",
+    "DaysLeft": "days left",
     "Filter": "Filter",
     "NoItemsFound": "No items found",
     "ErrorFetchingItems": "Error fetching items: ",
@@ -14,11 +15,15 @@
     "ItemDeletedSuccessfully": "Item deleted successfully!",
     "ErrorDeletingItem": "An error occurred while deleting the item. Please try again.",
     "ErrorDeletingItemLog": "Error deleting item: ",
-    "DeletingItem": "Borrando Item..."
+    "DeletingItem": "Deleting item...",
+    "Quantity": "Quantity",
+    "Location": "Location",
+    "Expires": "Expires"
   },
   "Header": {
     "AddItem": "Add item",
-    "HouseholdInventory": "Household Inventory"
+    "HouseholdInventory": "Household Inventory",
+    "ManageHomeEssentials": "Manage your home essentials"
   },
   "Search": {
     "Search": "Search"

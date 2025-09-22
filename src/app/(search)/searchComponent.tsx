@@ -42,10 +42,10 @@ const SearchComponent: React.FC = () => {
       {!isInputVisible && (
         <button
           onClick={handleClickSearch}
-          className="rounded-md bg-gray-400 border-none p-3 text-white flex items-center justify-center gap-2 hover:bg-gray-600 max-h-10 w-full sm:w-auto sm:min-w-0 transition-colors"
+          className="rounded-md border border-gray-300 p-3 flex items-center justify-center gap-2 hover:bg-gray-200 max-h-10 w-full sm:w-auto sm:min-w-0 transition-colors"
         >
-          <Search className="h-5 w-5" />
-          <span className="text-white text-sm sm:text-base">{t("Search")}</span>
+          <Search className="h-4 w-4" />
+          <span className="text-xs sm:text-base">{t("Search")}</span>
         </button>
       )}
 
@@ -54,7 +54,7 @@ const SearchComponent: React.FC = () => {
           type="search"
           ref={searchInputRef}
           placeholder={`${t("Search")}...`}
-          className="rounded-md bg-gray-200 p-3 focus:ring-2 focus:ring-gray-500 focus:outline-none transition-all w-full max-h-10 text-base"
+          className="rounded-md bg-gray-200 p-3 focus:ring-2 focus:ring-gray-500 focus:outline-none transition-all w-full max-h-10 text-base sm:w-auto sm:min-w-0"
           value={inputValue}
           onChange={handleInputValue}
           onKeyUp={getResults}

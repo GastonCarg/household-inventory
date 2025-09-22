@@ -7,6 +7,7 @@
     "Expired": "Vencido",
     "ExpiringSoon": "Próximo a vencer",
     "Filter": "Filtrar",
+    "DaysLeft": "días restantes",
     "NoItemsFound": "No se encontraron artículos",
     "ErrorFetchingItems": "Error al obtener los artículos: ",
     "ErrorFetchingItemsDetails": "Ocurrió un error al obtener los artículos. Por favor, inténtalo de nuevo más tarde.",
@@ -14,11 +15,15 @@
     "ItemDeletedSuccessfully": "¡Artículo borrado exitosamente!",
     "ErrorDeletingItemLog": "Error al borrar el artículo: ",
     "ErrorDeletingItem": "Ocurrió un error al borrar el artículo. Por favor, inténtalo de nuevo.",
-    "DeletingItem": "Deleting Item..."
+    "DeletingItem": "Borrando artículo...",
+    "Quantity": "Cantidad",
+    "Location": "Ubicación",
+    "Expires": "Vence"
   },
   "Header": {
     "AddItem": "Agregar artículo",
-    "HouseholdInventory": "Inventario del hogar"
+    "HouseholdInventory": "Inventario del hogar",
+    "ManageHomeEssentials": "Gestiona los elementos esenciales de tu hogar"
   },
   "Search": {
     "Search": "Buscar"
