@@ -33,6 +33,9 @@ export interface IDefaultCards {
 export interface ILocations {
   id: number;
   name: string;
+  bgColor?: string;
+  borderColor?: string;
+  textColor?: string;
 }
 
 export interface ItemsListComponentProps {

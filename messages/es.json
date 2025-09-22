@@ -15,7 +15,10 @@
     "ItemDeletedSuccessfully": "¡Artículo borrado exitosamente!",
     "ErrorDeletingItemLog": "Error al borrar el artículo: ",
     "ErrorDeletingItem": "Ocurrió un error al borrar el artículo. Por favor, inténtalo de nuevo.",
-    "DeletingItem": "Deleting Item..."
+    "DeletingItem": "Borrando artículo...",
+    "Quantity": "Cantidad",
+    "Location": "Ubicación",
+    "Expires": "Vence"
   },
   "Header": {
     "AddItem": "Agregar artículo",

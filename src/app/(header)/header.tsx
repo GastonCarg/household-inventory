@@ -37,7 +37,7 @@ const Header = () => {
       <section className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto order-2 sm:order-none">
         <SearchComponent />
         <button
-          className="rounded-md bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-lg border-none p-3 sm:p-2 text-white flex items-center justify-center gap-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors min-h-[44px] sm:min-h-0"
+          className="rounded-md bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-lg border-none p-3 sm:p-2 text-white flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors min-h-[44px] sm:min-h-0"
           onMouseUp={openModal}
         >
           <Plus className="h-4 w-4 text-white" />

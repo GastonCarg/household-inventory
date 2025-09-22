@@ -15,7 +15,10 @@
     "ItemDeletedSuccessfully": "Item deleted successfully!",
     "ErrorDeletingItem": "An error occurred while deleting the item. Please try again.",
     "ErrorDeletingItemLog": "Error deleting item: ",
-    "DeletingItem": "Borrando Item..."
+    "DeletingItem": "Deleting item...",
+    "Quantity": "Quantity",
+    "Location": "Location",
+    "Expires": "Expires"
   },
   "Header": {
     "AddItem": "Add item",

@@ -18,12 +18,12 @@ export default function Card({
 
 Card.Header = function HeaderCard({
   children,
+  props = "",
 }: {
   children: ReactNode;
+  props?: string;
 }): React.JSX.Element {
-  return (
-    <div className="flex items-start justify-between mb-3">{children}</div>
-  );
+  return <div className={`flex ${props}`}>{children}</div>;
 };
 
 Card.Content = function ContentCard({

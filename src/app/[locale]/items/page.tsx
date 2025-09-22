@@ -118,11 +118,15 @@ const ItemsList: React.FC = () => {
           const { id, title, status, value } = card;
           return (
             <Card key={id}>
-              <Card.Header>
+              <Card.Header props="justify-between">
                 <h2 className="text-base sm:text-lg font-semibold text-gray-800 flex-1 pr-2">
                   {t(title)}
                 </h2>
-                <IconSummaryItem status={status} />
+                <div
+                  className={`flex items-center justify-center rounded-md w-10 h-10 ${STATUS_COLOR_MAP[status].bg}`}
+                >
+                  <IconSummaryItem status={status} />
+                </div>
               </Card.Header>
               <Card.Content>
                 <p
@@ -132,7 +136,7 @@ const ItemsList: React.FC = () => {
                 </p>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
-                    className={`${STATUS_COLOR_MAP[status]?.bg ?? "bg-blue-500"} h-2.5 rounded-full`}
+                    className={`${STATUS_COLOR_MAP[status]?.bgSummary ?? "bg-blue-500"} h-2.5 rounded-full`}
                     style={{
                       width: `${total > 0 ? Math.min((value / total) * 100, 100) : 0}%`,
                       transition: "width 0.5s ease-in-out",
@@ -144,7 +148,7 @@ const ItemsList: React.FC = () => {
           );
         })}
       </div>
-      <section className="flex flex-col gap-4 w-full border-b border-gray-300 pt-8">
+      <section className="flex flex-col gap-4 w-full border-b border-gray-300 pt-8 px-4">
         <div className="flex overflow-x-auto scrollbar-hide pb-2 gap-1">
           {buttonList.map((button) => {
             const { id, title, action } = button;
