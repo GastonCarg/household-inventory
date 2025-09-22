@@ -1,6 +1,7 @@
+import { CircleX, Package, TriangleAlert } from "lucide-react";
+
 export const ITEMS_URL = "http://localhost:3001";
 
-// TODO: Eliminar estas constantes
 export const COLOR_TEXT_MAP: Record<string, string> = {
   black: "text-black-500",
   orange: "text-orange-500",
@@ -28,23 +29,29 @@ export const STATUS_COLOR_MAP: Record<
   { text: string; bg: string; border: string }
 > = {
   default: {
-    text: "text-black-500",
-    bg: "transparent",
-    border: "border-black-200",
+    text: "text-blue-500",
+    bg: "bg-blue-200",
+    border: "border-blue-200",
   },
   warning: {
     text: "text-orange-500",
-    bg: "bg-orange-100",
+    bg: "bg-orange-200",
     border: "border-orange-200",
   },
   error: {
     text: "text-red-500",
-    bg: "bg-red-100",
+    bg: "bg-red-200",
     border: "border-red-200",
   },
   success: {
     text: "text-green-600",
-    bg: "bg-green-100",
+    bg: "bg-green-200",
     border: "border-green-300",
   },
+};
+
+export const STATUS_ICON_MAP: Record<string, React.ElementType> = {
+  default: Package,
+  warning: TriangleAlert,
+  error: CircleX,
 };

@@ -9,7 +9,7 @@ export default function Card({
 }): React.JSX.Element {
   return (
     <div
-      className={`flex min-h-28 flex-col rounded-lg border border-gray-200 bg-white p-4 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 ${props}`}
+      className={`flex min-h-28 flex-col rounded-lg border border-gray-200 bg-white p-4 sm:p-5 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 ${props}`}
     >
       {children}
     </div>

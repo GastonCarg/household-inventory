@@ -1,12 +1,12 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Package } from "lucide-react";
 import { useTranslations } from "next-intl";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
 
-import { STATUS_COLOR_MAP } from "@/(constants)";
+import { STATUS_COLOR_MAP, STATUS_ICON_MAP } from "@/(constants)";
 import SearchContext from "@/(contexts)/searchContext/page";
 import { Card, GenericTabs, Loader } from "@/components";
 import { useDeleteItem, useGetItems, useItemsSummary } from "@/hooks/useItems";
@@ -22,6 +22,7 @@ const ItemsList: React.FC = () => {
 
   const { data, error, fetchNextPage, status, hasNextPage } =
     useGetItems(searchValue);
+
   const { data: dataSummary, status: statusSummary } = useItemsSummary();
   const total = dataSummary?.total ?? 0;
   const expired = dataSummary?.expired ?? 0;
@@ -42,6 +43,13 @@ const ItemsList: React.FC = () => {
       value: expired,
     },
   ];
+  let buttonList = [
+    {
+      id: 0,
+      title: t("AllItems"),
+      action: (value: string) => setButtonPressed(value),
+    },
+  ];
 
   const {
     data: locations,
@@ -60,14 +68,6 @@ const ItemsList: React.FC = () => {
   const removeItem = (id: string) => {
     mutation.mutate(id);
   };
-
-  let buttonList = [
-    {
-      id: 0,
-      title: t("AllItems"),
-      action: (value: string) => setButtonPressed(value),
-    },
-  ];
 
   let items = data?.pages.flatMap(({ data }) => data) || [];
 
@@ -100,6 +100,17 @@ const ItemsList: React.FC = () => {
     ];
   }
 
+  function IconSummaryItem({ status }: { status: string }) {
+    const Icon = STATUS_ICON_MAP[status] ?? Package;
+
+    return (
+      <Icon
+        className={`${STATUS_COLOR_MAP[status].text ?? "text-gray-500"}`}
+        size={24}
+      />
+    );
+  }
+
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4 p-4">
@@ -111,6 +122,7 @@ const ItemsList: React.FC = () => {
                 <h2 className="text-base sm:text-lg font-semibold text-gray-800 flex-1 pr-2">
                   {t(title)}
                 </h2>
+                <IconSummaryItem status={status} />
               </Card.Header>
               <Card.Content>
                 <p
@@ -118,6 +130,15 @@ const ItemsList: React.FC = () => {
                 >
                   {value}
                 </p>
+                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                  <div
+                    className={`${STATUS_COLOR_MAP[status]?.bg ?? "bg-blue-500"} h-2.5 rounded-full`}
+                    style={{
+                      width: `${total > 0 ? Math.min((value / total) * 100, 100) : 0}%`,
+                      transition: "width 0.5s ease-in-out",
+                    }}
+                  />
+                </div>
               </Card.Content>
             </Card>
           );
