@@ -1,4 +1,4 @@
-import { Item, ItemSummaryResponse } from "@/app/[locale]/items/type";
+import { IAddItem, Item, ItemSummaryResponse } from "@/app/[locale]/items/type";
 
 export const getAllItems = async ({
   page,
@@ -34,7 +34,7 @@ export const getAllItems = async ({
   }
 };
 
-export const addItem = async (item: Item): Promise<Item> => {
+export const addItem = async (item: IAddItem): Promise<Item> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/products`,

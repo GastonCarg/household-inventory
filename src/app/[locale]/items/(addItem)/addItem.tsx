@@ -6,7 +6,7 @@ import Form from "next/form";
 import { toast } from "react-toastify";
 
 import { useGetLocations } from "@/hooks/useLocations";
-import { Item } from "../type";
+import { IAddItem } from "../type";
 import { IAddItemModal, ILocations } from "./type";
 
 const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
@@ -41,7 +41,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal }) => {
         date.setDate(date.getDate() + days);
       }
 
-      const item: Item = {
+      const item: IAddItem = {
         title: name,
         expireDate: date.toISOString(),
         location: location,

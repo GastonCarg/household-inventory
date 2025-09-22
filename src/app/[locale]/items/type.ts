@@ -8,6 +8,16 @@ export interface Item {
   quantity: number;
 }
 
+export interface IAddItem {
+  id?: string;
+  title: string;
+  count?: number;
+  expireDate?: string;
+  location?: string;
+  color?: string;
+  quantity: number;
+}
+
 export type ItemFormValues = Item;
 
 export interface ItemSummaryResponse {
