@@ -18,7 +18,9 @@
     "DeletingItem": "Borrando artículo...",
     "Quantity": "Cantidad",
     "Location": "Ubicación",
-    "Expires": "Vence"
+    "Expires": "Vence",
+    "Ok": "Ok",
+    "FilterByStatus": "Filtrar por estado"
   },
   "Header": {
     "AddItem": "Agregar artículo",
@@ -44,9 +46,5 @@
     "PleaseFillAllFields": "Por favor, complete todos los campos.",
     "Close": "Cerrar",
     "Error": "Error"
-  },
-  "GenericCard": {
-    "DaysLeft": "días restantes",
-    "Expired": "Vencido"
   }
 }

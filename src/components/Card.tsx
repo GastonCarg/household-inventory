@@ -3,12 +3,15 @@ import { ReactNode } from "react";
 export default function Card({
   children,
   props,
+  onClick,
 }: {
   children: ReactNode;
   props?: string;
+  onClick?: () => void;
 }): React.JSX.Element {
   return (
     <div
+      onClick={onClick}
       className={`flex min-h-28 flex-col rounded-lg border border-gray-200 bg-white p-4 sm:p-5 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 ${props}`}
     >
       {children}
@@ -36,8 +39,10 @@ Card.Content = function ContentCard({
 
 Card.Footer = function FooterCard({
   children,
+  props,
 }: {
   children: ReactNode;
+  props?: string;
 }): React.JSX.Element {
-  return <div className="flex justify-end mt-2">{children}</div>;
+  return <div className={`flex mt-2 ${props}`}>{children}</div>;
 };
