@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 
-import { Loader2, Package } from "lucide-react";
+import { Filter, Loader2, Package } from "lucide-react";
 import { useTranslations } from "next-intl";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ import SearchContext from "@/(contexts)/searchContext/page";
 import { Card, GenericTabs, Loader } from "@/components";
 import { useDeleteItem, useGetItems, useItemsSummary } from "@/hooks/useItems";
 import { useGetLocations } from "@/hooks/useLocations";
+import { IFilterSearch } from "@/lib/types";
 import { ILocations } from "./(addItem)/type";
 import { ItemsListComponent } from "./(ItemList)/page";
 import { IDefaultCards, Item } from "./type";
@@ -18,7 +19,8 @@ import { IDefaultCards, Item } from "./type";
 const ItemsList: React.FC = () => {
   const t = useTranslations("ItemsList");
   const [buttonPressed, setButtonPressed] = useState(t("AllItems"));
-  const { searchValue } = useContext(SearchContext);
+  const { searchValue, statusFilter, filterByStatus, handleSetStatusFilter } =
+    useContext(SearchContext);
 
   const { data, error, fetchNextPage, status, hasNextPage } =
     useGetItems(searchValue);
@@ -77,6 +79,13 @@ const ItemsList: React.FC = () => {
     );
   }
 
+  if (statusFilter && statusFilter.status !== "all") {
+    items = items.filter(
+      (item: Item) =>
+        filterByStatus(item.expireDate ?? "").status === statusFilter.status,
+    );
+  }
+
   if (buttonPressed !== t("AllItems")) {
     items = items.filter((item: Item) => item.location?.name === buttonPressed);
   }
@@ -117,9 +126,12 @@ const ItemsList: React.FC = () => {
         {SUMMARY_CARDS.map((card) => {
           const { id, title, status, value } = card;
           return (
-            <Card key={id}>
+            <Card key={id} props="cursor-pointer">
               <Card.Header props="justify-between">
-                <h2 className="text-base sm:text-lg font-semibold text-gray-800 flex-1 pr-2">
+                <h2
+                  aria-label="title"
+                  className="text-base sm:text-lg font-semibold text-gray-800 flex-1 pr-2"
+                >
                   {t(title)}
                 </h2>
                 <div
@@ -131,6 +143,7 @@ const ItemsList: React.FC = () => {
               <Card.Content>
                 <p
                   className={`font-bold text-2xl sm:text-3xl mb-2 ${STATUS_COLOR_MAP[status].text}`}
+                  aria-label={`${t(title)}: ${value}`}
                 >
                   {value}
                 </p>
@@ -149,7 +162,7 @@ const ItemsList: React.FC = () => {
         })}
       </div>
       <section className="flex flex-col gap-4 w-full border-b border-gray-300 pt-8 px-4">
-        <div className="flex overflow-x-auto scrollbar-hide pb-2 gap-1">
+        <div className="flex overflow-x-auto scrollbar-hide pb-2 gap-1 items-center">
           {buttonList.map((button) => {
             const { id, title, action } = button;
             return (
@@ -161,11 +174,38 @@ const ItemsList: React.FC = () => {
               />
             );
           })}
+          <div
+            id="Filter"
+            className="flex items-center justify-center min-w-30 p-4 ml-auto text-gray-500 active:bg-gray-300 group"
+          >
+            <Filter
+              className="mr-2 group-hover:text-blue-500 group-active:text-blue-500"
+              size={
+                typeof window !== "undefined" && window.innerWidth < 640
+                  ? 20
+                  : 24
+              }
+            />
+            <select
+              defaultValue="all"
+              className="bg-transparent focus:outline-none cursor-pointer text-sm group-hover:text-blue-500 group-active:text-blue-500 px-1"
+              aria-label="Filter items by status"
+              onChange={(e) => {
+                const value = e.target.value as IFilterSearch["status"];
+                handleSetStatusFilter({ status: value });
+              }}
+            >
+              <option value="all">{t("AllItems")}</option>
+              <option value="ok">{t("Ok")}</option>
+              <option value="expiringSoon">{t("ExpiringSoon")}</option>
+              <option value="expired">{t("Expired")}</option>
+            </select>
+          </div>
         </div>
       </section>
       {mutation.isPending ? (
         <div className="flex flex-col items-center justify-center text-lg font-medium p-8 gap-2">
-          <Loader2 className="animate-spin text-green-700" size={32} />
+          <Loader2 className="animate-spin text-blue-500" size={32} />
           <p>{t("DeletingItem")}</p>
         </div>
       ) : items.length > 0 ? (

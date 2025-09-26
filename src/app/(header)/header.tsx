@@ -20,16 +20,25 @@ const Header = () => {
   };
 
   return (
-    <header className="flex flex-col sm:flex-row h-auto sm:h-16 items-start sm:items-center justify-between border-b border-gray-300 bg-white p-4 gap-4">
+    <header
+      aria-label="banner header"
+      className="flex flex-col sm:flex-row h-auto sm:h-16 items-start sm:items-center justify-between border-b border-gray-300 bg-white p-4 gap-4"
+    >
       <div className="flex items-center justify-center gap-2">
         <section className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
           <Home className="h-5 w-5 text-white" />
         </section>
         <div>
-          <h3 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+          <h3
+            aria-label="project name"
+            className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent"
+          >
             {t("HouseholdInventory")}
           </h3>
-          <p className="text-sm text-slate-500 hidden sm:block">
+          <p
+            aria-label="description"
+            className="text-sm text-slate-500 hidden sm:block"
+          >
             {t("ManageHomeEssentials")}
           </p>
         </div>

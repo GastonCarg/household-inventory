@@ -18,7 +18,9 @@
     "DeletingItem": "Deleting item...",
     "Quantity": "Quantity",
     "Location": "Location",
-    "Expires": "Expires"
+    "Expires": "Expires",
+    "Ok": "Ok",
+    "FilterByStatus": "Filter by status"
   },
   "Header": {
     "AddItem": "Add item",
@@ -44,9 +46,5 @@
     "PleaseFillAllFields": "Please fill in all fields.",
     "Close": "Close",
     "Error": "Error"
-  },
-  "GenericCard": {
-    "DaysLeft": "days left",
-    "Expired": "Expired"
   }
 }

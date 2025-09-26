@@ -28,3 +28,7 @@ export interface Location {
 type Props = {
   children?: ReactNode;
 };
+
+export interface IFilterSearch {
+  status: "expired" | "expiringSoon" | "all" | "ok";
+}
