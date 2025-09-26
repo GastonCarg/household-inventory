@@ -121,8 +121,8 @@ const ItemsList: React.FC = () => {
   }
 
   return (
-    <>
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-4 p-4">
+    <div className="grid grid-cols-1">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {SUMMARY_CARDS.map((card) => {
           const { id, title, status, value } = card;
           return (
@@ -217,7 +217,7 @@ const ItemsList: React.FC = () => {
           scrollThreshold={0.9}
           loader={<Loader hasMoreItems />}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
             {items.map((item) => (
               <React.Fragment key={item.id}>
                 <ItemsListComponent item={item} removeItem={removeItem} />
@@ -230,7 +230,7 @@ const ItemsList: React.FC = () => {
           {t("NoItemsFound")}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
