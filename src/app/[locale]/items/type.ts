@@ -8,16 +8,6 @@ export interface Item {
   quantity: number;
 }
 
-export interface IAddItem {
-  id?: string;
-  title: string;
-  count?: number;
-  expireDate?: string;
-  location?: string;
-  color?: string;
-  quantity: number;
-}
-
 export type ItemFormValues = Item;
 
 export interface ItemSummaryResponse {
@@ -51,4 +41,5 @@ export interface ILocations {
 export interface ItemsListComponentProps {
   item: Item;
   removeItem: (id: string) => void;
+  editItem: (item: Item) => void;
 }

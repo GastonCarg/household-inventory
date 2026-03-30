@@ -20,7 +20,11 @@
     "Location": "Location",
     "Expires": "Expires",
     "Ok": "Ok",
-    "FilterByStatus": "Filter by status"
+    "FilterByStatus": "Filter by status",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "Actions": "Actions for",
+    "FilterByLocation": "Filter by location"
   },
   "Header": {
     "AddItem": "Add item",
@@ -36,15 +40,25 @@
     "Expiration": "Expiration date (in days)",
     "Location": "Location",
     "AddItem": "Add item",
+    "EditItem": "Edit item",
     "Cancel": "Cancel",
     "Submit": "Submit",
+    "UpdateItem": "Update item",
     "Refrigerator": "Refrigerator",
     "Freezer": "Freezer",
     "ItemAddedSuccessfully": "Item added successfully!",
+    "ItemUpdatedSuccessfully": "Item updated successfully!",
     "ErrorAddingItem": "An error occurred while adding the item. Please try again.",
     "ErrorAddingItemLog": "Error adding item: ",
+    "ErrorUpdatingItem": "An error occurred while updating the item. Please try again.",
+    "ErrorUpdatingItemLog": "Error updating item: ",
     "PleaseFillAllFields": "Please fill in all fields.",
     "Close": "Close",
-    "Error": "Error"
+    "Error": "Error",
+    "SelectLocation": "Select a location",
+    "NameRequired": "Product name is required.",
+    "QuantityRequired": "Quantity must be at least 1.",
+    "ExpirationRequired": "Expiration date is required.",
+    "LocationRequired": "Please select a location."
   }
 }

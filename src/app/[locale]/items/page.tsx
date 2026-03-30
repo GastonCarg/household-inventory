@@ -6,8 +6,13 @@ import { useTranslations } from "next-intl";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
 
-import { STATUS_COLOR_MAP, STATUS_ICON_MAP } from "@/(constants)";
-import SearchContext from "@/(contexts)/searchContext/page";
+import {
+  CARD_LEFT_BORDER,
+  STATUS_COLOR_MAP,
+  STATUS_ICON_MAP,
+  SUMMARY_CARD_FILTER_MAP,
+} from "@/(constants)";
+import { ItemModalContext, SearchContext } from "@/(contexts)";
 import { Card, GenericTabs, Loader } from "@/components";
 import { useDeleteItem, useGetItems, useItemsSummary } from "@/hooks/useItems";
 import { useGetLocations } from "@/hooks/useLocations";
@@ -21,6 +26,7 @@ const ItemsList: React.FC = () => {
   const [buttonPressed, setButtonPressed] = useState(t("AllItems"));
   const { searchValue, statusFilter, filterByStatus, handleSetStatusFilter } =
     useContext(SearchContext);
+  const { editItem } = useContext(ItemModalContext);
 
   const { data, error, fetchNextPage, status, hasNextPage } =
     useGetItems(searchValue);
@@ -71,7 +77,7 @@ const ItemsList: React.FC = () => {
     mutation.mutate(id);
   };
 
-  let items = data?.pages.flatMap(({ data }) => data) || [];
+  let items: Item[] = data?.pages.flatMap(({ data }) => data) || [];
 
   if (searchValue) {
     items = items.filter((item: Item) =>
@@ -121,38 +127,53 @@ const ItemsList: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-cols-1">
+    <div className="grid grid-cols-1 gap-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {SUMMARY_CARDS.map((card) => {
           const { id, title, status, value } = card;
           return (
-            <Card key={id} props="cursor-pointer">
-              <Card.Header props="justify-between">
-                <h2
-                  aria-label="title"
-                  className="text-base sm:text-lg font-semibold text-gray-800 flex-1 pr-2"
-                >
-                  {t(title)}
-                </h2>
+            <Card
+              key={id}
+              props={`cursor-pointer ${CARD_LEFT_BORDER[status] ?? ""}`}
+              onClick={() => {
+                const mapped = SUMMARY_CARD_FILTER_MAP[status] ?? "all";
+                handleSetStatusFilter({
+                  status: statusFilter.status === mapped ? "all" : mapped,
+                });
+              }}
+            >
+              <Card.Header props="justify-between items-start">
+                <div className="flex flex-col gap-1">
+                  <h2
+                    aria-label="title"
+                    className="text-sm font-semibold text-[#8A90AB] uppercase tracking-wider"
+                  >
+                    {t(title)}
+                  </h2>
+                  <p
+                    className={`font-bold text-3xl sm:text-4xl ${STATUS_COLOR_MAP[status].text}`}
+                    aria-label={`${t(title)}: ${value}`}
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    {value}
+                  </p>
+                </div>
                 <div
-                  className={`flex items-center justify-center rounded-md w-10 h-10 ${STATUS_COLOR_MAP[status].bg}`}
+                  className={`flex items-center justify-center rounded-xl w-11 h-11 ${STATUS_COLOR_MAP[status].bg}`}
                 >
                   <IconSummaryItem status={status} />
                 </div>
               </Card.Header>
               <Card.Content>
-                <p
-                  className={`font-bold text-2xl sm:text-3xl mb-2 ${STATUS_COLOR_MAP[status].text}`}
-                  aria-label={`${t(title)}: ${value}`}
+                <div
+                  className="w-full bg-[#1E2130] rounded-full h-1.5 mt-3"
+                  aria-hidden="true"
                 >
-                  {value}
-                </p>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
-                    className={`${STATUS_COLOR_MAP[status]?.bgSummary ?? "bg-blue-500"} h-2.5 rounded-full`}
+                    className={`${STATUS_COLOR_MAP[status]?.bgSummary ?? "bg-blue-500"} h-1.5 rounded-full`}
                     style={{
                       width: `${total > 0 ? Math.min((value / total) * 100, 100) : 0}%`,
-                      transition: "width 0.5s ease-in-out",
+                      transition: "width 0.6s cubic-bezier(0.4,0,0.2,1)",
                     }}
                   />
                 </div>
@@ -161,8 +182,15 @@ const ItemsList: React.FC = () => {
           );
         })}
       </div>
-      <section className="flex flex-col gap-4 w-full border-b border-gray-300 pt-8 px-4">
-        <div className="flex overflow-x-auto scrollbar-hide pb-2 gap-1 items-center">
+      <nav
+        aria-label={t("FilterByLocation")}
+        className="flex flex-col gap-4 w-full border-b border-[#1E2130] px-2"
+      >
+        <div
+          role="tablist"
+          aria-label={t("FilterByLocation")}
+          className="flex overflow-x-auto scrollbar-hide pb-2 gap-1 items-center"
+        >
           {buttonList.map((button) => {
             const { id, title, action } = button;
             return (
@@ -176,19 +204,19 @@ const ItemsList: React.FC = () => {
           })}
           <div
             id="Filter"
-            className="flex items-center justify-center min-w-30 p-4 ml-auto text-gray-500 active:bg-gray-300 group"
+            className="flex items-center justify-center min-w-30 p-3 ml-auto text-[#8A90AB] hover:text-[#F2F4FF] transition-colors group"
           >
             <Filter
-              className="mr-2 group-hover:text-blue-500 group-active:text-blue-500"
+              className="mr-2 group-hover:text-[#deff6ecc]"
               size={
                 typeof window !== "undefined" && window.innerWidth < 640
                   ? 20
-                  : 24
+                  : 18
               }
             />
             <select
-              defaultValue="all"
-              className="bg-transparent focus:outline-none cursor-pointer text-sm group-hover:text-blue-500 group-active:text-blue-500 px-1"
+              value={statusFilter.status}
+              className="bg-transparent focus:outline-none cursor-pointer text-sm group-hover:text-[#deff6ecc] px-1 font-medium text-[#8A90AB]"
               aria-label="Filter items by status"
               onChange={(e) => {
                 const value = e.target.value as IFilterSearch["status"];
@@ -202,10 +230,10 @@ const ItemsList: React.FC = () => {
             </select>
           </div>
         </div>
-      </section>
+      </nav>
       {mutation.isPending ? (
-        <div className="flex flex-col items-center justify-center text-lg font-medium p-8 gap-2">
-          <Loader2 className="animate-spin text-blue-500" size={32} />
+        <div className="flex flex-col items-center justify-center text-lg font-medium p-8 gap-3 text-[#8A90AB]">
+          <Loader2 className="animate-spin text-[#deff6ecc]" size={32} />
           <p>{t("DeletingItem")}</p>
         </div>
       ) : items.length > 0 ? (
@@ -217,17 +245,26 @@ const ItemsList: React.FC = () => {
           scrollThreshold={0.9}
           loader={<Loader hasMoreItems />}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
             {items.map((item) => (
               <React.Fragment key={item.id}>
-                <ItemsListComponent item={item} removeItem={removeItem} />
+                <ItemsListComponent
+                  item={item}
+                  removeItem={removeItem}
+                  editItem={editItem}
+                />
               </React.Fragment>
             ))}
           </div>
         </InfiniteScroll>
       ) : (
-        <div className="flex items-center justify-center text-2xl font-bold p-8">
-          {t("NoItemsFound")}
+        <div className="flex flex-col items-center justify-center p-16 gap-4 text-center">
+          <div className="w-16 h-16 bg-[#1C1F2E] rounded-2xl flex items-center justify-center">
+            <Package size={32} className="text-[#404460]" />
+          </div>
+          <p className="text-lg font-semibold text-[#8A90AB]">
+            {t("NoItemsFound")}
+          </p>
         </div>
       )}
     </div>
