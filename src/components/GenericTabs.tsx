@@ -11,7 +11,9 @@ const GenericTabs: React.FC<IGenericTabs> = ({
   return (
     <button
       id={title}
-      className={`flex items-center justify-center h-8 px-4 py-3 sm:py-4 border-b-2 rounded-md whitespace-nowrap ${buttonPressed === title ? "bg-blue-500 text-white" : "border-transparent text-gray-500"} ${isFilter && "ml-auto"} transition-colors`}
+      role="tab"
+      aria-selected={buttonPressed === title}
+      className={`flex items-center justify-center h-8 px-4 py-3 sm:py-4 border-b-2 rounded-xl whitespace-nowrap font-medium text-sm transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-bg ${buttonPressed === title ? "bg-primary text-bg border-primary shadow-sm" : "border-transparent text-fg-muted hover:text-fg hover:bg-muted"} ${isFilter && "ml-auto"}`}
       onClick={() => action(title)}
     >
       {children}

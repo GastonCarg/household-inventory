@@ -9,7 +9,7 @@ const Loader: React.FC<{ hasMoreItems?: boolean }> = ({ hasMoreItems }) => {
       }
     >
       <Loader2
-        className="animate-spin text-blue-500"
+        className="animate-spin text-primary"
         size={!hasMoreItems ? 48 : 24}
         style={{
           width: !hasMoreItems

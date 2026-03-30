@@ -1,11 +1,41 @@
 @import "tailwindcss";
 
+@theme {
+  /* --- Accent --- */
+  --color-primary: #deff6ecc;
+  --color-primary-dark: #c8f000;
+  --color-primary-active: #b3d800;
+
+  /* --- Backgrounds & surfaces --- */
+  --color-bg: #090a0f;
+  --color-surface: #111318;
+  --color-surface-elevated: #1a1d28;
+  --color-surface-modal: #181b24;
+  --color-surface-input: #0e1018;
+  --color-surface-overlay: #252836;
+
+  /* --- Structural --- */
+  --color-muted: #1c1f2e;
+  --color-divider: #1e2130;
+
+  /* --- Foreground / text --- */
+  --color-fg: #f2f4ff;
+  --color-fg-bright: #f0f2ff;
+  --color-fg-secondary: #c4cbe8;
+  --color-fg-muted: #8a90ab;
+  --color-fg-dim: #404460;
+
+  /* --- Accent extras --- */
+  --color-accent-edit: #6b9bff;
+  --color-accent-edit-bg: #1c2545;
+  --color-accent-add-bg: #2a3a1a;
+}
+
+/* Font variables stay in :root — used via inline styles, not Tailwind utilities */
 :root {
-  --color-primary: #0070f3;
-  --color-secondary: #1a1a1a;
-  --color-background: #f0f0f0;
-  --color-text: #333333;
-  --color-border: #eaeaea;
+  --font-display: "Syne", sans-serif;
+  --font-body: "Figtree", sans-serif;
+  --font-product: "Nunito", sans-serif;
 }
 
 @layer base {
@@ -17,13 +47,31 @@
     -ms-text-size-adjust: 100%;
   }
 
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
   body {
-    color: var(--color-text);
-    background: var(--color-background);
-    font-family: Arial, Helvetica, sans-serif;
+    color: var(--color-fg);
+    background: var(--color-bg);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     touch-action: manipulation;
+    background-image:
+      radial-gradient(
+        ellipse 80% 60% at 20% -10%,
+        rgba(222, 255, 110, 0.05) 0%,
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 60% 50% at 80% 110%,
+        rgba(110, 180, 255, 0.04) 0%,
+        transparent 60%
+      );
+    background-attachment: fixed;
   }
 
   * {
@@ -42,7 +90,9 @@
       font-size: 14px;
     }
 
-    button, input, select {
+    button,
+    input,
+    select {
       min-height: 44px;
       min-width: 44px;
     }

@@ -1,9 +1,28 @@
 import { routing } from "@/i18n/routing";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { Figtree, Nunito, Syne } from "next/font/google";
 import { notFound } from "next/navigation";
 
-import { SearchContextProvider } from "@/(contexts)/searchContext/page";
+import { ItemModalProvider, SearchContextProvider } from "@/(contexts)";
 import "@/app/globals.css";
+
+const figtree = Figtree({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-figtree",
+});
+
+const nunito = Nunito({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-nunito",
+});
+
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  variable: "--font-syne",
+});
 
 export default async function LocaleLayout({
   children,
@@ -18,19 +37,24 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale}>
+    <html
+      lang={locale}
+      className={`${figtree.variable} ${nunito.variable} ${syne.variable}`}
+    >
       <head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-        />
-        <meta name="theme-color" content="#0070f3" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#090A0F" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
       </head>
       <body>
         <NextIntlClientProvider>
-          <SearchContextProvider>{children}</SearchContextProvider>
+          <ItemModalProvider>
+            <SearchContextProvider>{children}</SearchContextProvider>
+          </ItemModalProvider>
         </NextIntlClientProvider>
       </body>
     </html>

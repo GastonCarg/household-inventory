@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import React, { useContext, useEffect, useRef, useState } from "react";
 
-import SearchContext from "../../(contexts)/searchContext/page";
+import { SearchContext } from "@/(contexts)";
 
 const SearchComponent: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
@@ -38,26 +38,33 @@ const SearchComponent: React.FC = () => {
   }, [inputValue]);
 
   return (
-    <div className="flex items-center gap-2 w-full sm:w-auto">
-      {!isInputVisible && (
+    <div role="search" className="flex items-center gap-2 w-full sm:w-auto">
+      {!isInputVisible && inputValue === "" && (
         <button
           onClick={handleClickSearch}
-          className="rounded-md border border-gray-300 p-3 flex items-center justify-center gap-2 hover:bg-gray-200 max-h-10 w-full sm:w-auto sm:min-w-0 transition-colors"
+          aria-label={t("Search")}
+          aria-expanded={false}
+          type="button"
+          className="rounded-xl border border-divider bg-surface-elevated px-4 py-2.5 flex items-center justify-center gap-2 hover:bg-divider hover:border-primary/40 max-h-10 w-full sm:w-auto transition-all duration-150 text-fg-muted hover:text-fg"
         >
-          <Search className="h-4 w-4" />
-          <span className="text-xs sm:text-base">{t("Search")}</span>
+          <Search className="h-4 w-4" aria-hidden="true" />
+          <span className="text-sm font-medium">{t("Search")}</span>
         </button>
       )}
 
-      {isInputVisible && (
+      {(isInputVisible || inputValue !== "") && (
         <input
           type="search"
           ref={searchInputRef}
+          aria-label={t("Search")}
           placeholder={`${t("Search")}...`}
-          className="rounded-md bg-gray-200 p-3 focus:ring-2 focus:ring-gray-500 focus:outline-none transition-all w-full max-h-10 text-base sm:w-auto sm:min-w-0"
+          className="rounded-xl bg-surface-elevated border border-divider px-4 py-2.5 focus:ring-2 focus:ring-primary/30 focus:border-primary focus:outline-none transition-all w-full max-h-10 text-base sm:w-auto text-fg placeholder:text-fg-dim"
           value={inputValue}
           onChange={handleInputValue}
           onKeyUp={getResults}
+          onBlur={() => {
+            if (inputValue === "") setIsInputVisible(false);
+          }}
         />
       )}
     </div>

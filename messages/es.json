@@ -20,7 +20,11 @@
     "Location": "Ubicación",
     "Expires": "Vence",
     "Ok": "Ok",
-    "FilterByStatus": "Filtrar por estado"
+    "FilterByStatus": "Filtrar por estado",
+    "Edit": "Editar",
+    "Delete": "Eliminar",
+    "Actions": "Acciones para",
+    "FilterByLocation": "Filtrar por ubicación"
   },
   "Header": {
     "AddItem": "Agregar artículo",
@@ -36,15 +40,25 @@
     "Expiration": "Fecha de vencimiento (en días)",
     "Location": "Ubicación",
     "AddItem": "Agregar artículo",
+    "EditItem": "Editar artículo",
     "Cancel": "Cancelar",
     "Submit": "Confirmar",
+    "UpdateItem": "Actualizar artículo",
     "Refrigerator": "Heladera",
     "Freezer": "Congelador",
     "ItemAddedSuccessfully": "¡Artículo agregado exitosamente!",
+    "ItemUpdatedSuccessfully": "¡Artículo actualizado exitosamente!",
     "ErrorAddingItem": "Ocurrió un error al agregar el artículo. Por favor, inténtalo de nuevo.",
     "ErrorAddingItemLog": "Error al agregar el artículo: ",
+    "ErrorUpdatingItem": "Ocurrió un error al actualizar el artículo. Por favor, inténtalo de nuevo.",
+    "ErrorUpdatingItemLog": "Error al actualizar el artículo: ",
     "PleaseFillAllFields": "Por favor, complete todos los campos.",
     "Close": "Cerrar",
-    "Error": "Error"
+    "Error": "Error",
+    "SelectLocation": "Selecciona una ubicación",
+    "NameRequired": "El nombre del artículo es obligatorio.",
+    "QuantityRequired": "La cantidad debe ser al menos 1.",
+    "ExpirationRequired": "La fecha de vencimiento es obligatoria.",
+    "LocationRequired": "Por favor, selecciona una ubicación."
   }
 }

@@ -1,4 +1,10 @@
-import { addItem, deleteItem, getAllItems, getItemsSummary } from "@/api/items";
+import {
+  addItem,
+  deleteItem,
+  getAllItems,
+  getItemsSummary,
+  updateItem,
+} from "@/api/items";
 import { Item } from "@/app/[locale]/items/type";
 import {
   useInfiniteQuery,
@@ -79,6 +85,31 @@ export const useAddItem = (closeModal: Function) => {
     onError: (error) => {
       toast.error(t("ErrorAddingItem"));
       console.error(t("ErrorAddingItemLog"), error);
+    },
+  });
+};
+
+export const useUpdateItem = (closeModal: Function) => {
+  const queryClient = useQueryClient();
+  const t = useTranslations("AddItemModal");
+  return useMutation({
+    mutationFn: ({ id, item }: { id: string; item: Item }) =>
+      updateItem(id, item),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["items", "infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["summary"] });
+      toast.success(t("ItemUpdatedSuccessfully"), {
+        position: "top-right",
+        autoClose: 5000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      closeModal();
+    },
+    onError: (error) => {
+      toast.error(t("ErrorUpdatingItem"));
+      console.error(t("ErrorUpdatingItemLog"), error);
     },
   });
 };

@@ -1,63 +1,51 @@
 "use client";
-import { lazy, useState } from "react";
-
 import { Home, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useContext } from "react";
 
+import { ItemModalContext } from "@/(contexts)";
 import SearchComponent from "../(search)/searchComponent";
-const ItemModal = lazy(() => import("../[locale]/items/(addItem)/addItem"));
 
 const Header = () => {
-  const [addItemModal, setAddItemModal] = useState(false);
+  const { openModal } = useContext(ItemModalContext);
   const t = useTranslations("Header");
-
-  const openModal = () => {
-    setAddItemModal(true);
-  };
-
-  const closeModal = () => {
-    setAddItemModal(false);
-  };
 
   return (
     <header
       aria-label="banner header"
-      className="flex flex-col sm:flex-row h-auto sm:h-16 items-start sm:items-center justify-between border-b border-gray-300 bg-white p-4 gap-4"
+      className="flex flex-col sm:flex-row h-auto sm:h-[72px] items-start sm:items-center justify-between bg-surface border-b border-divider px-6 py-4 gap-4"
     >
-      <div className="flex items-center justify-center gap-2">
-        <section className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
-          <Home className="h-5 w-5 text-white" />
+      <div className="flex items-center justify-center gap-3">
+        <section className="p-2.5 bg-[#deff6ecc] rounded-xl" aria-hidden="true">
+          <Home className="h-5 w-5 text-[#090A0F]" />
         </section>
         <div>
           <h3
             aria-label="project name"
-            className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent"
+            className="text-2xl font-bold text-fg tracking-tight"
+            style={{ fontFamily: "var(--font-display)" }}
           >
             {t("HouseholdInventory")}
           </h3>
           <p
             aria-label="description"
-            className="text-sm text-slate-500 hidden sm:block"
+            className="text-xs text-fg-muted hidden sm:block font-medium tracking-wide uppercase"
           >
             {t("ManageHomeEssentials")}
           </p>
         </div>
       </div>
-      <section className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto order-2 sm:order-none">
+      <section className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-3 w-full sm:w-auto order-2 sm:order-none">
         <SearchComponent />
         <button
-          className="rounded-md bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-lg border-none p-3 sm:p-2 text-white flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors min-h-[44px] sm:min-h-0"
-          onMouseUp={openModal}
+          className="rounded-xl bg-primary hover:bg-primary-dark active:bg-primary-active border-none px-5 py-2.5 text-bg flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface transition-all duration-150 min-h-[44px] sm:min-h-0 font-semibold"
+          onClick={openModal}
+          type="button"
         >
-          <Plus className="h-4 w-4 text-white" />
-          <span className="text-sm sm:text-base">{t("AddItem")}</span>
+          <Plus className="h-4 w-4 text-bg" />
+          <span className="text-sm">{t("AddItem")}</span>
         </button>
       </section>
-      {addItemModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
-          <ItemModal closeModal={closeModal} />
-        </div>
-      )}
     </header>
   );
 };
