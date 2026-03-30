@@ -1,4 +1,8 @@
-import { Item, ItemSummaryResponse } from "@/app/[locale]/items/type";
+import {
+  Item,
+  ItemsResponse,
+  ItemSummaryResponse,
+} from "@/app/[locale]/items/type";
 
 export const getAllItems = async ({
   page = 1,
@@ -6,7 +10,7 @@ export const getAllItems = async ({
 }: {
   page?: number | undefined;
   searchValue?: string | undefined;
-}) => {
+}): Promise<ItemsResponse> => {
   try {
     const limit = 12;
     const queryParams = new URLSearchParams();
@@ -21,11 +25,8 @@ export const getAllItems = async ({
       throw new Error("Failed to fetch all items");
     }
 
-    const data: Item[] = await response.json();
-    const total = parseInt(response.headers.get("X-Total-Count") ?? "0", 10);
-    const lastPage = Math.ceil(total / limit);
-
-    return { data, page, lastPage };
+    const data: ItemsResponse = await response.json();
+    return data;
   } catch (error) {
     throw error;
   }
@@ -57,7 +58,6 @@ export const addItem = async (item: Item): Promise<Item> => {
 
 export const getItemsSummary = async (): Promise<ItemSummaryResponse> => {
   try {
-    // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/summary`);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/products/summary`,
     );
@@ -73,7 +73,7 @@ export const getItemsSummary = async (): Promise<ItemSummaryResponse> => {
   }
 };
 
-export const deleteItem = async (id: string): Promise<void> => {
+export const deleteItem = async (id: number | string): Promise<void> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
@@ -101,7 +101,7 @@ export const updateItem = async (id: string, item: Item): Promise<Item> => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
       {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },

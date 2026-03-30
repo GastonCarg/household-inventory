@@ -5,10 +5,7 @@
       "expireDate": "2026-03-15T17:35:01.782Z",
       "location": {
         "id": "2",
-        "name": "Freezer",
-        "bgColor": "bg-cyan-50",
-        "borderColor": "border-cyan-300",
-        "textColor": "text-cyan-700"
+        "name": "Freezer"
       },
       "quantity": 2,
       "id": "prod001"

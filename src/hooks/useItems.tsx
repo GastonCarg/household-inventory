@@ -49,7 +49,9 @@ export const useDeleteItem = () => {
         ...old,
         pages: old.pages.map((page: any) => ({
           ...page,
-          data: page.data.filter((item: Item) => item.id !== id),
+          data: page.data.filter(
+            (item: Item) => String(item.id) !== String(id),
+          ),
         })),
       }));
 
@@ -93,8 +95,8 @@ export const useUpdateItem = (closeModal: Function) => {
   const queryClient = useQueryClient();
   const t = useTranslations("AddItemModal");
   return useMutation({
-    mutationFn: ({ id, item }: { id: string; item: Item }) =>
-      updateItem(id, item),
+    mutationFn: ({ id, item }: { id: string | number; item: Item }) =>
+      updateItem(String(id), item),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["items", "infinite"] });
       queryClient.invalidateQueries({ queryKey: ["summary"] });

@@ -1,11 +1,14 @@
 export interface Item {
-  id?: string;
+  id?: number | string;
   title: string;
   count?: number;
   expireDate?: string;
   location?: ILocations;
   color?: string;
   quantity: number;
+  deletedAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export type ItemFormValues = Item;
@@ -20,6 +23,8 @@ export interface ItemsResponse {
   data: Item[];
   page: number;
   lastPage: number;
+  total: number;
+  next: number | null;
 }
 
 export interface IDefaultCards {
@@ -36,10 +41,13 @@ export interface ILocations {
   bgColor?: string;
   borderColor?: string;
   textColor?: string;
+  deletedAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ItemsListComponentProps {
   item: Item;
-  removeItem: (id: string) => void;
+  removeItem: (id: number | string) => void;
   editItem: (item: Item) => void;
 }

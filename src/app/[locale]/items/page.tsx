@@ -73,7 +73,7 @@ const ItemsList: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, errorLocations]);
 
-  const removeItem = (id: string) => {
+  const removeItem = (id: number | string) => {
     mutation.mutate(id);
   };
 
