@@ -57,10 +57,10 @@ export const addItem = async (item: Item): Promise<Item> => {
 
 export const getItemsSummary = async (): Promise<ItemSummaryResponse> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/summary`);
-    // const response = await fetch(
-    //   `${process.env.NEXT_PUBLIC_API_URL}/products/summary`,
-    // );
+    // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/summary`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/products/summary`,
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch item summary");
