@@ -18,7 +18,7 @@ import { useDeleteItem, useGetItems, useItemsSummary } from "@/hooks/useItems";
 import { useGetLocations } from "@/hooks/useLocations";
 import { IFilterSearch } from "@/lib/types";
 import { ILocations } from "./(addItem)/type";
-import { ItemsListComponent } from "./(ItemList)/page";
+import { ItemsListComponent } from "./(ItemList)/ItemsListComponent";
 import { IDefaultCards, Item } from "./type";
 
 const ItemsList: React.FC = () => {
