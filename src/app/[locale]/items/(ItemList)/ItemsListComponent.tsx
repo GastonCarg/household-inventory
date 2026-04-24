@@ -5,48 +5,48 @@ import {
   MoreVertical,
   Pencil,
   Trash2,
-} from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
-import { useState } from "react";
+} from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
 
-import { CARD_LEFT_BORDER, STATUS_COLOR_MAP } from "@/(constants)";
-import { Card } from "@/components";
-import { formatDate, getExpirationDaysLeft } from "@/lib/helpers";
-import { ItemsListComponentProps } from "../type";
+import { CARD_LEFT_BORDER, STATUS_COLOR_MAP } from '@/(constants)';
+import { Card } from '@/components';
+import { formatDate, getExpirationDaysLeft } from '@/lib/helpers';
+import { ItemsListComponentProps } from '../type';
 
 export function ItemsListComponent({
   item,
   removeItem,
   editItem,
 }: ItemsListComponentProps) {
-  const t = useTranslations("ItemsList");
+  const t = useTranslations('ItemsList');
   const { locale } = useParams();
-  const lang = locale === "es" && "es-AR";
+  const lang = locale === 'es' && 'es-AR';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { title, expireDate, quantity, location, id } = item;
-  const daysLeft = getExpirationDaysLeft(expireDate ?? "");
-  let textDaysLeft = `${daysLeft} ${t("DaysLeft")}`;
+  const daysLeft = getExpirationDaysLeft(expireDate ?? '');
+  let textDaysLeft = `${daysLeft} ${t('DaysLeft')}`;
   const status =
-    daysLeft <= 0 ? "error" : daysLeft <= 3 ? "warning" : "success";
+    daysLeft <= 0 ? 'error' : daysLeft <= 3 ? 'warning' : 'success';
   if (daysLeft <= 0) {
-    textDaysLeft = t("Expired");
+    textDaysLeft = t('Expired');
   }
 
   return (
     <Card
       key={id}
-      props={`group relative ${CARD_LEFT_BORDER[status] ?? ""}`}
+      props={`group relative ${CARD_LEFT_BORDER[status] ?? ''}`}
       aria-label={title}
       tabIndex={0}
     >
-      <div className="absolute top-3 right-3 z-10 md:opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-150">
+      <div className="absolute top-3 right-3 z-10 transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100 md:opacity-0">
         <div className="relative">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-1.5 text-[#404460] hover:text-[#F2F4FF] hover:bg-[#1E2130] rounded-lg flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#deff6ecc] focus-visible:ring-offset-1"
-            aria-label={`${t("Actions")} ${title}`}
+            className="flex items-center justify-center rounded-lg p-1.5 text-[#404460] transition-colors hover:bg-[#1E2130] hover:text-[#F2F4FF] focus-visible:ring-2 focus-visible:ring-[#deff6ecc] focus-visible:ring-offset-1 focus-visible:outline-none"
+            aria-label={`${t('Actions')} ${title}`}
             aria-expanded={isMenuOpen}
             aria-haspopup="menu"
             type="button"
@@ -56,59 +56,59 @@ export function ItemsListComponent({
           {isMenuOpen && (
             <div
               role="menu"
-              aria-label={`${t("Actions")} ${title}`}
-              className="absolute right-0 top-full mt-1 bg-[#1A1D28] border border-[#252836] rounded-xl shadow-lg z-20 overflow-hidden"
+              aria-label={`${t('Actions')} ${title}`}
+              className="absolute top-full right-0 z-20 mt-1 overflow-hidden rounded-xl border border-[#252836] bg-[#1A1D28] shadow-lg"
             >
               <button
                 onClick={() => {
                   editItem(item);
                   setIsMenuOpen(false);
                 }}
-                className="flex items-center gap-2 w-full px-4 py-2.5 text-[#C4CBE8] hover:bg-[#1E2130] transition-colors"
+                className="flex w-full items-center gap-2 px-4 py-2.5 text-[#C4CBE8] transition-colors hover:bg-[#1E2130]"
                 role="menuitem"
-                aria-label={`${t("Edit")} ${title}`}
+                aria-label={`${t('Edit')} ${title}`}
               >
                 <Pencil size={14} className="text-[#8A90AB]" />
-                <span className="text-sm font-medium">{t("Edit")}</span>
+                <span className="text-sm font-medium">{t('Edit')}</span>
               </button>
               <button
                 onClick={() => {
                   removeItem(id!);
                   setIsMenuOpen(false);
                 }}
-                className="flex items-center gap-2 w-full px-4 py-2.5 text-red-400 hover:bg-red-950/40 transition-colors"
+                className="flex w-full items-center gap-2 px-4 py-2.5 text-red-400 transition-colors hover:bg-red-950/40"
                 role="menuitem"
-                aria-label={`${t("Delete")} ${title}`}
+                aria-label={`${t('Delete')} ${title}`}
               >
                 <Trash2 size={14} />
-                <span className="text-sm font-medium">{t("Delete")}</span>
+                <span className="text-sm font-medium">{t('Delete')}</span>
               </button>
             </div>
           )}
         </div>
       </div>
       <Card.Header props="flex justify-between my-0 pb-3">
-        <div className="flex items-center flex-1 min-w-0 pr-6">
+        <div className="flex min-w-0 flex-1 items-center pr-6">
           <div
             aria-label="dishes icon"
-            className="flex mr-3 h-10 w-10 items-center justify-center text-2xl bg-[#1C1F2E] rounded-xl shrink-0"
+            className="mr-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#1C1F2E] text-2xl"
           >
             🍽️
           </div>
           <section className="min-w-0">
             <h2
-              className="text-base sm:text-lg font-semibold text-[#F0F2FF] flex-1 pr-2 truncate leading-tight"
-              style={{ fontFamily: "var(--font-product)" }}
+              className="flex-1 truncate pr-2 text-base leading-tight font-semibold text-[#F0F2FF] sm:text-lg"
+              style={{ fontFamily: 'var(--font-product)' }}
             >
               {title}
             </h2>
             {quantity && (
               <p
-                className="text-xs text-[#8A90AB] mt-0.5 font-medium"
-                aria-label={`${t("Quantity")}: ${quantity}`}
+                className="mt-0.5 text-xs font-medium text-[#8A90AB]"
+                aria-label={`${t('Quantity')}: ${quantity}`}
               >
-                {t("Quantity")}:{" "}
-                <span className="text-[#C4CBE8] font-semibold">{quantity}</span>
+                {t('Quantity')}:{' '}
+                <span className="font-semibold text-[#C4CBE8]">{quantity}</span>
               </p>
             )}
           </section>
@@ -120,24 +120,24 @@ export function ItemsListComponent({
             <div className="flex items-center gap-1.5 text-xs text-[#8A90AB]">
               <Calendar
                 size={13}
-                className="text-[#404460] shrink-0"
+                className="shrink-0 text-[#404460]"
                 aria-hidden="true"
               />
               <span className="truncate">
-                {`${t("Expires")}: ${formatDate(expireDate, lang?.toString())}`}
+                {`${t('Expires')}: ${formatDate(expireDate, lang?.toString())}`}
               </span>
             </div>
           )}
         </div>
       </Card.Content>
       <Card.Footer>
-        <div className="flex flex-row items-center gap-2 w-full flex-wrap">
+        <div className="flex w-full flex-row flex-wrap items-center gap-2">
           {location && (
-            <div className="flex justify-center px-3 my-1 border rounded-full h-7 bg-indigo-500/15 border-indigo-400/30">
+            <div className="my-1 flex h-7 justify-center rounded-full border border-indigo-400/30 bg-indigo-500/15 px-3">
               <div className="flex items-center justify-center gap-1.5 text-xs">
                 <MapPin
                   size={11}
-                  className="text-indigo-300 shrink-0"
+                  className="shrink-0 text-indigo-300"
                   aria-hidden="true"
                 />
                 <span className="truncate font-medium text-indigo-300">
@@ -147,10 +147,10 @@ export function ItemsListComponent({
             </div>
           )}
           <span
-            className={`flex items-center justify-center h-7 gap-1 text-xs px-3 py-1 rounded-full font-semibold ${STATUS_COLOR_MAP[status].expiredText} ${STATUS_COLOR_MAP[status].bg ?? "transparent"} border ${STATUS_COLOR_MAP[status].border ?? "border-transparent"}`}
+            className={`flex h-7 items-center justify-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${STATUS_COLOR_MAP[status].expiredText} ${STATUS_COLOR_MAP[status].bg ?? 'transparent'} border ${STATUS_COLOR_MAP[status].border ?? 'border-transparent'}`}
           >
             <Clock size={10} aria-hidden="true" />
-            <span>{daysLeft <= 0 ? t("Expired") : `${textDaysLeft}`}</span>
+            <span>{daysLeft <= 0 ? t('Expired') : `${textDaysLeft}`}</span>
           </span>
         </div>
       </Card.Footer>

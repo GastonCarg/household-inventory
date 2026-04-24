@@ -1,16 +1,16 @@
-import { UI_CLASSES } from "@/(constants)";
-import { useAddItem, useUpdateItem } from "@/hooks/useItems";
-import { useGetLocations } from "@/hooks/useLocations";
-import { getExpirationDaysLeft } from "@/lib/helpers";
-import { Check, Loader2, Pencil, Plus, X } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import { Item } from "../type";
-import { IAddItemModal, ILocations } from "./type";
+import { UI_CLASSES } from '@/(constants)';
+import { useAddItem, useUpdateItem } from '@/hooks/useItems';
+import { useGetLocations } from '@/hooks/useLocations';
+import { getExpirationDaysLeft } from '@/lib/helpers';
+import { Check, Loader2, Pencil, Plus, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import { Item } from '../type';
+import { IAddItemModal, ILocations } from './type';
 
 const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
-  const t = useTranslations("AddItemModal");
+  const t = useTranslations('AddItemModal');
   const isEditing = !!editingItem;
 
   const { data: locations, status, error } = useGetLocations();
@@ -22,17 +22,17 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
 
   // State for form fields
   const [formData, setFormData] = useState({
-    name: editingItem?.title || "",
-    expiration: "",
-    location: editingItem?.location?.id?.toString() || "",
-    quantity: editingItem?.quantity?.toString() || "",
+    name: editingItem?.title || '',
+    expiration: '',
+    location: editingItem?.location?.id?.toString() || '',
+    quantity: editingItem?.quantity?.toString() || '',
   });
 
   const [errors, setErrors] = useState({
-    name: "",
-    quantity: "",
-    expiration: "",
-    location: "",
+    name: '',
+    quantity: '',
+    expiration: '',
+    location: '',
   });
 
   // Calculate days remaining from expiration date
@@ -56,22 +56,22 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
       const quantity = parseInt(quantityStr, 10);
 
       const newErrors = {
-        name: !name ? t("NameRequired") : "",
+        name: !name ? t('NameRequired') : '',
         quantity:
           !quantityStr || isNaN(quantity) || quantity < 1
-            ? t("QuantityRequired")
-            : "",
-        expiration: !expiration ? t("ExpirationRequired") : "",
-        location: !location ? t("LocationRequired") : "",
+            ? t('QuantityRequired')
+            : '',
+        expiration: !expiration ? t('ExpirationRequired') : '',
+        location: !location ? t('LocationRequired') : '',
       };
 
       if (Object.values(newErrors).some(Boolean)) {
         setErrors(newErrors);
-        toast.warning(t("PleaseFillAllFields"));
+        toast.warning(t('PleaseFillAllFields'));
         return;
       }
 
-      let expireDate = "";
+      let expireDate = '';
       if (expiration) {
         const date = new Date();
         const days = parseInt(expiration, 10);
@@ -80,7 +80,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
       }
 
       const locationObj = locations.find(
-        (loc: ILocations) => loc.id.toString() === location,
+        (loc: ILocations) => loc.id.toString() === location
       );
 
       const item: Item = {
@@ -95,13 +95,13 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
       } else if (!isEditing) {
         createMutation.mutate(item);
       } else {
-        toast.error(t("ErrorUpdatingItem"));
+        toast.error(t('ErrorUpdatingItem'));
       }
     } catch (error) {
-      toast.error(isEditing ? t("ErrorUpdatingItem") : t("ErrorAddingItem"));
+      toast.error(isEditing ? t('ErrorUpdatingItem') : t('ErrorAddingItem'));
       console.error(
-        isEditing ? t("ErrorUpdatingItemLog") : t("ErrorAddingItemLog"),
-        error,
+        isEditing ? t('ErrorUpdatingItemLog') : t('ErrorAddingItemLog'),
+        error
       );
     }
   };
@@ -116,14 +116,14 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
       'button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         closeModal();
         return;
       }
-      if (e.key !== "Tab") return;
+      if (e.key !== 'Tab') return;
 
       const focusable = Array.from(
-        container.querySelectorAll<HTMLElement>(FOCUSABLE),
+        container.querySelectorAll<HTMLElement>(FOCUSABLE)
       );
       if (!focusable.length) return;
 
@@ -139,8 +139,8 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [closeModal]);
 
   const handleInputChange = (field: string, value: string) => {
@@ -150,19 +150,19 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
     }));
     setErrors((prev) => ({
       ...prev,
-      [field]: "",
+      [field]: '',
     }));
   };
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center gap-2 mb-2">
-        <Loader2 size={48} className="animate-spin text-primary" />
+      <div className="mb-2 flex items-center justify-center gap-2">
+        <Loader2 size={48} className="text-primary animate-spin" />
       </div>
     );
   }
 
-  if (status === "pending") {
+  if (status === 'pending') {
     return <div>Cargando locations</div>;
   }
 
@@ -172,7 +172,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm"
       aria-modal="true"
       role="dialog"
       aria-labelledby="modal-title"
@@ -182,12 +182,12 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
     >
       <div
         ref={containerRef}
-        className="relative bg-surface-modal p-6 sm:p-8 rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-surface-overlay"
+        className="bg-surface-modal border-surface-overlay relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl border p-6 shadow-2xl sm:p-8"
       >
         <button
           onClick={closeModal}
-          className="absolute top-4 right-4 text-fg-dim hover:text-fg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl hover:bg-divider"
-          aria-label={t("Close")}
+          className="text-fg-dim hover:text-fg hover:bg-divider absolute top-4 right-4 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl transition-colors"
+          aria-label={t('Close')}
           disabled={isLoading}
         >
           <X size={20} />
@@ -197,48 +197,48 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
           onSubmit={handleSubmit}
           className="flex flex-col gap-5"
         >
-          <section className="flex items-center justify-center gap-2 mb-1">
+          <section className="mb-1 flex items-center justify-center gap-2">
             {isEditing ? (
               <>
-                <div className="p-2 bg-accent-edit-bg rounded-xl">
+                <div className="bg-accent-edit-bg rounded-xl p-2">
                   <Pencil size={18} className="text-accent-edit" />
                 </div>
                 <h2
                   id="modal-title"
-                  className="text-2xl sm:text-3xl font-bold text-fg tracking-tight"
-                  style={{ fontFamily: "var(--font-display)" }}
+                  className="text-fg text-2xl font-bold tracking-tight sm:text-3xl"
+                  style={{ fontFamily: 'var(--font-display)' }}
                 >
-                  {t("EditItem")}
+                  {t('EditItem')}
                 </h2>
               </>
             ) : (
               <>
                 <div
-                  className="p-2 bg-accent-add-bg rounded-xl"
+                  className="bg-accent-add-bg rounded-xl p-2"
                   aria-hidden="true"
                 >
                   <Plus size={18} className="text-primary" />
                 </div>
                 <h2
                   id="modal-title"
-                  className="text-2xl sm:text-3xl font-bold text-fg tracking-tight"
-                  style={{ fontFamily: "var(--font-display)" }}
+                  className="text-fg text-2xl font-bold tracking-tight sm:text-3xl"
+                  style={{ fontFamily: 'var(--font-display)' }}
                 >
-                  {t("AddItem")}
+                  {t('AddItem')}
                 </h2>
               </>
             )}
           </section>
           <div className="flex flex-col gap-1.5">
             <label htmlFor="name" className={UI_CLASSES.label}>
-              {t("ProductName")}
+              {t('ProductName')}
             </label>
             <input
               id="name"
               name="name"
-              placeholder={t("ProductName")}
+              placeholder={t('ProductName')}
               value={formData.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
+              onChange={(e) => handleInputChange('name', e.target.value)}
               className={UI_CLASSES.input}
               autoComplete="on"
               autoFocus
@@ -246,15 +246,15 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
               disabled={isLoading}
             />
             {errors.name && (
-              <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.name}</p>
             )}
           </div>
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="quantity"
-              className="text-xs font-semibold text-fg-muted uppercase tracking-wider"
+              className="text-fg-muted text-xs font-semibold tracking-wider uppercase"
             >
-              {t("Quantity")}
+              {t('Quantity')}
             </label>
             <input
               id="quantity"
@@ -262,22 +262,22 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
               type="number"
               placeholder="1"
               value={formData.quantity}
-              onChange={(e) => handleInputChange("quantity", e.target.value)}
+              onChange={(e) => handleInputChange('quantity', e.target.value)}
               className={UI_CLASSES.input}
               min="1"
               aria-required="true"
               disabled={isLoading}
             />
             {errors.quantity && (
-              <p className="text-red-500 text-xs mt-1">{errors.quantity}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.quantity}</p>
             )}
           </div>
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="expiration"
-              className="text-xs font-semibold text-fg-muted uppercase tracking-wider"
+              className="text-fg-muted text-xs font-semibold tracking-wider uppercase"
             >
-              {t("Expiration")}
+              {t('Expiration')}
             </label>
             <input
               id="expiration"
@@ -285,32 +285,32 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
               type="number"
               placeholder="30"
               value={formData.expiration}
-              onChange={(e) => handleInputChange("expiration", e.target.value)}
+              onChange={(e) => handleInputChange('expiration', e.target.value)}
               className={UI_CLASSES.input}
               min="1"
               disabled={isLoading}
             />
             {errors.expiration && (
-              <p className="text-red-500 text-xs mt-1">{errors.expiration}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.expiration}</p>
             )}
           </div>
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="location"
-              className="text-xs font-semibold text-fg-muted uppercase tracking-wider"
+              className="text-fg-muted text-xs font-semibold tracking-wider uppercase"
             >
-              {t("Location")}
+              {t('Location')}
             </label>
             <select
               id="location"
               name="location"
               value={formData.location}
-              onChange={(e) => handleInputChange("location", e.target.value)}
+              onChange={(e) => handleInputChange('location', e.target.value)}
               className={`${UI_CLASSES.input} cursor-pointer`}
               aria-required="true"
               disabled={isLoading}
             >
-              <option value="">{t("SelectLocation")}</option>
+              <option value="">{t('SelectLocation')}</option>
               {locations.map((location: ILocations) => (
                 <option key={location.id} value={location.id}>
                   {location.name}
@@ -318,25 +318,25 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
               ))}
             </select>
             {errors.location && (
-              <p className="text-red-500 text-xs mt-1">{errors.location}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.location}</p>
             )}
           </div>
-          <div className="flex flex-col sm:flex-row justify-end gap-3 mt-1">
+          <div className="mt-1 flex flex-col justify-end gap-3 sm:flex-row">
             <button
               type="button"
               onClick={closeModal}
-              className="px-5 py-3 bg-transparent border border-surface-overlay rounded-xl text-fg-muted hover:bg-divider hover:text-fg transition-all duration-150 min-h-[44px] order-2 sm:order-1 font-medium"
+              className="border-surface-overlay text-fg-muted hover:bg-divider hover:text-fg order-2 min-h-[44px] rounded-xl border bg-transparent px-5 py-3 font-medium transition-all duration-150 sm:order-1"
               disabled={isLoading}
             >
-              {t("Cancel")}
+              {t('Cancel')}
             </button>
             <button
               type="submit"
-              className="px-5 py-3 bg-primary hover:bg-primary-dark text-bg rounded-xl flex items-center justify-center gap-2 font-semibold shadow-md transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] order-1 sm:order-2"
+              className="bg-primary hover:bg-primary-dark text-bg order-1 flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold shadow-md transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-50 sm:order-2"
               disabled={isLoading}
             >
               <Check size={18} />
-              {isEditing ? t("UpdateItem") : t("Submit")}
+              {isEditing ? t('UpdateItem') : t('Submit')}
             </button>
           </div>
         </form>
