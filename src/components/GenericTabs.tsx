@@ -1,5 +1,5 @@
-import { IGenericTabs } from "@/lib/types";
-import React from "react";
+import { IGenericTabs } from '@/lib/types';
+import React from 'react';
 
 const GenericTabs: React.FC<IGenericTabs> = ({
   title,
@@ -13,7 +13,7 @@ const GenericTabs: React.FC<IGenericTabs> = ({
       id={title}
       role="tab"
       aria-selected={buttonPressed === title}
-      className={`flex items-center justify-center h-8 px-4 py-3 sm:py-4 border-b-2 rounded-xl whitespace-nowrap font-medium text-sm transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-bg ${buttonPressed === title ? "bg-primary text-bg border-primary shadow-sm" : "border-transparent text-fg-muted hover:text-fg hover:bg-muted"} ${isFilter && "ml-auto"}`}
+      className={`focus-visible:ring-primary focus-visible:ring-offset-bg flex h-8 items-center justify-center rounded-xl border-b-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-all duration-150 focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none sm:py-4 ${buttonPressed === title ? 'bg-primary text-bg border-primary shadow-sm' : 'text-fg-muted hover:text-fg hover:bg-muted border-transparent'} ${isFilter && 'ml-auto'}`}
       onClick={() => action(title)}
     >
       {children}

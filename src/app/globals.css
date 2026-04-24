@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   /* --- Accent --- */
@@ -33,9 +33,9 @@
 
 /* Font variables stay in :root — used via inline styles, not Tailwind utilities */
 :root {
-  --font-display: "Syne", sans-serif;
-  --font-body: "Figtree", sans-serif;
-  --font-product: "Nunito", sans-serif;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Figtree', sans-serif;
+  --font-product: 'Nunito', sans-serif;
 }
 
 @layer base {
@@ -97,9 +97,9 @@
       min-width: 44px;
     }
 
-    input[type="text"],
-    input[type="search"],
-    input[type="number"],
+    input[type='text'],
+    input[type='search'],
+    input[type='number'],
     select {
       font-size: 16px;
     }

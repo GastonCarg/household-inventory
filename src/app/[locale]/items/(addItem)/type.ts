@@ -1,4 +1,4 @@
-import { Item } from "../type";
+import { Item } from '../type';
 
 export interface IAddItemModal {
   closeModal: () => void;

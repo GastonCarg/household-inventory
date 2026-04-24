@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { IFilterSearch } from "@/lib/types";
-import React, { createContext, useState } from "react";
+import { IFilterSearch } from '@/lib/types';
+import React, { createContext, useState } from 'react';
 
 interface ISearchContext {
   searchValue: string;
@@ -12,11 +12,11 @@ interface ISearchContext {
 }
 
 const SearchContext = createContext<ISearchContext>({
-  searchValue: "",
+  searchValue: '',
   handleSetSearchValue: () => {},
-  statusFilter: { status: "all" },
+  statusFilter: { status: 'all' },
   handleSetStatusFilter: () => {},
-  filterByStatus: () => ({ status: "all" }),
+  filterByStatus: () => ({ status: 'all' }),
 });
 
 export const SearchContextProvider = ({
@@ -24,22 +24,22 @@ export const SearchContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<IFilterSearch>({
-    status: "all",
+    status: 'all',
   });
 
   const filterByStatus = (expireDate: string): IFilterSearch => {
     const now = new Date();
     const expire = new Date(expireDate);
     const diffDays = Math.ceil(
-      (expire.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+      (expire.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
     );
 
-    if (diffDays <= 0) return { status: "expired" };
-    if (diffDays >= 1 && diffDays <= 3) return { status: "expiringSoon" };
-    if (diffDays > 3) return { status: "ok" };
-    return { status: "all" };
+    if (diffDays <= 0) return { status: 'expired' };
+    if (diffDays >= 1 && diffDays <= 3) return { status: 'expiringSoon' };
+    if (diffDays > 3) return { status: 'ok' };
+    return { status: 'all' };
   };
 
   const handleSetStatusFilter = (status: IFilterSearch) => {

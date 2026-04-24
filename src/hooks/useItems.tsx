@@ -4,20 +4,20 @@ import {
   getAllItems,
   getItemsSummary,
   updateItem,
-} from "@/api/items";
-import { Item } from "@/app/[locale]/items/type";
+} from '@/api/items';
+import { Item } from '@/app/[locale]/items/type';
 import {
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
-} from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
-import { toast } from "react-toastify";
+} from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { toast } from 'react-toastify';
 
 export const useItemsSummary = () => {
   return useQuery({
-    queryKey: ["summary"],
+    queryKey: ['summary'],
     queryFn: getItemsSummary,
     placeholderData: { total: 0, expired: 0, expiringSoon: 0 },
   });
@@ -25,11 +25,11 @@ export const useItemsSummary = () => {
 
 export const useGetItems = (searchValue: string) => {
   return useInfiniteQuery<any>({
-    queryKey: ["items", "infinite"],
+    queryKey: ['items', 'infinite'],
     queryFn: ({ pageParam = 1 }) =>
       getAllItems({
         page: Number(pageParam),
-        searchValue: searchValue || "",
+        searchValue: searchValue || '',
       }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
@@ -41,42 +41,42 @@ export const useGetItems = (searchValue: string) => {
 
 export const useDeleteItem = () => {
   const queryClient = useQueryClient();
-  const t = useTranslations("ItemsList");
+  const t = useTranslations('ItemsList');
   return useMutation({
     mutationFn: deleteItem,
     onSuccess: (_data, id) => {
-      queryClient.setQueryData(["items", "infinite"], (old: any) => ({
+      queryClient.setQueryData(['items', 'infinite'], (old: any) => ({
         ...old,
         pages: old.pages.map((page: any) => ({
           ...page,
           data: page.data.filter(
-            (item: Item) => String(item.id) !== String(id),
+            (item: Item) => String(item.id) !== String(id)
           ),
         })),
       }));
 
-      queryClient.invalidateQueries({ queryKey: ["items", "infinite"] });
-      queryClient.invalidateQueries({ queryKey: ["summary"] });
+      queryClient.invalidateQueries({ queryKey: ['items', 'infinite'] });
+      queryClient.invalidateQueries({ queryKey: ['summary'] });
 
-      toast.success(t("ItemDeletedSuccessfully"));
+      toast.success(t('ItemDeletedSuccessfully'));
     },
     onError: (error) => {
-      toast.error(t("ErrorDeletingItem"));
-      console.error(t("ErrorDeletingItemLog"), error);
+      toast.error(t('ErrorDeletingItem'));
+      console.error(t('ErrorDeletingItemLog'), error);
     },
   });
 };
 
 export const useAddItem = (closeModal: Function) => {
   const queryClient = useQueryClient();
-  const t = useTranslations("AddItemModal");
+  const t = useTranslations('AddItemModal');
   return useMutation({
     mutationFn: addItem,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["items", "infinite"] });
-      queryClient.invalidateQueries({ queryKey: ["summary"] });
-      toast.success(t("ItemAddedSuccessfully"), {
-        position: "top-right",
+      queryClient.invalidateQueries({ queryKey: ['items', 'infinite'] });
+      queryClient.invalidateQueries({ queryKey: ['summary'] });
+      toast.success(t('ItemAddedSuccessfully'), {
+        position: 'top-right',
         autoClose: 5000,
         closeOnClick: true,
         pauseOnHover: true,
@@ -85,23 +85,23 @@ export const useAddItem = (closeModal: Function) => {
       closeModal();
     },
     onError: (error) => {
-      toast.error(t("ErrorAddingItem"));
-      console.error(t("ErrorAddingItemLog"), error);
+      toast.error(t('ErrorAddingItem'));
+      console.error(t('ErrorAddingItemLog'), error);
     },
   });
 };
 
 export const useUpdateItem = (closeModal: Function) => {
   const queryClient = useQueryClient();
-  const t = useTranslations("AddItemModal");
+  const t = useTranslations('AddItemModal');
   return useMutation({
     mutationFn: ({ id, item }: { id: string | number; item: Item }) =>
       updateItem(String(id), item),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["items", "infinite"] });
-      queryClient.invalidateQueries({ queryKey: ["summary"] });
-      toast.success(t("ItemUpdatedSuccessfully"), {
-        position: "top-right",
+      queryClient.invalidateQueries({ queryKey: ['items', 'infinite'] });
+      queryClient.invalidateQueries({ queryKey: ['summary'] });
+      toast.success(t('ItemUpdatedSuccessfully'), {
+        position: 'top-right',
         autoClose: 5000,
         closeOnClick: true,
         pauseOnHover: true,
@@ -110,8 +110,8 @@ export const useUpdateItem = (closeModal: Function) => {
       closeModal();
     },
     onError: (error) => {
-      toast.error(t("ErrorUpdatingItem"));
-      console.error(t("ErrorUpdatingItemLog"), error);
+      toast.error(t('ErrorUpdatingItem'));
+      console.error(t('ErrorUpdatingItemLog'), error);
     },
   });
 };

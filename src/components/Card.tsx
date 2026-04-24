@@ -1,24 +1,24 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export default function Card({
   children,
   props,
   onClick,
   tabIndex,
-  "aria-label": ariaLabel,
+  'aria-label': ariaLabel,
 }: {
   children: ReactNode;
   props?: string;
   onClick?: () => void;
   tabIndex?: number;
-  "aria-label"?: string;
+  'aria-label'?: string;
 }): React.JSX.Element {
   return (
     <article
       onClick={onClick}
       tabIndex={tabIndex}
       aria-label={ariaLabel}
-      className={`flex min-h-28 flex-col rounded-2xl border border-divider bg-surface p-4 sm:p-5 shadow-sm hover:shadow-xl hover:shadow-black/50 hover:-translate-y-1 transition-[transform,box-shadow] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${props}`}
+      className={`border-divider bg-surface focus-visible:ring-primary focus-visible:ring-offset-bg flex min-h-28 flex-col rounded-2xl border p-4 shadow-sm transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/50 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:p-5 ${props}`}
     >
       {children}
     </article>
@@ -27,7 +27,7 @@ export default function Card({
 
 Card.Header = function HeaderCard({
   children,
-  props = "",
+  props = '',
 }: {
   children: ReactNode;
   props?: string;
@@ -50,5 +50,5 @@ Card.Footer = function FooterCard({
   children: ReactNode;
   props?: string;
 }): React.JSX.Element {
-  return <div className={`flex mt-2 ${props}`}>{children}</div>;
+  return <div className={`mt-2 flex ${props}`}>{children}</div>;
 };

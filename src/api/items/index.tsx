@@ -2,7 +2,7 @@ import {
   Item,
   ItemsResponse,
   ItemSummaryResponse,
-} from "@/app/[locale]/items/type";
+} from '@/app/[locale]/items/type';
 
 export const getAllItems = async ({
   page = 1,
@@ -14,15 +14,15 @@ export const getAllItems = async ({
   try {
     const limit = 12;
     const queryParams = new URLSearchParams();
-    queryParams.append("_page", page.toString());
-    queryParams.append("_limit", limit.toString());
-    if (searchValue) queryParams.append("q", searchValue);
+    queryParams.append('_page', page.toString());
+    queryParams.append('_limit', limit.toString());
+    if (searchValue) queryParams.append('q', searchValue);
 
     const url = `${process.env.NEXT_PUBLIC_API_URL}/products?${queryParams.toString()}`;
 
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error("Failed to fetch all items");
+      throw new Error('Failed to fetch all items');
     }
 
     const data: ItemsResponse = await response.json();
@@ -37,16 +37,16 @@ export const addItem = async (item: Item): Promise<Item> => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/products`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(item),
-      },
+      }
     );
 
     if (!response.ok) {
-      throw new Error("Failed to add item");
+      throw new Error('Failed to add item');
     }
 
     const data = await response.json();
@@ -59,11 +59,11 @@ export const addItem = async (item: Item): Promise<Item> => {
 export const getItemsSummary = async (): Promise<ItemSummaryResponse> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/products/summary`,
+      `${process.env.NEXT_PUBLIC_API_URL}/products/summary`
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch item summary");
+      throw new Error('Failed to fetch item summary');
     }
 
     const data = await response.json();
@@ -78,15 +78,15 @@ export const deleteItem = async (id: number | string): Promise<void> => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
       {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      },
+      }
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch item summary");
+      throw new Error('Failed to fetch item summary');
     }
 
     const data = await response.json();
@@ -101,16 +101,16 @@ export const updateItem = async (id: string, item: Item): Promise<Item> => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
       {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(item),
-      },
+      }
     );
 
     if (!response.ok) {
-      throw new Error("Failed to update item");
+      throw new Error('Failed to update item');
     }
 
     const data = await response.json();

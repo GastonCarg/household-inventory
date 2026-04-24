@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Item } from "@/app/[locale]/items/type";
-import React, { createContext, useState } from "react";
+import { Item } from '@/app/[locale]/items/type';
+import React, { createContext, useState } from 'react';
 
 interface IItemModalContext {
   addItemModal: boolean;

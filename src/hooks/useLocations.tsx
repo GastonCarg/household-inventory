@@ -1,9 +1,9 @@
-import { getLocations } from "@/api/locations";
-import { useQuery } from "@tanstack/react-query";
+import { getLocations } from '@/api/locations';
+import { useQuery } from '@tanstack/react-query';
 
 export const useGetLocations = () => {
   return useQuery({
-    queryKey: ["locations"],
+    queryKey: ['locations'],
     queryFn: getLocations,
     staleTime: Infinity,
   });
