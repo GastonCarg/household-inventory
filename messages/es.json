@@ -34,6 +34,38 @@
   "Search": {
     "Search": "Buscar"
   },
+  "Sidebar": {
+    "Navigation": "Navegación lateral",
+    "OpenMenu": "Abrir menú",
+    "CloseMenu": "Cerrar menú",
+    "Menu": "Menú",
+    "Inventory": "Inventario",
+    "Home": "Inicio",
+    "Locations": "Ubicaciones"
+  },
+  "Locations": {
+    "Eyebrow": "Configuración del espacio",
+    "Title": "Ubicaciones",
+    "Description": "Crea los espacios donde guardas tus artículos del hogar para que el inventario quede organizado desde el inicio.",
+    "CounterLabel": "Espacios activos",
+    "AddTitle": "Agregar una nueva ubicación",
+    "AddDescription": "Solo hace falta el nombre. Puedes seguir ampliando la lista a medida que cambia tu hogar.",
+    "NameLabel": "Nombre de la ubicación",
+    "NamePlaceholder": "Ejemplo: Despensa",
+    "AddAction": "Agregar ubicación",
+    "Adding": "Agregando...",
+    "Delete": "Eliminar",
+    "EmptyTitle": "Todavía no hay ubicaciones",
+    "EmptyDescription": "Agrega tu primera ubicación para habilitar el resto del flujo del inventario.",
+    "LocationCardLabel": "Punto de guardado",
+    "NameRequired": "El nombre de la ubicación es obligatorio.",
+    "LocationAddedSuccessfully": "¡Ubicación agregada exitosamente!",
+    "ErrorAddingLocation": "Ocurrió un error al agregar la ubicación. Por favor, inténtalo de nuevo.",
+    "ErrorAddingLocationLog": "Error al agregar la ubicación:",
+    "LocationDeletedSuccessfully": "¡Ubicación eliminada exitosamente!",
+    "ErrorDeletingLocation": "Ocurrió un error al eliminar la ubicación. Por favor, inténtalo de nuevo.",
+    "ErrorDeletingLocationLog": "Error al eliminar la ubicación:"
+  },
   "AddItemModal": {
     "ProductName": "Nombre del artículo",
     "Quantity": "Cantidad",

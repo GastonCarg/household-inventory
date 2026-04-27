@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 
-import { Filter, Loader2, Package } from 'lucide-react';
+import { ChevronDown, Filter, Loader2, Package } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { toast } from 'react-toastify';
@@ -51,7 +51,11 @@ const ItemsList: React.FC = () => {
       value: expired,
     },
   ];
-  let buttonList = [
+  let buttonList: {
+    id: string | number;
+    title: string;
+    action: (value: string) => void;
+  }[] = [
     {
       id: 0,
       title: t('AllItems'),
@@ -184,50 +188,58 @@ const ItemsList: React.FC = () => {
       </div>
       <nav
         aria-label={t('FilterByLocation')}
-        className="flex w-full flex-col gap-4 border-b border-[#1E2130] px-2"
+        className="flex w-full flex-col gap-4 border-b border-[#1E2130] px-2 pb-4"
       >
-        <div
-          role="tablist"
-          aria-label={t('FilterByLocation')}
-          className="scrollbar-hide flex items-center gap-1 overflow-x-auto pb-2"
-        >
-          {buttonList.map((button) => {
-            const { id, title, action } = button;
-            return (
-              <GenericTabs
-                key={id}
-                title={title}
-                action={(title) => action(title)}
-                buttonPressed={buttonPressed}
-              />
-            );
-          })}
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div
-            id="Filter"
-            className="group ml-auto flex min-w-30 items-center justify-center p-3 text-[#8A90AB] transition-colors hover:text-[#F2F4FF]"
+            role="tablist"
+            aria-label={t('FilterByLocation')}
+            className="scrollbar-hide flex items-center gap-1 overflow-x-auto pb-1 lg:flex-1"
           >
-            <Filter
-              className="mr-2 group-hover:text-[#deff6ecc]"
-              size={
-                typeof window !== 'undefined' && window.innerWidth < 640
-                  ? 20
-                  : 18
-              }
-            />
-            <select
-              value={statusFilter.status}
-              className="cursor-pointer bg-transparent px-1 text-sm font-medium text-[#8A90AB] group-hover:text-[#deff6ecc] focus:outline-none"
-              aria-label="Filter items by status"
-              onChange={(e) => {
-                const value = e.target.value as IFilterSearch['status'];
-                handleSetStatusFilter({ status: value });
-              }}
-            >
-              <option value="all">{t('AllItems')}</option>
-              <option value="ok">{t('Ok')}</option>
-              <option value="expiringSoon">{t('ExpiringSoon')}</option>
-              <option value="expired">{t('Expired')}</option>
-            </select>
+            {buttonList.map((button) => {
+              const { id, title, action } = button;
+              return (
+                <GenericTabs
+                  key={id}
+                  title={title}
+                  action={(title) => action(title)}
+                  buttonPressed={buttonPressed}
+                />
+              );
+            })}
+          </div>
+          <div className="border-divider bg-surface-elevated/80 focus-within:ring-primary/30 focus-within:border-primary/50 flex w-full items-center gap-3 rounded-2xl border px-4 py-3 shadow-sm transition-all focus-within:ring-2 lg:w-auto lg:min-w-[250px] lg:justify-between">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="bg-primary/12 flex h-10 w-10 items-center justify-center rounded-xl border border-[#2B3145]">
+                <Filter className="text-primary h-4 w-4" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-fg text-sm font-semibold">
+                  {t('FilterByStatus')}
+                </p>
+                <p className="text-fg-muted text-xs">{t('Filter')}</p>
+              </div>
+            </div>
+            <div className="relative min-w-0 flex-1 lg:max-w-[150px] lg:flex-none">
+              <select
+                value={statusFilter.status}
+                className="text-fg border-divider bg-surface w-full cursor-pointer appearance-none rounded-xl border px-3 py-2 pr-10 text-sm font-medium focus:outline-none"
+                aria-label={t('FilterByStatus')}
+                onChange={(e) => {
+                  const value = e.target.value as IFilterSearch['status'];
+                  handleSetStatusFilter({ status: value });
+                }}
+              >
+                <option value="all">{t('AllItems')}</option>
+                <option value="ok">{t('Ok')}</option>
+                <option value="expiringSoon">{t('ExpiringSoon')}</option>
+                <option value="expired">{t('Expired')}</option>
+              </select>
+              <ChevronDown
+                className="text-fg-muted pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2"
+                aria-hidden="true"
+              />
+            </div>
           </div>
         </div>
       </nav>

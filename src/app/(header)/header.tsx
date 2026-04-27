@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <header
       aria-label="banner header"
-      className="bg-surface border-divider flex h-auto flex-col items-start justify-between gap-4 border-b px-6 py-4 sm:h-[72px] sm:flex-row sm:items-center"
+      className="bg-surface border-divider flex h-auto flex-col items-start justify-between gap-4 border-b px-6 py-4 pl-16 sm:h-[72px] sm:flex-row sm:items-center sm:pl-6"
     >
       <div className="flex items-center justify-center gap-3">
         <section className="rounded-xl bg-[#deff6ecc] p-2.5" aria-hidden="true">

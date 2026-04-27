@@ -36,7 +36,7 @@ export interface IDefaultCards {
 }
 
 export interface ILocations {
-  id: number;
+  id: string | number;
   name: string;
   bgColor?: string;
   borderColor?: string;

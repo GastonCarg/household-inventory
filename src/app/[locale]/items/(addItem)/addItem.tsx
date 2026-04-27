@@ -13,7 +13,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
   const t = useTranslations('AddItemModal');
   const isEditing = !!editingItem;
 
-  const { data: locations, status, error } = useGetLocations();
+  const { data: locations = [], status, error } = useGetLocations();
   const createMutation = useAddItem(closeModal);
   const updateMutation = useUpdateItem(closeModal);
   const isLoading = isEditing
@@ -80,8 +80,17 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
       }
 
       const locationObj = locations.find(
-        (loc: ILocations) => loc.id.toString() === location
+        (loc) => loc.id.toString() === location
       );
+
+      if (!locationObj) {
+        setErrors((prev) => ({
+          ...prev,
+          location: t('LocationRequired'),
+        }));
+        toast.warning(t('LocationRequired'));
+        return;
+      }
 
       const item: Item = {
         title: name,

@@ -34,6 +34,38 @@
   "Search": {
     "Search": "Search"
   },
+  "Sidebar": {
+    "Navigation": "Sidebar navigation",
+    "OpenMenu": "Open menu",
+    "CloseMenu": "Close menu",
+    "Menu": "Menu",
+    "Inventory": "Inventory",
+    "Home": "Home",
+    "Locations": "Locations"
+  },
+  "Locations": {
+    "Eyebrow": "Space setup",
+    "Title": "Locations",
+    "Description": "Create the spaces where you store household items so the inventory can be organized from the start.",
+    "CounterLabel": "Active spaces",
+    "AddTitle": "Add a new location",
+    "AddDescription": "Only the name is required. You can keep growing the list as your home setup changes.",
+    "NameLabel": "Location name",
+    "NamePlaceholder": "Example: Pantry",
+    "AddAction": "Add location",
+    "Adding": "Adding...",
+    "Delete": "Delete",
+    "EmptyTitle": "No locations yet",
+    "EmptyDescription": "Add your first location to unlock the rest of the inventory flow.",
+    "LocationCardLabel": "Storage point",
+    "NameRequired": "Location name is required.",
+    "LocationAddedSuccessfully": "Location added successfully!",
+    "ErrorAddingLocation": "An error occurred while adding the location. Please try again.",
+    "ErrorAddingLocationLog": "Error adding location:",
+    "LocationDeletedSuccessfully": "Location deleted successfully!",
+    "ErrorDeletingLocation": "An error occurred while deleting the location. Please try again.",
+    "ErrorDeletingLocationLog": "Error deleting location:"
+  },
   "AddItemModal": {
     "ProductName": "Product name",
     "Quantity": "Quantity",
