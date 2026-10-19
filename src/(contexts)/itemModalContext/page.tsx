@@ -1,7 +1,7 @@
 'use client';
 
 import { Item } from '@/app/[locale]/items/type';
-import React, { createContext, useState } from 'react';
+import React, { createContext, useCallback, useState } from 'react';
 
 interface IItemModalContext {
   addItemModal: boolean;
@@ -9,6 +9,9 @@ interface IItemModalContext {
   openModal: () => void;
   closeModal: () => void;
   editItem: (item: Item) => void;
+  scanSession: boolean;
+  openScan: () => void;
+  closeScan: () => void;
 }
 
 const ItemModalContext = createContext<IItemModalContext>({
@@ -17,6 +20,9 @@ const ItemModalContext = createContext<IItemModalContext>({
   openModal: () => {},
   closeModal: () => {},
   editItem: () => {},
+  scanSession: false,
+  openScan: () => {},
+  closeScan: () => {},
 });
 
 export const ItemModalProvider = ({
@@ -26,20 +32,30 @@ export const ItemModalProvider = ({
 }) => {
   const [addItemModal, setAddItemModal] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
+  const [scanSession, setScanSession] = useState(false);
 
-  const openModal = () => {
+  // Stable references: the modals use these as effect dependencies
+  const openModal = useCallback(() => {
     setAddItemModal(true);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setAddItemModal(false);
     setEditingItem(null);
-  };
+  }, []);
 
-  const editItem = (item: Item) => {
+  const editItem = useCallback((item: Item) => {
     setEditingItem(item);
     setAddItemModal(true);
-  };
+  }, []);
+
+  const openScan = useCallback(() => {
+    setScanSession(true);
+  }, []);
+
+  const closeScan = useCallback(() => {
+    setScanSession(false);
+  }, []);
 
   const value = {
     addItemModal,
@@ -47,6 +63,9 @@ export const ItemModalProvider = ({
     openModal,
     closeModal,
     editItem,
+    scanSession,
+    openScan,
+    closeScan,
   };
 
   return (

@@ -1,5 +1,5 @@
 'use client';
-import { Home, Plus } from 'lucide-react';
+import { Home, Plus, ScanBarcode } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useContext } from 'react';
 
@@ -7,13 +7,13 @@ import { ItemModalContext } from '@/(contexts)';
 import SearchComponent from '../(search)/searchComponent';
 
 const Header = () => {
-  const { openModal } = useContext(ItemModalContext);
+  const { openModal, openScan } = useContext(ItemModalContext);
   const t = useTranslations('Header');
 
   return (
     <header
       aria-label="banner header"
-      className="bg-surface border-divider flex h-auto flex-col items-start justify-between gap-4 border-b px-6 py-4 sm:h-[72px] sm:flex-row sm:items-center"
+      className="bg-surface border-divider flex h-auto flex-col items-start justify-between gap-4 border-b px-6 py-4 pl-16 sm:h-[72px] sm:flex-row sm:items-center sm:pl-6"
     >
       <div className="flex items-center justify-center gap-3">
         <section className="rounded-xl bg-[#deff6ecc] p-2.5" aria-hidden="true">
@@ -37,6 +37,14 @@ const Header = () => {
       </div>
       <section className="order-2 flex w-full flex-col items-stretch gap-3 sm:order-none sm:w-auto sm:flex-row sm:items-center sm:gap-3">
         <SearchComponent />
+        <button
+          className="border-primary/40 text-primary hover:bg-primary/10 focus-visible:ring-primary focus-visible:ring-offset-surface flex min-h-[44px] items-center justify-center gap-2 rounded-xl border px-5 py-2.5 font-semibold transition-all duration-150 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:min-h-0"
+          onClick={openScan}
+          type="button"
+        >
+          <ScanBarcode className="h-4 w-4" />
+          <span className="text-sm">{t('Scan')}</span>
+        </button>
         <button
           className="bg-primary hover:bg-primary-dark active:bg-primary-active text-bg focus-visible:ring-primary focus-visible:ring-offset-surface flex min-h-[44px] items-center justify-center gap-2 rounded-xl border-none px-5 py-2.5 font-semibold transition-all duration-150 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:min-h-0"
           onClick={openModal}
