@@ -4,8 +4,11 @@ import {
   ItemSummaryResponse,
 } from '@/app/[locale]/items/type';
 
-const ITEMS_PER_PAGE_PARAM =
-  process.env.NODE_ENV === 'development' ? '_per_page' : '_limit';
+// json-server (dev) and the Nest API use different pagination params
+const PAGINATION_PARAMS =
+  process.env.NODE_ENV === 'development'
+    ? { page: '_page', limit: '_per_page' }
+    : { page: 'page', limit: 'limit' };
 
 export const getAllItems = async ({
   page = 1,
@@ -17,8 +20,8 @@ export const getAllItems = async ({
   try {
     const limit = 12;
     const queryParams = new URLSearchParams();
-    queryParams.append('_page', page.toString());
-    queryParams.append(ITEMS_PER_PAGE_PARAM, limit.toString());
+    queryParams.append(PAGINATION_PARAMS.page, page.toString());
+    queryParams.append(PAGINATION_PARAMS.limit, limit.toString());
     if (searchValue) queryParams.append('q', searchValue);
 
     const url = `${process.env.NEXT_PUBLIC_API_URL}/products?${queryParams.toString()}`;
@@ -50,6 +53,30 @@ export const addItem = async (item: Item): Promise<Item> => {
 
     if (!response.ok) {
       throw new Error('Failed to add item');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const addItemsBulk = async (items: Item[]): Promise<Item[]> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/products/bulk`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to add items');
     }
 
     const data = await response.json();

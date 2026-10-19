@@ -11,8 +11,9 @@ import Header from '../(header)/header';
 
 const ItemsList = lazy(() => import('./items/page'));
 const ItemModal = lazy(() => import('./items/(addItem)/addItem'));
+const ScanSession = lazy(() => import('./items/(scan)/ScanSession'));
 
-const HomeContent = ({ addItemModal }: { addItemModal: boolean }) => {
+const HomeContent = ({ isModalOpen }: { isModalOpen: boolean }) => {
   const router = useRouter();
   const { data: locations, status } = useGetLocations();
 
@@ -30,7 +31,7 @@ const HomeContent = ({ addItemModal }: { addItemModal: boolean }) => {
   }
 
   return (
-    <div inert={addItemModal || undefined}>
+    <div inert={isModalOpen || undefined}>
       <Header />
       <div className="mx-auto grid w-full max-w-7xl gap-6 p-5 sm:p-6">
         <Suspense fallback={<Loader />}>
@@ -43,15 +44,20 @@ const HomeContent = ({ addItemModal }: { addItemModal: boolean }) => {
 
 const Home = () => {
   const [queryClient] = useState(() => new QueryClient());
-  const { addItemModal, closeModal, editingItem } =
+  const { addItemModal, closeModal, editingItem, scanSession, closeScan } =
     useContext(ItemModalContext);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HomeContent addItemModal={addItemModal} />
+      <HomeContent isModalOpen={addItemModal || scanSession} />
       {addItemModal && (
         <Suspense>
           <ItemModal closeModal={closeModal} editingItem={editingItem} />
+        </Suspense>
+      )}
+      {scanSession && (
+        <Suspense>
+          <ScanSession closeScan={closeScan} />
         </Suspense>
       )}
       <ToastContainer />
