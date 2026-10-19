@@ -6,6 +6,7 @@ export interface Item {
   location?: ILocations;
   color?: string;
   quantity: number;
+  barcode?: string | null;
   deletedAt?: string | null;
   createdAt?: string;
   updatedAt?: string;
