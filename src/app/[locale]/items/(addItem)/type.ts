@@ -7,7 +7,7 @@ export interface IAddItemModal {
 }
 
 export interface ILocations {
-  id: string | number;
+  id: number;
   name: string;
-  deletedAt?: string | null;
+  deletedAt: string;
 }
