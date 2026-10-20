@@ -20,9 +20,14 @@ export interface IGenericCardProps {
 }
 
 export interface Location {
-  id: string;
+  id: string | number;
   name: string;
+  bgColor?: string;
+  borderColor?: string;
+  textColor?: string;
   deletedAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 type Props = {

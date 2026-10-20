@@ -1,5 +1,6 @@
 import {
   addItem,
+  addItemsBulk,
   deleteItem,
   getAllItems,
   getItemsSummary,
@@ -67,7 +68,8 @@ export const useDeleteItem = () => {
   });
 };
 
-export const useAddItem = (closeModal: Function) => {
+// Closing (or keeping open for "save and add another") is decided per call via mutate options
+export const useAddItem = () => {
   const queryClient = useQueryClient();
   const t = useTranslations('AddItemModal');
   return useMutation({
@@ -75,6 +77,7 @@ export const useAddItem = (closeModal: Function) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['items', 'infinite'] });
       queryClient.invalidateQueries({ queryKey: ['summary'] });
+      queryClient.invalidateQueries({ queryKey: ['catalog'] });
       toast.success(t('ItemAddedSuccessfully'), {
         position: 'top-right',
         autoClose: 5000,
@@ -82,11 +85,31 @@ export const useAddItem = (closeModal: Function) => {
         pauseOnHover: true,
         draggable: true,
       });
-      closeModal();
     },
     onError: (error) => {
       toast.error(t('ErrorAddingItem'));
       console.error(t('ErrorAddingItemLog'), error);
+    },
+  });
+};
+
+export const useAddItemsBulk = (onDone: () => void) => {
+  const queryClient = useQueryClient();
+  const t = useTranslations('ScanSession');
+  return useMutation({
+    mutationFn: addItemsBulk,
+    onSuccess: (items) => {
+      queryClient.invalidateQueries({ queryKey: ['items', 'infinite'] });
+      queryClient.invalidateQueries({ queryKey: ['summary'] });
+      queryClient.invalidateQueries({ queryKey: ['catalog'] });
+      // Barcode lookups are cached; refresh them so they reflect what was just learned
+      queryClient.removeQueries({ queryKey: ['lookup', 'barcode'] });
+      toast.success(t('ItemsAddedSuccessfully', { count: items.length }));
+      onDone();
+    },
+    onError: (error) => {
+      toast.error(t('ErrorAddingItems'));
+      console.error(t('ErrorAddingItemsLog'), error);
     },
   });
 };
