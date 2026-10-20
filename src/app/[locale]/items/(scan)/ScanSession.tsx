@@ -26,7 +26,14 @@ import {
   X,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { toast } from 'react-toastify';
 import { ILocations, Item } from '../type';
 import { isRowValid, ScanRow } from './ScanRow';
@@ -78,6 +85,13 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
   const rowsRef = useRef(rows);
 
   const { data: locations = [] } = useGetLocations();
+  const locationIds = useMemo(
+    () => new Set(locations.map((location) => String(location.id))),
+    [locations]
+  );
+  // A row restored from storage may point to a location deleted since
+  const withValidLocation = (row: ScanRowData): ScanRowData =>
+    locationIds.has(row.locationId) ? row : { ...row, locationId: '' };
   const { data: frequent = [] } = useFrequentCatalog();
   const { data: imageStatus } = useImageLookupStatus();
   const photoEnabled = !!imageStatus?.enabled;
@@ -290,7 +304,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
       toast.info(t('WaitForLookups'));
       return;
     }
-    if (!rows.every(isRowValid)) {
+    if (!rows.every((row) => isRowValid(withValidLocation(row)))) {
       setShowErrors(true);
       toast.warning(t('CompleteHighlightedRows'));
       return;
@@ -499,7 +513,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
                 {rows.map((row) => (
                   <ScanRow
                     key={row.key}
-                    row={row}
+                    row={withValidLocation(row)}
                     locations={locations}
                     showErrors={showErrors}
                     onChange={(changes) => updateRow(row.key, changes)}

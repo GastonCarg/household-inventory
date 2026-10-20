@@ -256,3 +256,28 @@ test('the list survives closing the session by mistake', async () => {
 
   expect(screen.getByLabelText('ProductName')).toHaveValue('Yogur');
 });
+
+test('a restored row whose location was deleted must pick a new one', () => {
+  sessionStorage.setItem(
+    'household-inventory:scanSession',
+    JSON.stringify([
+      {
+        key: 'restored',
+        title: 'Yogur',
+        quantity: 1,
+        locationId: '99',
+        expireDate: addDaysToToday(5),
+        status: 'ready',
+        source: 'manual',
+      },
+    ])
+  );
+  render(<ScanSession closeScan={mockCloseScan} />);
+
+  expect(screen.getByLabelText('Location')).toHaveValue('');
+
+  fireEvent.click(screen.getByRole('button', { name: 'Save 1' }));
+
+  expect(toast.warning).toHaveBeenCalledWith('CompleteHighlightedRows');
+  expect(mockBulkMutate).not.toHaveBeenCalled();
+});
