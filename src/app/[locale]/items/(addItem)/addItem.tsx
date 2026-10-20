@@ -1,75 +1,68 @@
 import { UI_CLASSES } from '@/(constants)';
-import ExpirationInput from '@/components/ExpirationInput';
 import { useAddItem, useUpdateItem } from '@/hooks/useItems';
 import { useGetLocations } from '@/hooks/useLocations';
-import { useModalA11y } from '@/hooks/useModalA11y';
-import { Link } from '@/i18n/navigation';
-import {
-  dateInputValueToISO,
-  getLastLocationId,
-  isoToDateInputValue,
-  setLastLocationId,
-} from '@/lib/helpers';
+import { getExpirationDaysLeft } from '@/lib/helpers';
 import { Check, Loader2, Pencil, Plus, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Item } from '../type';
 import { IAddItemModal, ILocations } from './type';
-
-const EMPTY_ERRORS = {
-  name: '',
-  quantity: '',
-  expiration: '',
-  location: '',
-};
 
 const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
   const t = useTranslations('AddItemModal');
   const isEditing = !!editingItem;
 
-  const { data: locations = [], status, error } = useGetLocations();
-  const createMutation = useAddItem();
+  const { data: locations, status, error } = useGetLocations();
+  const createMutation = useAddItem(closeModal);
   const updateMutation = useUpdateItem(closeModal);
-  const isSaving = isEditing
+  const isLoading = isEditing
     ? updateMutation.isPending
     : createMutation.isPending;
 
   // State for form fields
-  const [formData, setFormData] = useState(() => ({
+  const [formData, setFormData] = useState({
     name: editingItem?.title || '',
-    expiration: isoToDateInputValue(editingItem?.expireDate),
-    location: editingItem?.location?.id?.toString() || getLastLocationId(),
-    quantity: editingItem?.quantity?.toString() || '1',
-  }));
+    expiration: '',
+    location: editingItem?.location?.id?.toString() || '',
+    quantity: editingItem?.quantity?.toString() || '',
+  });
 
-  const [errors, setErrors] = useState(EMPTY_ERRORS);
+  const [errors, setErrors] = useState({
+    name: '',
+    quantity: '',
+    expiration: '',
+    location: '',
+  });
 
-  // Set by the clicked submit button: keep the modal open for the next product
-  const addAnotherRef = useRef(false);
-  const nameInputRef = useRef<HTMLInputElement>(null);
-
-  // A remembered location may have been deleted since
-  const selectedLocation = locations.some(
-    (loc) => loc.id.toString() === formData.location
-  )
-    ? formData.location
-    : '';
+  // Calculate days remaining from expiration date
+  useEffect(() => {
+    if (isEditing && editingItem?.expireDate) {
+      const daysLeft = getExpirationDaysLeft(editingItem.expireDate);
+      // Only set expiration if the item is not expired
+      if (daysLeft > 0) {
+        setFormData((prev) => ({
+          ...prev,
+          expiration: daysLeft.toString(),
+        }));
+      }
+    }
+  }, [editingItem, isEditing]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const { name, expiration, quantity: quantityStr } = formData;
+      const { name, expiration, location, quantity: quantityStr } = formData;
       const quantity = parseInt(quantityStr, 10);
 
       const newErrors = {
-        name: !name.trim() ? t('NameRequired') : '',
+        name: !name ? t('NameRequired') : '',
         quantity:
           !quantityStr || isNaN(quantity) || quantity < 1
             ? t('QuantityRequired')
             : '',
         expiration: !expiration ? t('ExpirationRequired') : '',
-        location: !selectedLocation ? t('LocationRequired') : '',
+        location: !location ? t('LocationRequired') : '',
       };
 
       if (Object.values(newErrors).some(Boolean)) {
@@ -78,13 +71,21 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
         return;
       }
 
+      let expireDate = '';
+      if (expiration) {
+        const date = new Date();
+        const days = parseInt(expiration, 10);
+        date.setDate(date.getDate() + days);
+        expireDate = date.toISOString();
+      }
+
       const locationObj = locations.find(
-        (loc) => loc.id.toString() === selectedLocation
-      )!;
+        (loc: ILocations) => loc.id.toString() === location
+      );
 
       const item: Item = {
-        title: name.trim(),
-        expireDate: dateInputValueToISO(expiration),
+        title: name,
+        expireDate: expireDate,
         location: locationObj,
         quantity: quantity,
       };
@@ -92,20 +93,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
       if (isEditing && editingItem?.id) {
         updateMutation.mutate({ id: editingItem.id, item });
       } else if (!isEditing) {
-        setLastLocationId(locationObj.id);
-        const addAnother = addAnotherRef.current;
-        createMutation.mutate(item, {
-          onSuccess: () => {
-            if (!addAnother) {
-              closeModal();
-              return;
-            }
-            // Keep location and expiration: consecutive products usually share them
-            setFormData((prev) => ({ ...prev, name: '', quantity: '1' }));
-            setErrors(EMPTY_ERRORS);
-            nameInputRef.current?.focus();
-          },
-        });
+        createMutation.mutate(item);
       } else {
         toast.error(t('ErrorUpdatingItem'));
       }
@@ -119,7 +107,41 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
   };
 
   const containerRef = useRef<HTMLDivElement>(null);
-  useModalA11y(containerRef, closeModal);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const FOCUSABLE =
+      'button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      const focusable = Array.from(
+        container.querySelectorAll<HTMLElement>(FOCUSABLE)
+      );
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [closeModal]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -132,159 +154,21 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
     }));
   };
 
-  const renderBody = () => {
-    if (status === 'pending') {
-      return (
-        <div
-          className="text-fg-muted flex flex-col items-center gap-3 py-10"
-          role="status"
-        >
-          <Loader2 size={32} className="text-primary animate-spin" />
-          <p>{t('LoadingLocations')}</p>
-        </div>
-      );
-    }
-
-    if (error || !locations.length) {
-      return (
-        <div className="flex flex-col items-center gap-4 py-8 text-center">
-          <p className="text-fg-secondary">
-            {error ? t('ErrorLoadingLocations') : t('NoLocations')}
-          </p>
-          <Link
-            href="/locations"
-            onClick={closeModal}
-            className={`${UI_CLASSES.buttonPrimary} px-5 py-3`}
-          >
-            {t('GoToLocations')}
-          </Link>
-        </div>
-      );
-    }
-
+  if (isLoading) {
     return (
-      <form
-        data-testid="addItemForm"
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-5"
-        aria-busy={isSaving || undefined}
-      >
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="name" className={UI_CLASSES.label}>
-            {t('ProductName')}
-          </label>
-          <input
-            ref={nameInputRef}
-            id="name"
-            name="name"
-            placeholder={t('ProductName')}
-            value={formData.name}
-            onChange={(e) => handleInputChange('name', e.target.value)}
-            className={UI_CLASSES.input}
-            autoComplete="on"
-            autoFocus
-            aria-required="true"
-            disabled={isSaving}
-          />
-          {errors.name && (
-            <p className="mt-1 text-xs text-red-500">{errors.name}</p>
-          )}
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="quantity" className={UI_CLASSES.label}>
-            {t('Quantity')}
-          </label>
-          <input
-            id="quantity"
-            name="quantity"
-            type="number"
-            placeholder="1"
-            value={formData.quantity}
-            onChange={(e) => handleInputChange('quantity', e.target.value)}
-            className={UI_CLASSES.input}
-            min="1"
-            aria-required="true"
-            disabled={isSaving}
-          />
-          {errors.quantity && (
-            <p className="mt-1 text-xs text-red-500">{errors.quantity}</p>
-          )}
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="expiration" className={UI_CLASSES.label}>
-            {t('Expiration')}
-          </label>
-          <ExpirationInput
-            id="expiration"
-            value={formData.expiration}
-            onChange={(value) => handleInputChange('expiration', value)}
-            invalid={!!errors.expiration}
-            disabled={isSaving}
-          />
-          {errors.expiration && (
-            <p className="mt-1 text-xs text-red-500">{errors.expiration}</p>
-          )}
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="location" className={UI_CLASSES.label}>
-            {t('Location')}
-          </label>
-          <select
-            id="location"
-            name="location"
-            value={selectedLocation}
-            onChange={(e) => handleInputChange('location', e.target.value)}
-            className={`${UI_CLASSES.input} cursor-pointer`}
-            aria-required="true"
-            disabled={isSaving}
-          >
-            <option value="">{t('SelectLocation')}</option>
-            {locations.map((location: ILocations) => (
-              <option key={location.id} value={location.id}>
-                {location.name}
-              </option>
-            ))}
-          </select>
-          {errors.location && (
-            <p className="mt-1 text-xs text-red-500">{errors.location}</p>
-          )}
-        </div>
-        <div className="mt-1 flex flex-col justify-end gap-3 sm:flex-row sm:flex-wrap">
-          <button
-            type="button"
-            onClick={closeModal}
-            className="border-surface-overlay text-fg-muted hover:bg-divider hover:text-fg order-3 min-h-[44px] rounded-xl border bg-transparent px-5 py-3 font-medium transition-all duration-150 sm:order-1"
-            disabled={isSaving}
-          >
-            {t('Cancel')}
-          </button>
-          {!isEditing && (
-            <button
-              type="submit"
-              onClick={() => (addAnotherRef.current = true)}
-              className="border-primary/40 text-primary hover:bg-primary/10 order-2 min-h-[44px] rounded-xl border px-5 py-3 font-semibold transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={isSaving}
-            >
-              {t('SaveAndAddAnother')}
-            </button>
-          )}
-          <button
-            type="submit"
-            onClick={() => (addAnotherRef.current = false)}
-            className="bg-primary hover:bg-primary-dark text-bg order-1 flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold shadow-md transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-50 sm:order-3"
-            disabled={isSaving}
-          >
-            {isSaving ? (
-              <Loader2 size={18} className="animate-spin" />
-            ) : (
-              <Check size={18} />
-            )}
-            {isSaving ? t('Saving') : isEditing ? t('UpdateItem') : t('Submit')}
-          </button>
-        </div>
-      </form>
+      <div className="mb-2 flex items-center justify-center gap-2">
+        <Loader2 size={48} className="text-primary animate-spin" />
+      </div>
     );
-  };
+  }
+
+  if (status === 'pending') {
+    return <div>Cargando locations</div>;
+  }
+
+  if (error || !locations.length) {
+    return <div>Error al cargar locations</div>;
+  }
 
   return (
     <div
@@ -293,7 +177,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
       role="dialog"
       aria-labelledby="modal-title"
       onClick={(e) => {
-        if (e.target === e.currentTarget && !isSaving) closeModal();
+        if (e.target === e.currentTarget) closeModal();
       }}
     >
       <div
@@ -304,30 +188,158 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
           onClick={closeModal}
           className="text-fg-dim hover:text-fg hover:bg-divider absolute top-4 right-4 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl transition-colors"
           aria-label={t('Close')}
-          disabled={isSaving}
+          disabled={isLoading}
         >
           <X size={20} />
         </button>
-        <section className="mb-6 flex items-center justify-center gap-2">
-          <div
-            className={`${isEditing ? 'bg-accent-edit-bg' : 'bg-accent-add-bg'} rounded-xl p-2`}
-            aria-hidden="true"
-          >
+        <form
+          data-testid="addItemForm"
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-5"
+        >
+          <section className="mb-1 flex items-center justify-center gap-2">
             {isEditing ? (
-              <Pencil size={18} className="text-accent-edit" />
+              <>
+                <div className="bg-accent-edit-bg rounded-xl p-2">
+                  <Pencil size={18} className="text-accent-edit" />
+                </div>
+                <h2
+                  id="modal-title"
+                  className="text-fg text-2xl font-bold tracking-tight sm:text-3xl"
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
+                  {t('EditItem')}
+                </h2>
+              </>
             ) : (
-              <Plus size={18} className="text-primary" />
+              <>
+                <div
+                  className="bg-accent-add-bg rounded-xl p-2"
+                  aria-hidden="true"
+                >
+                  <Plus size={18} className="text-primary" />
+                </div>
+                <h2
+                  id="modal-title"
+                  className="text-fg text-2xl font-bold tracking-tight sm:text-3xl"
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
+                  {t('AddItem')}
+                </h2>
+              </>
+            )}
+          </section>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="name" className={UI_CLASSES.label}>
+              {t('ProductName')}
+            </label>
+            <input
+              id="name"
+              name="name"
+              placeholder={t('ProductName')}
+              value={formData.name}
+              onChange={(e) => handleInputChange('name', e.target.value)}
+              className={UI_CLASSES.input}
+              autoComplete="on"
+              autoFocus
+              aria-required="true"
+              disabled={isLoading}
+            />
+            {errors.name && (
+              <p className="mt-1 text-xs text-red-500">{errors.name}</p>
             )}
           </div>
-          <h2
-            id="modal-title"
-            className="text-fg text-2xl font-bold tracking-tight sm:text-3xl"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            {isEditing ? t('EditItem') : t('AddItem')}
-          </h2>
-        </section>
-        {renderBody()}
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="quantity"
+              className="text-fg-muted text-xs font-semibold tracking-wider uppercase"
+            >
+              {t('Quantity')}
+            </label>
+            <input
+              id="quantity"
+              name="quantity"
+              type="number"
+              placeholder="1"
+              value={formData.quantity}
+              onChange={(e) => handleInputChange('quantity', e.target.value)}
+              className={UI_CLASSES.input}
+              min="1"
+              aria-required="true"
+              disabled={isLoading}
+            />
+            {errors.quantity && (
+              <p className="mt-1 text-xs text-red-500">{errors.quantity}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="expiration"
+              className="text-fg-muted text-xs font-semibold tracking-wider uppercase"
+            >
+              {t('Expiration')}
+            </label>
+            <input
+              id="expiration"
+              name="expiration"
+              type="number"
+              placeholder="30"
+              value={formData.expiration}
+              onChange={(e) => handleInputChange('expiration', e.target.value)}
+              className={UI_CLASSES.input}
+              min="1"
+              disabled={isLoading}
+            />
+            {errors.expiration && (
+              <p className="mt-1 text-xs text-red-500">{errors.expiration}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="location"
+              className="text-fg-muted text-xs font-semibold tracking-wider uppercase"
+            >
+              {t('Location')}
+            </label>
+            <select
+              id="location"
+              name="location"
+              value={formData.location}
+              onChange={(e) => handleInputChange('location', e.target.value)}
+              className={`${UI_CLASSES.input} cursor-pointer`}
+              aria-required="true"
+              disabled={isLoading}
+            >
+              <option value="">{t('SelectLocation')}</option>
+              {locations.map((location: ILocations) => (
+                <option key={location.id} value={location.id}>
+                  {location.name}
+                </option>
+              ))}
+            </select>
+            {errors.location && (
+              <p className="mt-1 text-xs text-red-500">{errors.location}</p>
+            )}
+          </div>
+          <div className="mt-1 flex flex-col justify-end gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={closeModal}
+              className="border-surface-overlay text-fg-muted hover:bg-divider hover:text-fg order-2 min-h-[44px] rounded-xl border bg-transparent px-5 py-3 font-medium transition-all duration-150 sm:order-1"
+              disabled={isLoading}
+            >
+              {t('Cancel')}
+            </button>
+            <button
+              type="submit"
+              className="bg-primary hover:bg-primary-dark text-bg order-1 flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold shadow-md transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-50 sm:order-2"
+              disabled={isLoading}
+            >
+              <Check size={18} />
+              {isEditing ? t('UpdateItem') : t('Submit')}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

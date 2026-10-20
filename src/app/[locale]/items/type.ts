@@ -6,7 +6,6 @@ export interface Item {
   location?: ILocations;
   color?: string;
   quantity: number;
-  barcode?: string | null;
   deletedAt?: string | null;
   createdAt?: string;
   updatedAt?: string;
@@ -37,7 +36,7 @@ export interface IDefaultCards {
 }
 
 export interface ILocations {
-  id: string | number;
+  id: number;
   name: string;
   bgColor?: string;
   borderColor?: string;

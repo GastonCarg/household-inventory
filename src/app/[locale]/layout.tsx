@@ -1,5 +1,4 @@
 import { routing } from '@/i18n/routing';
-import { Sidebar } from '@/components';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { Figtree, Nunito, Syne } from 'next/font/google';
 import { notFound } from 'next/navigation';
@@ -54,14 +53,7 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider>
           <ItemModalProvider>
-            <SearchContextProvider>
-              <div className="flex min-h-screen bg-transparent lg:items-stretch">
-                <Sidebar />
-                <main className="flex min-h-screen min-w-0 flex-1 flex-col lg:ml-0">
-                  {children}
-                </main>
-              </div>
-            </SearchContextProvider>
+            <SearchContextProvider>{children}</SearchContextProvider>
           </ItemModalProvider>
         </NextIntlClientProvider>
       </body>
