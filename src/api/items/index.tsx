@@ -9,6 +9,9 @@ const PAGINATION_PARAMS =
   process.env.NODE_ENV === 'development'
     ? { page: '_page', limit: '_per_page' }
     : { page: 'page', limit: 'limit' };
+// The Nest API already sorts by expireDate; json-server only sorts when asked
+const SORT_PARAMS: Record<string, string> =
+  process.env.NODE_ENV === 'development' ? { _sort: 'expireDate' } : {};
 
 export const getAllItems = async ({
   page = 1,
@@ -22,6 +25,9 @@ export const getAllItems = async ({
     const queryParams = new URLSearchParams();
     queryParams.append(PAGINATION_PARAMS.page, page.toString());
     queryParams.append(PAGINATION_PARAMS.limit, limit.toString());
+    Object.entries(SORT_PARAMS).forEach(([key, value]) =>
+      queryParams.append(key, value)
+    );
     if (searchValue) queryParams.append('q', searchValue);
 
     const url = `${process.env.NEXT_PUBLIC_API_URL}/products?${queryParams.toString()}`;
