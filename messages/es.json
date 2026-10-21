@@ -28,8 +28,6 @@
   },
   "Header": {
     "AddItem": "Agregar artículo",
-    "HouseholdInventory": "Inventario del hogar",
-    "ManageHomeEssentials": "Gestiona los elementos esenciales de tu hogar",
     "Scan": "Escanear"
   },
   "Search": {
@@ -39,10 +37,10 @@
     "Navigation": "Navegación lateral",
     "OpenMenu": "Abrir menú",
     "CloseMenu": "Cerrar menú",
-    "Menu": "Menú",
-    "Inventory": "Inventario",
     "Home": "Inicio",
-    "Locations": "Ubicaciones"
+    "Locations": "Ubicaciones",
+    "HouseholdInventory": "Inventario del hogar",
+    "ManageHomeEssentials": "Gestiona los elementos esenciales de tu hogar"
   },
   "Locations": {
     "Eyebrow": "Configuración del espacio",

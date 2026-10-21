@@ -19,6 +19,18 @@ const navItems = [
   },
 ] as const;
 
+const menuButtonClasses =
+  'bg-surface-elevated border-divider text-fg hover:bg-muted flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border transition-colors';
+
+const Logo = () => (
+  <div
+    className="bg-primary text-bg flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-lg shadow-black/20"
+    aria-hidden="true"
+  >
+    <Home className="h-5 w-5" />
+  </div>
+);
+
 const Sidebar = () => {
   const t = useTranslations('Sidebar');
   const pathname = usePathname();
@@ -60,15 +72,25 @@ const Sidebar = () => {
 
   return (
     <>
-      <button
-        type="button"
-        aria-label={isOpen ? t('CloseMenu') : t('OpenMenu')}
-        aria-expanded={isOpen}
-        onClick={() => setIsOpen((current) => !current)}
-        className="bg-surface-elevated border-divider text-fg hover:bg-muted fixed top-3 left-3 z-50 flex h-11 w-11 items-center justify-center rounded-2xl border shadow-lg shadow-black/25 transition-colors lg:hidden"
-      >
-        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </button>
+      {/* Mobile top bar: keeps the menu button in the flow instead of floating over the page */}
+      <div className="bg-surface border-divider sticky top-0 z-30 flex w-full items-center gap-3 border-b px-4 py-3 lg:hidden">
+        <button
+          type="button"
+          aria-label={t('OpenMenu')}
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen(true)}
+          className={menuButtonClasses}
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <Logo />
+        <p
+          className="text-fg truncate text-xl font-bold tracking-tight"
+          style={{ fontFamily: 'var(--font-display)' }}
+        >
+          {t('HouseholdInventory')}
+        </p>
+      </div>
 
       {isOpen && (
         <div
@@ -82,20 +104,26 @@ const Sidebar = () => {
         className={`bg-surface border-divider fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r px-4 py-5 transition-transform duration-300 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex items-center gap-3 border-b border-[var(--color-divider)] px-2 pb-5">
-          <div className="bg-primary text-bg flex h-11 w-11 items-center justify-center rounded-2xl shadow-lg shadow-black/20">
-            <Home className="h-5 w-5" aria-hidden="true" />
-          </div>
-          <div>
-            <p className="text-fg-muted text-[11px] font-semibold tracking-[0.28em] uppercase">
-              {t('Inventory')}
-            </p>
+          <Logo />
+          <div className="min-w-0 flex-1">
             <h2
-              className="text-fg text-xl font-bold tracking-tight"
+              className="text-fg text-lg leading-tight font-bold tracking-tight"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              {t('Menu')}
+              {t('HouseholdInventory')}
             </h2>
+            <p className="text-fg-muted mt-1 text-[11px] font-medium tracking-wide uppercase">
+              {t('ManageHomeEssentials')}
+            </p>
           </div>
+          <button
+            type="button"
+            aria-label={t('CloseMenu')}
+            onClick={() => setIsOpen(false)}
+            className={`${menuButtonClasses} lg:hidden`}
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
         <div className="flex flex-1 flex-col gap-6 pt-6">{renderNav()}</div>

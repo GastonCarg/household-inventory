@@ -55,7 +55,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider>
           <ItemModalProvider>
             <SearchContextProvider>
-              <div className="flex min-h-screen bg-transparent lg:items-stretch">
+              <div className="flex min-h-screen flex-col bg-transparent lg:flex-row lg:items-stretch">
                 <Sidebar />
                 <main className="flex min-h-screen min-w-0 flex-1 flex-col lg:ml-0">
                   {children}

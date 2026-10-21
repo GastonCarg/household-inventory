@@ -28,8 +28,6 @@
   },
   "Header": {
     "AddItem": "Add item",
-    "HouseholdInventory": "Household Inventory",
-    "ManageHomeEssentials": "Manage your home essentials",
     "Scan": "Scan"
   },
   "Search": {
@@ -39,10 +37,10 @@
     "Navigation": "Sidebar navigation",
     "OpenMenu": "Open menu",
     "CloseMenu": "Close menu",
-    "Menu": "Menu",
-    "Inventory": "Inventory",
     "Home": "Home",
-    "Locations": "Locations"
+    "Locations": "Locations",
+    "HouseholdInventory": "Household Inventory",
+    "ManageHomeEssentials": "Manage your home essentials"
   },
   "Locations": {
     "Eyebrow": "Space setup",

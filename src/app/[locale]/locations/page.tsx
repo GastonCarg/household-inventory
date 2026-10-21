@@ -54,7 +54,7 @@ const LocationsContent = () => {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-5 pt-20 sm:p-6 sm:pt-24 lg:pt-8">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-5 sm:p-6 lg:p-8">
       <section className="relative overflow-hidden rounded-[28px] border border-[var(--color-divider)] bg-[linear-gradient(135deg,rgba(26,29,40,0.98),rgba(17,19,24,0.96))] p-6 shadow-2xl shadow-black/25 sm:p-8">
         <div className="pointer-events-none absolute -top-10 right-0 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(222,255,110,0.24),transparent_68%)]" />
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
