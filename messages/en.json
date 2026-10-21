@@ -28,8 +28,6 @@
   },
   "Header": {
     "AddItem": "Add item",
-    "HouseholdInventory": "Household Inventory",
-    "ManageHomeEssentials": "Manage your home essentials",
     "Scan": "Scan"
   },
   "Search": {
@@ -39,10 +37,10 @@
     "Navigation": "Sidebar navigation",
     "OpenMenu": "Open menu",
     "CloseMenu": "Close menu",
-    "Menu": "Menu",
-    "Inventory": "Inventory",
     "Home": "Home",
-    "Locations": "Locations"
+    "Locations": "Locations",
+    "HouseholdInventory": "Household Inventory",
+    "ManageHomeEssentials": "Manage your home essentials"
   },
   "Locations": {
     "Eyebrow": "Space setup",
@@ -155,6 +153,8 @@
     "CompleteHighlightedRows": "Fill in the fields highlighted in red.",
     "QuantityIncreased": "{title}: +1",
     "Scanned": "Product scanned!",
+    "Recognizing": "Recognizing product…",
+    "Recognized": "Product recognized!",
     "ItemsAddedSuccessfully": "{count, plural, one {# item added!} other {# items added!}}",
     "ErrorAddingItems": "An error occurred while saving the items. Please try again.",
     "ErrorAddingItemsLog": "Error saving items: ",

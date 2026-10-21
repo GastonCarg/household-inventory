@@ -223,6 +223,64 @@ test('a photo is recognized and flagged when confidence is low', async () => {
   expect(screen.getByText('LowConfidence')).toBeInTheDocument();
 });
 
+test('only one photo is recognized at a time', async () => {
+  mockCaptureFrame.mockReturnValue({
+    imageBase64: 'abc',
+    mimeType: 'image/jpeg',
+  });
+  let resolveLookup: (value: object) => void = () => {};
+  mockImageLookup.mockReturnValue(
+    new Promise((resolve) => {
+      resolveLookup = resolve;
+    })
+  );
+  render(<ScanSession closeScan={mockCloseScan} />);
+
+  fireEvent.click(screen.getByRole('button', { name: 'ModePhoto' }));
+  const takePhoto = screen.getByRole('button', { name: 'TakePhoto' });
+  fireEvent.click(takePhoto);
+  fireEvent.click(takePhoto);
+
+  expect(mockImageLookup).toHaveBeenCalledTimes(1);
+  expect(takePhoto).toBeDisabled();
+  expect(screen.getByText('Recognizing')).toBeInTheDocument();
+
+  await act(async () => {
+    resolveLookup({
+      title: 'Carne picada',
+      category: 'carne',
+      suggestedLocation: { id: '2', name: 'Freezer' },
+      suggestedShelfLifeDays: 90,
+      confidence: 0.9,
+    });
+  });
+
+  expect(takePhoto).toBeEnabled();
+  expect(screen.getByText('Recognized')).toBeInTheDocument();
+});
+
+test('the photo button is enabled again when recognition fails', async () => {
+  mockCaptureFrame.mockReturnValue({
+    imageBase64: 'abc',
+    mimeType: 'image/jpeg',
+  });
+  mockImageLookup.mockRejectedValue(new Error('boom'));
+  const consoleError = jest
+    .spyOn(console, 'error')
+    .mockImplementation(() => {});
+  render(<ScanSession closeScan={mockCloseScan} />);
+
+  fireEvent.click(screen.getByRole('button', { name: 'ModePhoto' }));
+  await act(async () => {
+    fireEvent.click(screen.getByRole('button', { name: 'TakePhoto' }));
+  });
+
+  expect(toast.error).toHaveBeenCalledWith('ErrorRecognizingPhoto');
+  expect(screen.getByRole('button', { name: 'TakePhoto' })).toBeEnabled();
+  expect(screen.queryByText('Recognized')).not.toBeInTheDocument();
+  consoleError.mockRestore();
+});
+
 test('photo mode is disabled when the server has no Gemini key', () => {
   mockImageEnabled = false;
   render(<ScanSession closeScan={mockCloseScan} />);
