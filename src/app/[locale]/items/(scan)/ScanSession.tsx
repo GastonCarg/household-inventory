@@ -86,6 +86,8 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
   // Mirror of `rows` readable from async scanner callbacks without stale closures
   const rowsRef = useRef(rows);
   const [justScanned, setJustScanned] = useState(false);
+  const [recognizing, setRecognizing] = useState(false);
+  const recognizingRef = useRef(false);
   const cooldownTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => () => clearTimeout(cooldownTimeoutRef.current), []);
@@ -201,26 +203,35 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
     [addRow, defaultLocationId, fetchBarcode, incrementRow, t, updateRow]
   );
 
+  const showScanSuccess = () => {
+    clearTimeout(cooldownTimeoutRef.current);
+    setJustScanned(true);
+    cooldownTimeoutRef.current = setTimeout(() => {
+      cooldownTimeoutRef.current = undefined;
+      setJustScanned(false);
+    }, SCAN_COOLDOWN_MS);
+  };
+
   const { videoRef, status, captureFrame } = useBarcodeScanner({
     enabled: true,
     onDetect: (code) => {
       // The timeout ref doubles as the cooldown flag, readable without stale closures
       if (mode !== 'barcode' || cooldownTimeoutRef.current) return;
-      setJustScanned(true);
-      cooldownTimeoutRef.current = setTimeout(() => {
-        cooldownTimeoutRef.current = undefined;
-        setJustScanned(false);
-      }, SCAN_COOLDOWN_MS);
+      showScanSuccess();
       handleBarcode(code);
     },
   });
 
   const handleCapture = async () => {
+    // The ref blocks a fast double tap before the re-render disables the button
+    if (recognizingRef.current) return;
     const image = captureFrame();
     if (!image) {
       toast.warning(t('CameraNotReady'));
       return;
     }
+    recognizingRef.current = true;
+    setRecognizing(true);
 
     const key = createKey();
     addRow({
@@ -234,7 +245,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
     });
 
     try {
-      // mutateAsync: several photos can be in flight at once
+      // One photo at a time: the capture button stays disabled until this resolves
       const result = await imageLookup.mutateAsync(image);
       updateRow(key, {
         status: 'ready',
@@ -245,6 +256,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
           : '',
         lowConfidence: result.confidence < LOW_CONFIDENCE,
       });
+      showScanSuccess();
     } catch (error) {
       updateRow(key, { status: 'ready', locationId: defaultLocationId() });
       toast.error(
@@ -253,6 +265,9 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
           : t('ErrorRecognizingPhoto')
       );
       console.error(t('ErrorRecognizingPhoto'), error);
+    } finally {
+      recognizingRef.current = false;
+      setRecognizing(false);
     }
   };
 
@@ -431,7 +446,18 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
                   className="border-primary/80 pointer-events-none absolute inset-x-[12%] top-1/2 h-1/3 -translate-y-1/2 rounded-xl border-2 shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]"
                 />
               )}
-              {mode === 'barcode' && justScanned && (
+              {mode === 'photo' && recognizing && (
+                <div
+                  className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/55 text-center"
+                  role="status"
+                >
+                  <Loader2 size={32} className="text-primary animate-spin" />
+                  <p className="text-fg text-sm font-semibold">
+                    {t('Recognizing')}
+                  </p>
+                </div>
+              )}
+              {justScanned && !recognizing && (
                 <div
                   className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/55 text-center"
                   role="status"
@@ -440,7 +466,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
                     <Check size={28} />
                   </div>
                   <p className="text-fg text-sm font-semibold">
-                    {t('Scanned')}
+                    {mode === 'barcode' ? t('Scanned') : t('Recognized')}
                   </p>
                 </div>
               )}
@@ -456,11 +482,16 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
                 <button
                   type="button"
                   onClick={handleCapture}
-                  disabled={status !== 'scanning'}
-                  className="bg-primary text-bg absolute bottom-3 left-1/2 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full shadow-lg ring-4 ring-black/30 transition-transform active:scale-95 disabled:opacity-50"
+                  disabled={status !== 'scanning' || recognizing}
+                  aria-busy={recognizing}
+                  className="bg-primary text-bg absolute bottom-3 left-1/2 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full shadow-lg ring-4 ring-black/30 transition-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
                   aria-label={t('TakePhoto')}
                 >
-                  <Camera size={24} />
+                  {recognizing ? (
+                    <Loader2 size={24} className="animate-spin" />
+                  ) : (
+                    <Camera size={24} />
+                  )}
                 </button>
               )}
             </div>

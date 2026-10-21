@@ -153,6 +153,8 @@
     "CompleteHighlightedRows": "Completa los datos marcados en rojo.",
     "QuantityIncreased": "{title}: +1",
     "Scanned": "¡Producto escaneado!",
+    "Recognizing": "Reconociendo producto…",
+    "Recognized": "¡Producto reconocido!",
     "ItemsAddedSuccessfully": "{count, plural, one {¡# artículo agregado!} other {¡# artículos agregados!}}",
     "ErrorAddingItems": "Ocurrió un error al guardar los artículos. Por favor, inténtalo de nuevo.",
     "ErrorAddingItemsLog": "Error al guardar los artículos: ",
