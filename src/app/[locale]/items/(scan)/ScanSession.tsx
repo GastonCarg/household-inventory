@@ -80,6 +80,8 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
   useModalA11y(containerRef, closeScan);
 
   const [mode, setMode] = useState<'barcode' | 'photo'>('barcode');
+  // Read after awaiting a photo lookup, when `mode` may be stale
+  const modeRef = useRef(mode);
   const [rows, setRows] = useState<ScanRowData[]>(loadStoredRows);
   const [showErrors, setShowErrors] = useState(false);
   const [manualCode, setManualCode] = useState('');
@@ -205,6 +207,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
 
   // A success from one mode must not leak into the other (overlay text or barcode cooldown)
   const changeMode = (next: 'barcode' | 'photo') => {
+    modeRef.current = next;
     clearTimeout(cooldownTimeoutRef.current);
     cooldownTimeoutRef.current = undefined;
     setJustScanned(false);
@@ -264,7 +267,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
           : '',
         lowConfidence: result.confidence < LOW_CONFIDENCE,
       });
-      showScanSuccess();
+      if (modeRef.current === 'photo') showScanSuccess();
     } catch (error) {
       updateRow(key, { status: 'ready', locationId: defaultLocationId() });
       toast.error(
