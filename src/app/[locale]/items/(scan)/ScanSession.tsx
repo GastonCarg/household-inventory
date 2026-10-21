@@ -203,6 +203,14 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
     [addRow, defaultLocationId, fetchBarcode, incrementRow, t, updateRow]
   );
 
+  // A success from one mode must not leak into the other (overlay text or barcode cooldown)
+  const changeMode = (next: 'barcode' | 'photo') => {
+    clearTimeout(cooldownTimeoutRef.current);
+    cooldownTimeoutRef.current = undefined;
+    setJustScanned(false);
+    setMode(next);
+  };
+
   const showScanSuccess = () => {
     clearTimeout(cooldownTimeoutRef.current);
     setJustScanned(true);
@@ -413,7 +421,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
             >
               <button
                 type="button"
-                onClick={() => setMode('barcode')}
+                onClick={() => changeMode('barcode')}
                 aria-pressed={mode === 'barcode'}
                 className={modeButtonClasses(mode === 'barcode')}
               >
@@ -422,7 +430,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
               </button>
               <button
                 type="button"
-                onClick={() => setMode('photo')}
+                onClick={() => changeMode('photo')}
                 aria-pressed={mode === 'photo'}
                 disabled={!photoEnabled}
                 title={!photoEnabled ? t('PhotoDisabled') : undefined}
