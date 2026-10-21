@@ -42,6 +42,8 @@ import { IScanSession, ScanRowData } from './type';
 const STORAGE_KEY = 'household-inventory:scanSession';
 const LOW_CONFIDENCE = 0.6;
 const VALID_BARCODE = /^\d{6,14}$/;
+// Pause after each camera detection so the same product isn't added twice by accident
+const SCAN_COOLDOWN_MS = 2000;
 
 const createKey = () =>
   typeof crypto !== 'undefined' && 'randomUUID' in crypto
@@ -83,6 +85,10 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
   const [manualCode, setManualCode] = useState('');
   // Mirror of `rows` readable from async scanner callbacks without stale closures
   const rowsRef = useRef(rows);
+  const [justScanned, setJustScanned] = useState(false);
+  const cooldownTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(() => () => clearTimeout(cooldownTimeoutRef.current), []);
 
   const { data: locations = [] } = useGetLocations();
   const locationIds = useMemo(
@@ -198,7 +204,14 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
   const { videoRef, status, captureFrame } = useBarcodeScanner({
     enabled: true,
     onDetect: (code) => {
-      if (mode === 'barcode') handleBarcode(code);
+      // The timeout ref doubles as the cooldown flag, readable without stale closures
+      if (mode !== 'barcode' || cooldownTimeoutRef.current) return;
+      setJustScanned(true);
+      cooldownTimeoutRef.current = setTimeout(() => {
+        cooldownTimeoutRef.current = undefined;
+        setJustScanned(false);
+      }, SCAN_COOLDOWN_MS);
+      handleBarcode(code);
     },
   });
 
@@ -375,8 +388,9 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
           </button>
         </header>
 
-        <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-          <section className="border-surface-overlay flex shrink-0 flex-col gap-3 border-b p-4 lg:w-[45%] lg:border-r lg:border-b-0">
+        {/* Below lg the whole body scrolls; on lg each column scrolls on its own */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
+          <section className="border-surface-overlay flex shrink-0 flex-col gap-3 border-b p-4 lg:w-[45%] lg:overflow-y-auto lg:border-r lg:border-b-0">
             <div
               className="border-surface-overlay flex gap-1 rounded-2xl border p-1"
               role="group"
@@ -411,11 +425,24 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
                 playsInline
                 className="h-full w-full object-cover"
               />
-              {mode === 'barcode' && status === 'scanning' && (
+              {mode === 'barcode' && status === 'scanning' && !justScanned && (
                 <div
                   aria-hidden="true"
                   className="border-primary/80 pointer-events-none absolute inset-x-[12%] top-1/2 h-1/3 -translate-y-1/2 rounded-xl border-2 shadow-[0_0_0_9999px_rgba(0,0,0,0.35)]"
                 />
+              )}
+              {mode === 'barcode' && justScanned && (
+                <div
+                  className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/55 text-center"
+                  role="status"
+                >
+                  <div className="bg-primary text-bg rounded-full p-3 shadow-lg">
+                    <Check size={28} />
+                  </div>
+                  <p className="text-fg text-sm font-semibold">
+                    {t('Scanned')}
+                  </p>
+                </div>
               )}
               {cameraMessage && (
                 <div
@@ -459,7 +486,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
             </form>
           </section>
 
-          <section className="flex min-h-0 flex-1 flex-col">
+          <section className="flex flex-1 flex-col lg:min-h-0">
             {frequent.length > 0 && (
               <div className="border-surface-overlay border-b px-4 py-3">
                 <p
@@ -509,7 +536,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
             </div>
 
             {rows.length > 0 ? (
-              <ul className="flex-1 space-y-3 overflow-y-auto p-4">
+              <ul className="flex-1 space-y-3 p-4 lg:overflow-y-auto">
                 {rows.map((row) => (
                   <ScanRow
                     key={row.key}

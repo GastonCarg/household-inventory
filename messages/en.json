@@ -154,6 +154,7 @@
     "WaitForLookups": "Wait until all products finish loading.",
     "CompleteHighlightedRows": "Fill in the fields highlighted in red.",
     "QuantityIncreased": "{title}: +1",
+    "Scanned": "Product scanned!",
     "ItemsAddedSuccessfully": "{count, plural, one {# item added!} other {# items added!}}",
     "ErrorAddingItems": "An error occurred while saving the items. Please try again.",
     "ErrorAddingItemsLog": "Error saving items: ",
