@@ -259,6 +259,82 @@ test('only one photo is recognized at a time', async () => {
   expect(screen.getByText('Recognized')).toBeInTheDocument();
 });
 
+test('switching mode right after a photo clears the success and the cooldown', async () => {
+  mockCaptureFrame.mockReturnValue({
+    imageBase64: 'abc',
+    mimeType: 'image/jpeg',
+  });
+  mockImageLookup.mockResolvedValue({
+    title: 'Carne picada',
+    category: 'carne',
+    suggestedLocation: { id: '2', name: 'Freezer' },
+    suggestedShelfLifeDays: 90,
+    confidence: 0.9,
+  });
+  mockFetchBarcode.mockResolvedValue({
+    source: 'catalog',
+    barcode: '7790080000000',
+    title: 'Yogur',
+    brand: null,
+    imageUrl: null,
+    suggestedLocation: null,
+    suggestedShelfLifeDays: null,
+  });
+  render(<ScanSession closeScan={mockCloseScan} />);
+
+  fireEvent.click(screen.getByRole('button', { name: 'ModePhoto' }));
+  await act(async () => {
+    fireEvent.click(screen.getByRole('button', { name: 'TakePhoto' }));
+  });
+  expect(screen.getByText('Recognized')).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole('button', { name: 'ModeBarcode' }));
+  expect(screen.queryByText('Scanned')).not.toBeInTheDocument();
+
+  await detect('7790080000000');
+  expect(mockFetchBarcode).toHaveBeenCalledWith('7790080000000');
+});
+
+test('a photo that resolves after switching to barcode does not pause scanning', async () => {
+  mockCaptureFrame.mockReturnValue({
+    imageBase64: 'abc',
+    mimeType: 'image/jpeg',
+  });
+  let resolveLookup: (value: object) => void = () => {};
+  mockImageLookup.mockReturnValue(
+    new Promise((resolve) => {
+      resolveLookup = resolve;
+    })
+  );
+  mockFetchBarcode.mockResolvedValue({
+    source: 'catalog',
+    barcode: '7790080000000',
+    title: 'Yogur',
+    brand: null,
+    imageUrl: null,
+    suggestedLocation: null,
+    suggestedShelfLifeDays: null,
+  });
+  render(<ScanSession closeScan={mockCloseScan} />);
+
+  fireEvent.click(screen.getByRole('button', { name: 'ModePhoto' }));
+  fireEvent.click(screen.getByRole('button', { name: 'TakePhoto' }));
+  fireEvent.click(screen.getByRole('button', { name: 'ModeBarcode' }));
+  await act(async () => {
+    resolveLookup({
+      title: 'Carne picada',
+      category: 'carne',
+      suggestedLocation: { id: '2', name: 'Freezer' },
+      suggestedShelfLifeDays: 90,
+      confidence: 0.9,
+    });
+  });
+
+  expect(screen.queryByText('Scanned')).not.toBeInTheDocument();
+  await detect('7790080000000');
+  expect(mockFetchBarcode).toHaveBeenCalledWith('7790080000000');
+});
+
 test('the photo button is enabled again when recognition fails', async () => {
   mockCaptureFrame.mockReturnValue({
     imageBase64: 'abc',
