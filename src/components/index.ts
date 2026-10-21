@@ -4,3 +4,4 @@ export { default as Sidebar } from './Sidebar';
 
 export { default as Loader } from './Loader';
 export { default as ExpirationInput } from './ExpirationInput';
+export { default as UnitSelect } from './UnitSelect';

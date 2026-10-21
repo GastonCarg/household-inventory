@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { CARD_LEFT_BORDER, STATUS_COLOR_MAP } from '@/(constants)';
 import { Card } from '@/components';
 import { formatDate, getExpirationDaysLeft } from '@/lib/helpers';
+import { DEFAULT_UNIT } from '@/lib/units';
 import { ItemsListComponentProps } from '../type';
 
 export function ItemsListComponent({
@@ -21,11 +22,16 @@ export function ItemsListComponent({
   editItem,
 }: ItemsListComponentProps) {
   const t = useTranslations('ItemsList');
+  const tUnits = useTranslations('Units');
   const { locale } = useParams();
   const lang = locale === 'es' && 'es-AR';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { title, expireDate, quantity, location, id } = item;
+  // "1,5 kg" / "3 unidades"
+  const amount = quantity
+    ? tUnits(`Amount.${item.unit ?? DEFAULT_UNIT}`, { count: quantity })
+    : '';
   const daysLeft = getExpirationDaysLeft(expireDate ?? '');
   let textDaysLeft = `${daysLeft} ${t('DaysLeft')}`;
   const status =
@@ -105,10 +111,10 @@ export function ItemsListComponent({
             {quantity && (
               <p
                 className="mt-0.5 text-xs font-medium text-[#8A90AB]"
-                aria-label={`${t('Quantity')}: ${quantity}`}
+                aria-label={`${t('Quantity')}: ${amount}`}
               >
                 {t('Quantity')}:{' '}
-                <span className="font-semibold text-[#C4CBE8]">{quantity}</span>
+                <span className="font-semibold text-[#C4CBE8]">{amount}</span>
               </p>
             )}
           </section>

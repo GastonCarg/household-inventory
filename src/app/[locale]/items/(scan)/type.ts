@@ -1,3 +1,4 @@
+import { Unit } from '@/lib/units';
 import { ILocations } from '../type';
 
 export type ScanRowSource =
@@ -13,6 +14,7 @@ export interface ScanRowData {
   barcode?: string;
   title: string;
   quantity: number;
+  unit: Unit;
   locationId: string;
   /** `YYYY-MM-DD` */
   expireDate: string;

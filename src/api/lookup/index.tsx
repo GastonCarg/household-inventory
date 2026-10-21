@@ -1,4 +1,5 @@
 import { ILocations } from '@/app/[locale]/items/type';
+import { Unit } from '@/lib/units';
 
 export interface BarcodeLookup {
   source: 'catalog' | 'openfoodfacts' | 'none';
@@ -8,6 +9,7 @@ export interface BarcodeLookup {
   imageUrl: string | null;
   suggestedLocation: ILocations | null;
   suggestedShelfLifeDays: number | null;
+  suggestedUnit?: Unit;
 }
 
 export interface ImageLookup {
@@ -15,6 +17,7 @@ export interface ImageLookup {
   category: string | null;
   suggestedLocation: ILocations | null;
   suggestedShelfLifeDays: number | null;
+  suggestedUnit?: Unit;
   confidence: number;
 }
 
@@ -26,6 +29,7 @@ export interface CatalogEntry {
   imageUrl: string | null;
   defaultLocation: ILocations | null;
   shelfLifeDays: number | null;
+  defaultUnit?: Unit | null;
   timesUsed: number;
 }
 
