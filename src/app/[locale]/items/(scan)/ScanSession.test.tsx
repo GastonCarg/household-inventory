@@ -114,14 +114,48 @@ test('scanning the same barcode again increases the quantity', async () => {
     suggestedLocation: null,
     suggestedShelfLifeDays: null,
   });
+  jest.useFakeTimers();
   render(<ScanSession closeScan={mockCloseScan} />);
 
   await detect('7790080000000');
+  act(() => {
+    jest.advanceTimersByTime(2000);
+  });
   await detect('7790080000000');
 
   expect(mockFetchBarcode).toHaveBeenCalledTimes(1);
   expect(screen.getAllByLabelText('ProductName')).toHaveLength(1);
   expect(screen.getByText('2')).toBeInTheDocument();
+  jest.useRealTimers();
+});
+
+test('scanning pauses for 2 seconds after each detection', async () => {
+  mockFetchBarcode.mockResolvedValue({
+    source: 'catalog',
+    barcode: '7790080000000',
+    title: 'Yogur',
+    brand: null,
+    imageUrl: null,
+    suggestedLocation: null,
+    suggestedShelfLifeDays: null,
+  });
+  jest.useFakeTimers();
+  render(<ScanSession closeScan={mockCloseScan} />);
+
+  await detect('7790080000000');
+  expect(screen.getByText('Scanned')).toBeInTheDocument();
+
+  await detect('7790080000001');
+  expect(mockFetchBarcode).toHaveBeenCalledTimes(1);
+
+  act(() => {
+    jest.advanceTimersByTime(2000);
+  });
+  expect(screen.queryByText('Scanned')).not.toBeInTheDocument();
+
+  await detect('7790080000001');
+  expect(mockFetchBarcode).toHaveBeenCalledTimes(2);
+  jest.useRealTimers();
 });
 
 test('an unknown product must be completed before saving', async () => {
