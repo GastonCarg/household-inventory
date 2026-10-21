@@ -88,7 +88,7 @@
     "Error": "Error",
     "SelectLocation": "Selecciona una ubicación",
     "NameRequired": "El nombre del artículo es obligatorio.",
-    "QuantityRequired": "La cantidad debe ser al menos 1.",
+    "QuantityRequired": "Ingresá una cantidad mayor a 0 (entera si es por unidades).",
     "ExpirationRequired": "La fecha de vencimiento es obligatoria.",
     "LocationRequired": "Por favor, selecciona una ubicación.",
     "SaveAndAddAnother": "Guardar y agregar otro",
@@ -160,6 +160,24 @@
     "ErrorAddingItemsLog": "Error al guardar los artículos: ",
     "ErrorLookingUpBarcode": "No pudimos buscar el código. Completa los datos a mano.",
     "ErrorRecognizingPhoto": "No pudimos reconocer la foto. Completa los datos a mano.",
-    "PhotoQuotaExceeded": "Se alcanzó el límite gratuito de reconocimiento por foto. Prueba en unos minutos."
+    "PhotoQuotaExceeded": "Se alcanzó el límite gratuito de reconocimiento por foto. Prueba en unos minutos.",
+    "AlreadyInList": "{title} ya está en la lista: ajustá la cantidad."
+  },
+  "Units": {
+    "Label": "Unidad",
+    "Names": {
+      "unit": "unidades",
+      "g": "g",
+      "kg": "kg",
+      "ml": "ml",
+      "l": "L"
+    },
+    "Amount": {
+      "unit": "{count, plural, one {# unidad} other {# unidades}}",
+      "g": "{count, number} g",
+      "kg": "{count, number} kg",
+      "ml": "{count, number} ml",
+      "l": "{count, number} L"
+    }
   }
 }

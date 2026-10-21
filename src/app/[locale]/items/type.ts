@@ -1,3 +1,5 @@
+import { Unit } from '@/lib/units';
+
 export interface Item {
   id?: number | string;
   title: string;
@@ -6,6 +8,7 @@ export interface Item {
   location?: ILocations;
   color?: string;
   quantity: number;
+  unit?: Unit;
   barcode?: string | null;
   deletedAt?: string | null;
   createdAt?: string;

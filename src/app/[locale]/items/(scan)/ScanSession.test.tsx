@@ -97,6 +97,7 @@ test('a scanned barcode is looked up and added to the list', async () => {
     {
       title: 'Leche entera 1 L',
       quantity: 1,
+      unit: 'unit',
       expireDate: expect.any(String),
       location: { id: '1', name: 'Heladera' },
       barcode: '7790080000000',
@@ -125,8 +126,60 @@ test('scanning the same barcode again increases the quantity', async () => {
 
   expect(mockFetchBarcode).toHaveBeenCalledTimes(1);
   expect(screen.getAllByLabelText('ProductName')).toHaveLength(1);
-  expect(screen.getByText('2')).toBeInTheDocument();
+  expect(screen.getByRole('textbox', { name: 'Quantity' })).toHaveValue('2');
   jest.useRealTimers();
+});
+
+test('a product weighed in kg uses its suggested unit and isn’t incremented when repeated', async () => {
+  mockFetchBarcode.mockResolvedValue({
+    source: 'catalog',
+    barcode: '7790080000002',
+    title: 'Queso cremoso',
+    brand: null,
+    imageUrl: null,
+    suggestedLocation: { id: '1', name: 'Heladera' },
+    suggestedShelfLifeDays: 20,
+    suggestedUnit: 'kg',
+  });
+  jest.useFakeTimers();
+  render(<ScanSession closeScan={mockCloseScan} />);
+
+  await detect('7790080000002');
+  expect(screen.getByLabelText('Label')).toHaveValue('kg');
+
+  fireEvent.click(screen.getByRole('button', { name: 'Increase' }));
+  expect(screen.getByRole('textbox', { name: 'Quantity' })).toHaveValue('1,5');
+
+  act(() => {
+    jest.advanceTimersByTime(2000);
+  });
+  await detect('7790080000002');
+
+  expect(screen.getByRole('textbox', { name: 'Quantity' })).toHaveValue('1,5');
+  expect(toast.info).toHaveBeenCalledWith(
+    'AlreadyInList Queso cremoso',
+    expect.anything()
+  );
+
+  fireEvent.click(screen.getByRole('button', { name: 'Save 1' }));
+  expect(mockBulkMutate).toHaveBeenCalledWith([
+    expect.objectContaining({ quantity: 1.5, unit: 'kg' }),
+  ]);
+  jest.useRealTimers();
+});
+
+test('a typed amount is applied on blur', () => {
+  render(<ScanSession closeScan={mockCloseScan} />);
+  fireEvent.click(screen.getByRole('button', { name: 'AddManually' }));
+
+  fireEvent.change(screen.getByLabelText('Label'), { target: { value: 'g' } });
+  const quantity = screen.getByRole('textbox', { name: 'Quantity' });
+  fireEvent.change(quantity, { target: { value: '350' } });
+  fireEvent.blur(quantity);
+
+  expect(quantity).toHaveValue('350');
+  fireEvent.click(screen.getByRole('button', { name: 'Decrease' }));
+  expect(quantity).toHaveValue('250');
 });
 
 test('scanning pauses for 2 seconds after each detection', async () => {

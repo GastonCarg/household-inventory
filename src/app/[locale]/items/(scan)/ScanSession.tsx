@@ -16,6 +16,7 @@ import {
   getLastLocationId,
   setLastLocationId,
 } from '@/lib/helpers';
+import { DEFAULT_UNIT } from '@/lib/units';
 import {
   Camera,
   Check,
@@ -59,6 +60,8 @@ const loadStoredRows = (): ScanRowData[] => {
     if (!stored) return [];
     return (JSON.parse(stored) as ScanRowData[]).map((row) => ({
       ...row,
+      // Sessions saved before units existed
+      unit: row.unit ?? DEFAULT_UNIT,
       status: 'ready',
     }));
   } catch {
@@ -150,15 +153,18 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
 
   const incrementRow = useCallback(
     (row: ScanRowData) => {
+      const title = row.title || row.barcode || '';
+      // A repeated weight or volume isn't "one more": the user adjusts the amount
+      if (row.unit !== 'unit') {
+        toast.info(t('AlreadyInList', { title }), { autoClose: 2500 });
+        return;
+      }
       setRows((prev) =>
         prev.map((r) =>
           r.key === row.key ? { ...r, quantity: r.quantity + 1 } : r
         )
       );
-      toast.info(
-        t('QuantityIncreased', { title: row.title || row.barcode || '' }),
-        { autoClose: 1500 }
-      );
+      toast.info(t('QuantityIncreased', { title }), { autoClose: 1500 });
     },
     [t]
   );
@@ -177,6 +183,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
         barcode: code,
         title: '',
         quantity: 1,
+        unit: DEFAULT_UNIT,
         locationId: '',
         expireDate: '',
         status: 'loading',
@@ -191,6 +198,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
           title: result.title ?? '',
           brand: result.brand,
           imageUrl: result.imageUrl,
+          unit: result.suggestedUnit ?? DEFAULT_UNIT,
           locationId: defaultLocationId(result.suggestedLocation),
           expireDate: result.suggestedShelfLifeDays
             ? addDaysToToday(result.suggestedShelfLifeDays)
@@ -249,6 +257,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
       key,
       title: '',
       quantity: 1,
+      unit: DEFAULT_UNIT,
       locationId: '',
       expireDate: '',
       status: 'loading',
@@ -261,6 +270,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
       updateRow(key, {
         status: 'ready',
         title: result.title,
+        unit: result.suggestedUnit ?? DEFAULT_UNIT,
         locationId: defaultLocationId(result.suggestedLocation),
         expireDate: result.suggestedShelfLifeDays
           ? addDaysToToday(result.suggestedShelfLifeDays)
@@ -300,6 +310,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
       brand: entry.brand,
       imageUrl: entry.imageUrl,
       quantity: 1,
+      unit: entry.defaultUnit ?? DEFAULT_UNIT,
       locationId: defaultLocationId(entry.defaultLocation),
       expireDate: entry.shelfLifeDays
         ? addDaysToToday(entry.shelfLifeDays)
@@ -314,6 +325,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
       key: createKey(),
       title: '',
       quantity: 1,
+      unit: DEFAULT_UNIT,
       locationId: defaultLocationId(),
       expireDate: '',
       status: 'ready',
@@ -356,6 +368,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
       return {
         title: row.title.trim(),
         quantity: row.quantity,
+        unit: row.unit,
         expireDate: dateInputValueToISO(row.expireDate),
         location: { id: location.id, name: location.name },
         ...(row.barcode && { barcode: row.barcode }),

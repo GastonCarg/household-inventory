@@ -46,7 +46,9 @@ const fillForm = () => {
     target: { value: 'Manzana' },
   });
   fireEvent.click(screen.getByRole('button', { name: 'OneWeek' }));
-  fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } });
+  fireEvent.change(screen.getByLabelText('Location'), {
+    target: { value: '1' },
+  });
 };
 
 beforeEach(() => {
@@ -62,13 +64,14 @@ test('the user can fill the add item modal', () => {
   render(<AddItemModal closeModal={mockCloseModal} />);
 
   expect(screen.getByText('AddItem')).toBeInTheDocument();
-  expect(screen.getByLabelText('Quantity')).toHaveValue(1);
+  expect(screen.getByLabelText('Quantity')).toHaveValue('1');
+  expect(screen.getByLabelText('Label')).toHaveValue('unit');
 
   fillForm();
 
   expect(screen.getByPlaceholderText('ProductName')).toHaveValue('Manzana');
   expect(screen.getByLabelText('Expiration')).toHaveValue(addDaysToToday(7));
-  expect(screen.getByRole('combobox')).toHaveValue('1');
+  expect(screen.getByLabelText('Location')).toHaveValue('1');
 });
 
 test('the user can add a new item and the modal closes', () => {
@@ -81,6 +84,7 @@ test('the user can add a new item and the modal closes', () => {
     {
       title: 'Manzana',
       quantity: 1,
+      unit: 'unit',
       expireDate: expect.any(String),
       location: { id: '1', name: 'Heladera' },
     },
@@ -102,14 +106,43 @@ test('"save and add another" keeps the modal open with location and date', () =>
   expect(mockCloseModal).not.toHaveBeenCalled();
   expect(screen.getByPlaceholderText('ProductName')).toHaveValue('');
   expect(screen.getByLabelText('Expiration')).toHaveValue(addDaysToToday(7));
-  expect(screen.getByRole('combobox')).toHaveValue('1');
+  expect(screen.getByLabelText('Location')).toHaveValue('1');
 });
 
 test('the last used location is preselected', () => {
   localStorage.setItem('household-inventory:lastLocationId', '2');
   render(<AddItemModal closeModal={mockCloseModal} />);
 
-  expect(screen.getByRole('combobox')).toHaveValue('2');
+  expect(screen.getByLabelText('Location')).toHaveValue('2');
+});
+
+test('a weight can be entered with a decimal comma', () => {
+  render(<AddItemModal closeModal={mockCloseModal} />);
+  fillForm();
+
+  fireEvent.change(screen.getByLabelText('Label'), { target: { value: 'kg' } });
+  fireEvent.change(screen.getByLabelText('Quantity'), {
+    target: { value: '1,5' },
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+  expect(mockCreate).toHaveBeenCalledWith(
+    expect.objectContaining({ quantity: 1.5, unit: 'kg' }),
+    expect.anything()
+  );
+});
+
+test('items counted in units need a whole quantity', () => {
+  render(<AddItemModal closeModal={mockCloseModal} />);
+  fillForm();
+
+  fireEvent.change(screen.getByLabelText('Quantity'), {
+    target: { value: '1,5' },
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+  expect(mockCreate).not.toHaveBeenCalled();
+  expect(screen.getByText('QuantityRequired')).toBeInTheDocument();
 });
 
 test('missing fields show errors and nothing is sent', () => {
@@ -130,7 +163,8 @@ test('editing an expired item keeps its expiration date', () => {
       editingItem={{
         id: '9',
         title: 'Leche',
-        quantity: 2,
+        quantity: 1.5,
+        unit: 'l',
         expireDate: '2020-03-15T12:00:00.000Z',
         location: { id: '1', name: 'Heladera' },
       }}
@@ -138,11 +172,12 @@ test('editing an expired item keeps its expiration date', () => {
   );
 
   expect(screen.getByLabelText('Expiration')).toHaveValue('2020-03-15');
+  expect(screen.getByLabelText('Label')).toHaveValue('l');
 
   fireEvent.click(screen.getByRole('button', { name: 'UpdateItem' }));
   expect(mockUpdate).toHaveBeenCalledWith({
     id: '9',
-    item: expect.objectContaining({ title: 'Leche', quantity: 2 }),
+    item: expect.objectContaining({ title: 'Leche', quantity: 1.5, unit: 'l' }),
   });
 });
 

@@ -1,5 +1,13 @@
 import { UI_CLASSES } from '@/(constants)';
 import ExpirationInput from '@/components/ExpirationInput';
+import UnitSelect from '@/components/UnitSelect';
+import {
+  isValidQuantity,
+  parseQuantity,
+  roundQuantity,
+  Unit,
+  UNIT_STEP,
+} from '@/lib/units';
 import {
   Camera,
   Loader2,
@@ -12,6 +20,7 @@ import {
   TriangleAlert,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
 import { IScanRow, ScanRowSource } from './type';
 
 const SOURCE_LABEL: Record<ScanRowSource, string> = {
@@ -32,16 +41,20 @@ const SOURCE_ICON: Record<ScanRowSource, React.ElementType> = {
   manual: Package,
 };
 
+// Decimal comma to match how amounts are typed in the app's main locale
+const formatDraft = (quantity: number) => String(quantity).replace('.', ',');
+
 export const isRowValid = ({
   status,
   title,
   quantity,
+  unit,
   locationId,
   expireDate,
 }: IScanRow['row']) =>
   status === 'ready' &&
   !!title.trim() &&
-  quantity >= 1 &&
+  isValidQuantity(quantity, unit) &&
   !!locationId &&
   !!expireDate;
 
@@ -56,6 +69,33 @@ export function ScanRow({
   const isLoading = row.status === 'loading';
   const SourceIcon = SOURCE_ICON[row.source];
   const invalid = (missing: boolean) => showErrors && !isLoading && missing;
+  const step = UNIT_STEP[row.unit];
+
+  // Typed text is kept as a draft and committed on blur, so "1," can be typed on the way to "1,5"
+  const [draft, setDraft] = useState(() => formatDraft(row.quantity));
+  useEffect(() => {
+    setDraft(formatDraft(row.quantity));
+  }, [row.quantity]);
+
+  const changeQuantity = (quantity: number) =>
+    onChange({ quantity: roundQuantity(Math.max(quantity, step)) });
+
+  const commitDraft = () => {
+    const quantity = parseQuantity(draft);
+    if (isValidQuantity(quantity, row.unit)) {
+      onChange({ quantity: roundQuantity(quantity) });
+    }
+    setDraft(formatDraft(row.quantity));
+  };
+
+  // Switching to units needs a whole amount; weights and volumes keep what was typed
+  const changeUnit = (unit: Unit) =>
+    onChange({
+      unit,
+      ...(unit === 'unit' && {
+        quantity: Math.max(1, Math.round(row.quantity)),
+      }),
+    });
 
   return (
     <li
@@ -121,33 +161,43 @@ export function ScanRow({
 
       {!isLoading && (
         <div className="mt-3 grid gap-3 sm:grid-cols-[auto_minmax(0,1fr)]">
-          <div
-            className="border-surface-overlay flex h-[40px] items-center self-start rounded-xl border"
-            role="group"
-            aria-label={t('Quantity')}
-          >
-            <button
-              type="button"
-              onClick={() =>
-                onChange({ quantity: Math.max(1, row.quantity - 1) })
-              }
-              className="text-fg-muted hover:text-fg flex h-full w-10 items-center justify-center"
-              aria-label={t('Decrease')}
-              disabled={row.quantity <= 1}
+          <div className="flex items-center gap-2 self-start">
+            <div
+              className={`flex h-[40px] items-center rounded-xl border ${invalid(!isValidQuantity(row.quantity, row.unit)) ? 'border-red-500' : 'border-surface-overlay'}`}
+              role="group"
+              aria-label={t('Quantity')}
             >
-              <Minus size={14} />
-            </button>
-            <span className="text-fg min-w-8 text-center text-sm font-semibold">
-              {row.quantity}
-            </span>
-            <button
-              type="button"
-              onClick={() => onChange({ quantity: row.quantity + 1 })}
-              className="text-fg-muted hover:text-fg flex h-full w-10 items-center justify-center"
-              aria-label={t('Increase')}
-            >
-              <Plus size={14} />
-            </button>
+              <button
+                type="button"
+                onClick={() => changeQuantity(row.quantity - step)}
+                className="text-fg-muted hover:text-fg flex h-full w-10 items-center justify-center disabled:opacity-40"
+                aria-label={t('Decrease')}
+                disabled={row.quantity <= step}
+              >
+                <Minus size={14} />
+              </button>
+              <input
+                aria-label={t('Quantity')}
+                inputMode={row.unit === 'unit' ? 'numeric' : 'decimal'}
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onBlur={commitDraft}
+                className="text-fg w-14 bg-transparent text-center text-sm font-semibold outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => changeQuantity(row.quantity + step)}
+                className="text-fg-muted hover:text-fg flex h-full w-10 items-center justify-center"
+                aria-label={t('Increase')}
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+            <UnitSelect
+              value={row.unit}
+              onChange={changeUnit}
+              className={`${UI_CLASSES.input} min-h-[40px] w-auto cursor-pointer p-2 text-sm`}
+            />
           </div>
           <select
             aria-label={t('Location')}

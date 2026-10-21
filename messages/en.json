@@ -88,7 +88,7 @@
     "Error": "Error",
     "SelectLocation": "Select a location",
     "NameRequired": "Product name is required.",
-    "QuantityRequired": "Quantity must be at least 1.",
+    "QuantityRequired": "Enter a quantity greater than 0 (a whole number for units).",
     "ExpirationRequired": "Expiration date is required.",
     "LocationRequired": "Please select a location.",
     "SaveAndAddAnother": "Save and add another",
@@ -160,6 +160,24 @@
     "ErrorAddingItemsLog": "Error saving items: ",
     "ErrorLookingUpBarcode": "We couldn't look up the code. Fill in the details manually.",
     "ErrorRecognizingPhoto": "We couldn't recognize the photo. Fill in the details manually.",
-    "PhotoQuotaExceeded": "The free photo recognition limit was reached. Try again in a few minutes."
+    "PhotoQuotaExceeded": "The free photo recognition limit was reached. Try again in a few minutes.",
+    "AlreadyInList": "{title} is already in the list: adjust the amount."
+  },
+  "Units": {
+    "Label": "Unit",
+    "Names": {
+      "unit": "units",
+      "g": "g",
+      "kg": "kg",
+      "ml": "ml",
+      "l": "L"
+    },
+    "Amount": {
+      "unit": "{count, plural, one {# unit} other {# units}}",
+      "g": "{count, number} g",
+      "kg": "{count, number} kg",
+      "ml": "{count, number} ml",
+      "l": "{count, number} L"
+    }
   }
 }

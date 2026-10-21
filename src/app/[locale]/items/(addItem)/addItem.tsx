@@ -1,5 +1,6 @@
 import { UI_CLASSES } from '@/(constants)';
 import ExpirationInput from '@/components/ExpirationInput';
+import UnitSelect from '@/components/UnitSelect';
 import { useAddItem, useUpdateItem } from '@/hooks/useItems';
 import { useGetLocations } from '@/hooks/useLocations';
 import { useModalA11y } from '@/hooks/useModalA11y';
@@ -10,6 +11,12 @@ import {
   isoToDateInputValue,
   setLastLocationId,
 } from '@/lib/helpers';
+import {
+  DEFAULT_UNIT,
+  isValidQuantity,
+  parseQuantity,
+  roundQuantity,
+} from '@/lib/units';
 import { Check, Loader2, Pencil, Plus, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { FormEvent, useRef, useState } from 'react';
@@ -26,6 +33,7 @@ const EMPTY_ERRORS = {
 
 const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
   const t = useTranslations('AddItemModal');
+  const tUnits = useTranslations('Units');
   const isEditing = !!editingItem;
 
   const { data: locations = [], status, error } = useGetLocations();
@@ -41,6 +49,7 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
     expiration: isoToDateInputValue(editingItem?.expireDate),
     location: editingItem?.location?.id?.toString() || getLastLocationId(),
     quantity: editingItem?.quantity?.toString() || '1',
+    unit: editingItem?.unit ?? DEFAULT_UNIT,
   }));
 
   const [errors, setErrors] = useState(EMPTY_ERRORS);
@@ -59,15 +68,12 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const { name, expiration, quantity: quantityStr } = formData;
-      const quantity = parseInt(quantityStr, 10);
+      const { name, expiration, unit } = formData;
+      const quantity = parseQuantity(formData.quantity);
 
       const newErrors = {
         name: !name.trim() ? t('NameRequired') : '',
-        quantity:
-          !quantityStr || isNaN(quantity) || quantity < 1
-            ? t('QuantityRequired')
-            : '',
+        quantity: !isValidQuantity(quantity, unit) ? t('QuantityRequired') : '',
         expiration: !expiration ? t('ExpirationRequired') : '',
         location: !selectedLocation ? t('LocationRequired') : '',
       };
@@ -86,7 +92,8 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
         title: name.trim(),
         expireDate: dateInputValueToISO(expiration),
         location: locationObj,
-        quantity: quantity,
+        quantity: roundQuantity(quantity),
+        unit,
       };
 
       if (isEditing && editingItem?.id) {
@@ -101,7 +108,12 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
               return;
             }
             // Keep location and expiration: consecutive products usually share them
-            setFormData((prev) => ({ ...prev, name: '', quantity: '1' }));
+            setFormData((prev) => ({
+              ...prev,
+              name: '',
+              quantity: '1',
+              unit: DEFAULT_UNIT,
+            }));
             setErrors(EMPTY_ERRORS);
             nameInputRef.current?.focus();
           },
@@ -191,21 +203,39 @@ const AddItemModal: React.FC<IAddItemModal> = ({ closeModal, editingItem }) => {
           )}
         </div>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="quantity" className={UI_CLASSES.label}>
-            {t('Quantity')}
-          </label>
-          <input
-            id="quantity"
-            name="quantity"
-            type="number"
-            placeholder="1"
-            value={formData.quantity}
-            onChange={(e) => handleInputChange('quantity', e.target.value)}
-            className={UI_CLASSES.input}
-            min="1"
-            aria-required="true"
-            disabled={isSaving}
-          />
+          <div className="flex gap-3">
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+              <label htmlFor="quantity" className={UI_CLASSES.label}>
+                {t('Quantity')}
+              </label>
+              {/* Text + decimal keyboard: type="number" rejects a decimal comma in some locales */}
+              <input
+                id="quantity"
+                name="quantity"
+                type="text"
+                inputMode={formData.unit === 'unit' ? 'numeric' : 'decimal'}
+                placeholder="1"
+                value={formData.quantity}
+                onChange={(e) => handleInputChange('quantity', e.target.value)}
+                className={UI_CLASSES.input}
+                aria-required="true"
+                aria-invalid={!!errors.quantity || undefined}
+                disabled={isSaving}
+              />
+            </div>
+            <div className="flex w-32 flex-col gap-1.5">
+              <label htmlFor="unit" className={UI_CLASSES.label}>
+                {tUnits('Label')}
+              </label>
+              <UnitSelect
+                id="unit"
+                value={formData.unit}
+                onChange={(unit) => handleInputChange('unit', unit)}
+                className={`${UI_CLASSES.input} cursor-pointer`}
+                disabled={isSaving}
+              />
+            </div>
+          </div>
           {errors.quantity && (
             <p className="mt-1 text-xs text-red-500">{errors.quantity}</p>
           )}
