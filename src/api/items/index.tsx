@@ -12,6 +12,9 @@ const PAGINATION_PARAMS =
 // The Nest API already sorts by expireDate; json-server only sorts when asked
 const SORT_PARAMS: Record<string, string> =
   process.env.NODE_ENV === 'development' ? { _sort: 'expireDate' } : {};
+// json-server serves a mock at /summary; the Nest API under /products/summary
+const SUMMARY_PATH =
+  process.env.NODE_ENV === 'development' ? '/summary' : '/products/summary';
 
 export const getAllItems = async ({
   page = 1,
@@ -94,10 +97,9 @@ export const addItemsBulk = async (items: Item[]): Promise<Item[]> => {
 
 export const getItemsSummary = async (): Promise<ItemSummaryResponse> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/summary`);
-    // const response = await fetch(
-    //   `${process.env.NEXT_PUBLIC_API_URL}/products/summary`
-    // );
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}${SUMMARY_PATH}`
+    );
 
     if (!response.ok) {
       throw new Error('Failed to fetch item summary');
