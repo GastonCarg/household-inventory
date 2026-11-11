@@ -18,6 +18,23 @@ test('the page behind a modal cannot scroll while it is open', () => {
   expect(document.body.style.overflow).toBe('hidden');
 });
 
+test('the content does not shift when the scrollbar disappears', () => {
+  Object.defineProperty(window, 'innerWidth', {
+    value: 1040,
+    configurable: true,
+  });
+  Object.defineProperty(document.documentElement, 'clientWidth', {
+    value: 1024,
+    configurable: true,
+  });
+
+  const { unmount } = renderHook(() => useBodyScrollLock());
+  expect(document.body.style.paddingRight).toBe('16px');
+
+  unmount();
+  expect(document.body.style.paddingRight).toBe('');
+});
+
 test('closing the modal restores the page and its scroll position', () => {
   const { unmount } = renderHook(() => useBodyScrollLock());
   unmount();

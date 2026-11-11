@@ -10,6 +10,9 @@ const lock = () => {
   const { body } = document;
   savedScrollY = window.scrollY;
   savedStyle = body.getAttribute('style') ?? '';
+  // Keep the content from shifting when the desktop scrollbar disappears
+  const scrollbarWidth =
+    window.innerWidth - document.documentElement.clientWidth;
   // overflow: hidden alone doesn't stop iOS Safari from scrolling the page
   // behind a modal, so pin the body in place at the current scroll position
   Object.assign(body.style, {
@@ -19,6 +22,7 @@ const lock = () => {
     right: '0',
     width: '100%',
     overflow: 'hidden',
+    ...(scrollbarWidth > 0 && { paddingRight: `${scrollbarWidth}px` }),
   });
 };
 
