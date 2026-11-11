@@ -1,7 +1,6 @@
 import { UI_CLASSES } from '@/(constants)';
 import { CatalogEntry, LookupError } from '@/api/lookup';
 import { useBarcodeScanner } from '@/hooks/useBarcodeScanner';
-import { PHOTO_RECOGNITION_ENABLED } from '@/lib/features';
 import { useAddItemsBulk } from '@/hooks/useItems';
 import {
   useBarcodeLookup,
@@ -11,6 +10,7 @@ import {
 } from '@/hooks/useLookup';
 import { useGetLocations } from '@/hooks/useLocations';
 import { useModalA11y } from '@/hooks/useModalA11y';
+import { PHOTO_RECOGNITION_ENABLED } from '@/lib/features';
 import {
   addDaysToToday,
   dateInputValueToISO,
