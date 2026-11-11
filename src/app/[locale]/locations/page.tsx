@@ -11,7 +11,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MapPin, Plus, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { FormEvent, useMemo, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const LocationsContent = () => {
   const t = useTranslations('Locations');
@@ -210,7 +210,6 @@ const LocationsPage = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <LocationsContent />
-      <ToastContainer />
     </QueryClientProvider>
   );
 };

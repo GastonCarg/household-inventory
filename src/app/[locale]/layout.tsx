@@ -1,5 +1,5 @@
 import { routing } from '@/i18n/routing';
-import { Sidebar } from '@/components';
+import { AppToaster, Sidebar } from '@/components';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { Figtree, Nunito, Syne } from 'next/font/google';
 import { notFound } from 'next/navigation';
@@ -63,6 +63,7 @@ export default async function LocaleLayout({
               </div>
             </SearchContextProvider>
           </ItemModalProvider>
+          <AppToaster />
         </NextIntlClientProvider>
       </body>
     </html>

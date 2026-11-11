@@ -162,3 +162,122 @@
     font-size: 16px;
   }
 }
+
+/*
+ * Notifications (react-toastify), themed to match the app.
+ * Scoped under .Toastify so these rules beat the library's own stylesheet,
+ * which is injected at runtime after ours.
+ */
+.Toastify {
+  --toast-accent: var(--color-accent-edit);
+  --toastify-font-family: var(--font-body);
+  --toastify-toast-width: 360px;
+  --toastify-toast-offset: 16px;
+  --toastify-toast-min-height: 56px;
+  --toastify-toast-bd-radius: 16px;
+  --toastify-color-dark: var(--color-surface-elevated);
+  --toastify-text-color-dark: var(--color-fg);
+}
+
+.Toastify .Toastify__toast {
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 12px 44px 12px 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-surface-overlay);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.Toastify .Toastify__toast--success {
+  --toast-accent: var(--color-primary-dark);
+}
+.Toastify .Toastify__toast--error {
+  --toast-accent: #ff6b6b;
+}
+.Toastify .Toastify__toast--warning {
+  --toast-accent: #ffb547;
+}
+.Toastify .Toastify__toast--info {
+  --toast-accent: var(--color-accent-edit);
+}
+
+.Toastify .Toastify__toast-icon {
+  width: auto;
+  margin: 0;
+}
+
+.app-toast-icon {
+  display: flex;
+  height: 32px;
+  width: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: var(--toast-accent);
+  background: color-mix(in srgb, var(--toast-accent) 14%, transparent);
+}
+
+.Toastify .Toastify__toast-body {
+  padding: 0;
+  color: var(--color-fg);
+}
+
+.Toastify .app-toast-close {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  display: flex;
+  height: 32px;
+  width: 32px;
+  min-height: 32px;
+  min-width: 32px;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  transition:
+    background-color 150ms,
+    color 150ms;
+}
+
+.Toastify .app-toast-close:hover {
+  background: var(--color-surface-overlay);
+  color: var(--color-fg);
+}
+
+.Toastify .Toastify__progress-bar--wrp {
+  height: 2px;
+}
+
+.Toastify .Toastify__progress-bar {
+  background: var(--toast-accent);
+}
+
+/* Mobile: floating cards with side margins instead of an edge-to-edge strip */
+@media only screen and (max-width: 480px) {
+  .Toastify .Toastify__toast-container {
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+    width: auto;
+  }
+
+  .Toastify .Toastify__toast-container--top-right {
+    top: max(12px, env(safe-area-inset-top));
+  }
+
+  .Toastify .Toastify__toast {
+    --toastify-toast-width: 100%;
+    margin-bottom: 8px;
+    border-radius: var(--toastify-toast-bd-radius);
+  }
+}

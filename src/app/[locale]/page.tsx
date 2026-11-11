@@ -6,7 +6,6 @@ import { useGetLocations } from '@/hooks/useLocations';
 import { useRouter } from '@/i18n/navigation';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { lazy, Suspense, useContext, useEffect, useState } from 'react';
-import { ToastContainer } from 'react-toastify';
 import Header from '../(header)/header';
 
 const ItemsList = lazy(() => import('./items/page'));
@@ -60,7 +59,6 @@ const Home = () => {
           <ScanSession closeScan={closeScan} />
         </Suspense>
       )}
-      <ToastContainer />
     </QueryClientProvider>
   );
 };
