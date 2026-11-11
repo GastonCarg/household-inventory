@@ -1,13 +1,19 @@
 import { RefObject, useEffect } from 'react';
+import { useBodyScrollLock } from './useBodyScrollLock';
 
 const FOCUSABLE =
   'button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-/** Closes on Escape and keeps Tab focus inside the modal container. */
+/**
+ * Closes on Escape, keeps Tab focus inside the modal container and locks the
+ * page scroll behind it.
+ */
 export const useModalA11y = (
   containerRef: RefObject<HTMLElement | null>,
   onClose: () => void
 ) => {
+  useBodyScrollLock();
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
