@@ -39,12 +39,12 @@ test('the user can open the add item modal', () => {
   expect(mockOpenModal).toHaveBeenCalled();
 });
 
-test('the scan button is hidden while camera scanning is disabled', () => {
+test('the user can open the scan session', () => {
   renderHeader();
 
-  expect(
-    screen.queryByRole('button', { name: 'Scan' })
-  ).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Scan' }));
+
+  expect(mockOpenScan).toHaveBeenCalled();
 });
 
 test('the user can search an item', () => {

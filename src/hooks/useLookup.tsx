@@ -4,6 +4,7 @@ import {
   lookupBarcode,
   lookupImage,
 } from '@/api/lookup';
+import { PHOTO_RECOGNITION_ENABLED } from '@/lib/features';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
@@ -19,6 +20,8 @@ export const useImageLookupStatus = () => {
   return useQuery({
     queryKey: ['lookup', 'image', 'status'],
     queryFn: getImageLookupStatus,
+    // No need to ask the server while photo recognition is turned off
+    enabled: PHOTO_RECOGNITION_ENABLED,
     staleTime: Infinity,
     retry: false,
   });

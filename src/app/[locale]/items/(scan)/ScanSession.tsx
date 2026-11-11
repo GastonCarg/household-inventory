@@ -10,6 +10,7 @@ import {
 } from '@/hooks/useLookup';
 import { useGetLocations } from '@/hooks/useLocations';
 import { useModalA11y } from '@/hooks/useModalA11y';
+import { PHOTO_RECOGNITION_ENABLED } from '@/lib/features';
 import {
   addDaysToToday,
   dateInputValueToISO,
@@ -107,7 +108,7 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
     locationIds.has(row.locationId) ? row : { ...row, locationId: '' };
   const { data: frequent = [] } = useFrequentCatalog();
   const { data: imageStatus } = useImageLookupStatus();
-  const photoEnabled = !!imageStatus?.enabled;
+  const photoEnabled = PHOTO_RECOGNITION_ENABLED && !!imageStatus?.enabled;
   const fetchBarcode = useBarcodeLookup();
   const imageLookup = useImageLookup();
   const bulkMutation = useAddItemsBulk(() => {
@@ -449,7 +450,13 @@ const ScanSession: React.FC<IScanSession> = ({ closeScan }) => {
                 onClick={() => changeMode('photo')}
                 aria-pressed={mode === 'photo'}
                 disabled={!photoEnabled}
-                title={!photoEnabled ? t('PhotoDisabled') : undefined}
+                title={
+                  !PHOTO_RECOGNITION_ENABLED
+                    ? t('PhotoComingSoon')
+                    : !photoEnabled
+                      ? t('PhotoDisabled')
+                      : undefined
+                }
                 className={modeButtonClasses(mode === 'photo')}
               >
                 <Camera size={16} />

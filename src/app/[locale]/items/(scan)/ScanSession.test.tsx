@@ -10,7 +10,14 @@ const mockBulkMutate = jest.fn();
 const mockCaptureFrame = jest.fn();
 let mockOnDetect: (code: string) => void = () => {};
 let mockImageEnabled = true;
+let mockPhotoFeatureEnabled = true;
 let mockFrequent: object[] = [];
+
+jest.mock('@/lib/features', () => ({
+  get PHOTO_RECOGNITION_ENABLED() {
+    return mockPhotoFeatureEnabled;
+  },
+}));
 
 jest.mock('next-intl', () => ({
   useTranslations:
@@ -69,6 +76,7 @@ beforeEach(() => {
   sessionStorage.clear();
   localStorage.clear();
   mockImageEnabled = true;
+  mockPhotoFeatureEnabled = true;
   mockFrequent = [];
 });
 
@@ -415,6 +423,16 @@ test('photo mode is disabled when the server has no Gemini key', () => {
   render(<ScanSession closeScan={mockCloseScan} />);
 
   expect(screen.getByRole('button', { name: 'ModePhoto' })).toBeDisabled();
+});
+
+test('photo mode is disabled while photo recognition is turned off', () => {
+  mockPhotoFeatureEnabled = false;
+  render(<ScanSession closeScan={mockCloseScan} />);
+
+  const photoButton = screen.getByRole('button', { name: 'ModePhoto' });
+  expect(photoButton).toBeDisabled();
+  expect(photoButton).toHaveAttribute('title', 'PhotoComingSoon');
+  expect(screen.getByRole('button', { name: 'ModeBarcode' })).toBeEnabled();
 });
 
 test('barcodes are ignored while in photo mode', async () => {
