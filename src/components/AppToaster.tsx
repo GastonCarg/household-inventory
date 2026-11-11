@@ -18,7 +18,7 @@ const ICONS = {
 } as const;
 
 const ToastIcon = ({ type }: IconProps) => {
-  const Icon = ICONS[type] ?? Info;
+  const Icon = ICONS[type];
   return (
     <span className="app-toast-icon" aria-hidden="true">
       <Icon size={18} strokeWidth={2.25} />
