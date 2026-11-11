@@ -148,3 +148,17 @@
     min-width: 44px;
   }
 }
+
+/*
+ * iOS Safari zooms into any form field whose font-size is below 16px when it
+ * gets focus, and doesn't zoom back out afterwards. Keep fields at 16px on
+ * touch devices. This rule is intentionally outside any @layer so it wins over
+ * Tailwind utilities like text-sm/text-xs, while pinch-to-zoom stays available.
+ */
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
