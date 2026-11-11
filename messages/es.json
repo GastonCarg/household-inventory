@@ -112,6 +112,7 @@
     "ModeBarcode": "Código",
     "ModePhoto": "Foto",
     "PhotoDisabled": "El reconocimiento por foto no está configurado en el servidor.",
+    "PhotoComingSoon": "El reconocimiento por foto estará disponible pronto.",
     "StartingCamera": "Iniciando cámara...",
     "CameraDenied": "No hay permiso para usar la cámara. Habilítalo en el navegador o ingresa el código a mano.",
     "CameraUnavailable": "No encontramos una cámara disponible. Puedes ingresar el código a mano.",

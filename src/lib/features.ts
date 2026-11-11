@@ -1,3 +1,3 @@
-// Temporarily disabled: barcode/photo scanning with the camera.
-// Flip to true to bring the "Scan" button back in the header.
-export const CAMERA_SCAN_ENABLED = false;
+// Photo recognition (Gemini) is paused until we decide on a paid model.
+// Flip to true to re-enable the "Photo" mode in the scan session.
+export const PHOTO_RECOGNITION_ENABLED = false;
