@@ -21,11 +21,7 @@ const CAPTURE_MAX_SIZE = 768;
 const VALID_BARCODE = /^\d{6,14}$/;
 
 export type ScannerStatus =
-  | 'idle'
-  | 'starting'
-  | 'scanning'
-  | 'denied'
-  | 'unavailable';
+  'idle' | 'starting' | 'scanning' | 'denied' | 'unavailable';
 
 interface UseBarcodeScannerOptions {
   enabled: boolean;

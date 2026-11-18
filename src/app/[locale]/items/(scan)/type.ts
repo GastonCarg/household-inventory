@@ -2,12 +2,7 @@ import { Unit } from '@/lib/units';
 import { ILocations } from '../type';
 
 export type ScanRowSource =
-  | 'catalog'
-  | 'openfoodfacts'
-  | 'none'
-  | 'photo'
-  | 'frequent'
-  | 'manual';
+  'catalog' | 'openfoodfacts' | 'none' | 'photo' | 'frequent' | 'manual';
 
 export interface ScanRowData {
   key: string;
