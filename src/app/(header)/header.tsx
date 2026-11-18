@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <header
       aria-label="banner header"
-      className="bg-surface border-divider flex h-auto items-center border-b px-4 py-4 sm:h-[72px] sm:justify-end sm:px-6"
+      className="bg-surface border-divider flex h-auto items-center border-b px-4 py-4 sm:h-[72px] sm:justify-end sm:px-6 lg:sticky lg:top-0 lg:z-20"
     >
       <section className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center">
         <SearchComponent />

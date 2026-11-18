@@ -42,7 +42,10 @@
   html,
   body {
     max-width: 100vw;
+    /* clip (not hidden) so body doesn't become a scroll container and break
+       sticky; hidden stays as the fallback for browsers without clip (Safari < 16) */
     overflow-x: hidden;
+    overflow-x: clip;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
   }
