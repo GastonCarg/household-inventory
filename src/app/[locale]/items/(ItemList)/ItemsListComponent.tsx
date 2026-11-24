@@ -1,6 +1,7 @@
 import {
   Calendar,
   Clock,
+  Loader2,
   MapPin,
   MoreVertical,
   Pencil,
@@ -20,6 +21,7 @@ export function ItemsListComponent({
   item,
   removeItem,
   editItem,
+  isDeleting = false,
 }: ItemsListComponentProps) {
   const t = useTranslations('ItemsList');
   const tUnits = useTranslations('Units');
@@ -45,12 +47,14 @@ export function ItemsListComponent({
       key={id}
       props={`group relative ${CARD_LEFT_BORDER[status] ?? ''}`}
       aria-label={title}
+      aria-busy={isDeleting}
       tabIndex={0}
     >
       <div className="absolute top-3 right-3 z-10 transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100 md:opacity-0">
         <div className="relative">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            disabled={isDeleting}
             className="flex items-center justify-center rounded-lg p-1.5 text-[#404460] transition-colors hover:bg-[#1E2130] hover:text-[#F2F4FF] focus-visible:ring-2 focus-visible:ring-[#deff6ecc] focus-visible:ring-offset-1 focus-visible:outline-none"
             aria-label={`${t('Actions')} ${title}`}
             aria-expanded={isMenuOpen}
@@ -160,6 +164,16 @@ export function ItemsListComponent({
           </span>
         </div>
       </Card.Footer>
+      {isDeleting && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="bg-surface/70 absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 rounded-2xl text-sm font-medium text-[#8A90AB] backdrop-blur-sm"
+        >
+          <Loader2 className="animate-spin text-[#deff6ecc]" size={28} />
+          <p>{t('DeletingItem')}</p>
+        </div>
+      )}
     </Card>
   );
 }

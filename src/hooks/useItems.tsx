@@ -44,6 +44,7 @@ export const useDeleteItem = () => {
   const queryClient = useQueryClient();
   const t = useTranslations('ItemsList');
   return useMutation({
+    mutationKey: ['items', 'delete'],
     mutationFn: deleteItem,
     onSuccess: (_data, id) => {
       queryClient.setQueryData(['items', 'infinite'], (old: any) => ({

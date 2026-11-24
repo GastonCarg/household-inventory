@@ -6,18 +6,21 @@ export default function Card({
   onClick,
   tabIndex,
   'aria-label': ariaLabel,
+  'aria-busy': ariaBusy,
 }: {
   children: ReactNode;
   props?: string;
   onClick?: () => void;
   tabIndex?: number;
   'aria-label'?: string;
+  'aria-busy'?: boolean;
 }): React.JSX.Element {
   return (
     <article
       onClick={onClick}
       tabIndex={tabIndex}
       aria-label={ariaLabel}
+      aria-busy={ariaBusy || undefined}
       className={`border-divider bg-surface focus-visible:ring-primary focus-visible:ring-offset-bg flex min-h-28 flex-col rounded-2xl border p-4 shadow-sm transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/50 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:p-5 ${props}`}
     >
       {children}

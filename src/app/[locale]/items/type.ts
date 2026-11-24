@@ -54,4 +54,5 @@ export interface ItemsListComponentProps {
   item: Item;
   removeItem: (id: number | string) => void;
   editItem: (item: Item) => void;
+  isDeleting?: boolean;
 }
