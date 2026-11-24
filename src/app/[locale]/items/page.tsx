@@ -1,7 +1,8 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 
-import { ChevronDown, Filter, Loader2, Package } from 'lucide-react';
+import { useMutationState } from '@tanstack/react-query';
+import { ChevronDown, Filter, Package } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { toast } from 'react-toastify';
@@ -69,6 +70,12 @@ const ItemsList: React.FC = () => {
     status: statusLocations,
   } = useGetLocations();
   const mutation = useDeleteItem();
+  // Pending deletions are tracked per item so the list stays mounted
+  // (and keeps its scroll position) while each card shows its own loader
+  const deletingIds = useMutationState({
+    filters: { mutationKey: ['items', 'delete'], status: 'pending' },
+    select: (m) => String(m.state.variables),
+  });
 
   useEffect(() => {
     if (error || errorLocations) {
@@ -243,12 +250,7 @@ const ItemsList: React.FC = () => {
           </div>
         </div>
       </nav>
-      {mutation.isPending ? (
-        <div className="flex flex-col items-center justify-center gap-3 p-8 text-lg font-medium text-[#8A90AB]">
-          <Loader2 className="animate-spin text-[#deff6ecc]" size={32} />
-          <p>{t('DeletingItem')}</p>
-        </div>
-      ) : items.length > 0 ? (
+      {items.length > 0 ? (
         <InfiniteScroll
           key={searchValue}
           dataLength={items.length}
@@ -264,6 +266,7 @@ const ItemsList: React.FC = () => {
                   item={item}
                   removeItem={removeItem}
                   editItem={editItem}
+                  isDeleting={deletingIds.includes(String(item.id))}
                 />
               </React.Fragment>
             ))}
